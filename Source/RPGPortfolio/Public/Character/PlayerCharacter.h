@@ -8,6 +8,8 @@
 
 class UCameraComponent;
 class USpringArmComponent;
+class UDataAsset_InputConfig;
+struct FInputActionValue;
 /**
  * 
  */
@@ -23,15 +25,24 @@ protected:
 	
 	virtual void BeginPlay() override;
 
+	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
+	
 private:
 
-#pragma region component
+#pragma region DefaultSetting
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", meta = (AllowPrivateAccess = "true"))
 		USpringArmComponent* SpringArmComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", meta = (AllowPrivateAccess = "true"))
 		UCameraComponent* CameraComponent;
-#pragma endregion component
-	
+
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "CharacterData", meta = (AllowPrivateAccess = "true"))
+		UDataAsset_InputConfig* InputConfigDataAsset;
+
+	void Input_Move(const FInputActionValue& InputActionValue);
+	void Input_Look(const FInputActionValue& InputActionValue);
+
+#pragma endregion DefaultSetting
 };
