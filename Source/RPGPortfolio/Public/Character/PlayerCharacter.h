@@ -22,9 +22,10 @@ public:
 	APlayerCharacter();
 	
 protected:
+	virtual void PossessedBy(AController* NewController) override;
 	
 	virtual void BeginPlay() override;
-
+	
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 	
 private:

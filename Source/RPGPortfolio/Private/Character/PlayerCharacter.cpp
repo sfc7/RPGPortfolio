@@ -8,7 +8,9 @@
 #include "EnhancedInputSubsystems.h"
 #include "Component/PlayerEnhancedInputComponent.h"
 #include "DataAsset/DataAsset_InputConfig.h"
-#include "GamePlayAbility/RPGGamePlayTag.h"
+#include "DataAsset/DataAsset_AbilitySetBase.h"
+#include "GameAbilitySystem/GamePlayAbility/RPGGamePlayTag.h"
+#include "GameAbilitySystem/MainAbilitySystemComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 APlayerCharacter::APlayerCharacter()
@@ -19,7 +21,7 @@ APlayerCharacter::APlayerCharacter()
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate = FRotator(0.f, 600.f, 0.f);
-	GetCharacterMovement()->MaxWalkSpeed = 400.f;
+	GetCharacterMovement()->MaxWalkSpeed = 600.f;
 	GetCharacterMovement()->BrakingDecelerationWalking= 2000.f;
 	
 	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComponent"));
@@ -30,13 +32,19 @@ APlayerCharacter::APlayerCharacter()
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
 	CameraComponent->SetupAttachment(SpringArmComponent);
 	CameraComponent->bUsePawnControlRotation = true;
-
-
 }
 
-void APlayerCharacter::BeginPlay()
+void APlayerCharacter::PossessedBy(AController* NewController)
 {
-	Super::BeginPlay();
+	Super::PossessedBy(NewController);
+ 
+	if (!CharacterStartUpData.IsNull())
+	{
+		if (UDataAsset_AbilitySetBase* LoadedData = CharacterStartUpData.LoadSynchronous())
+		{
+			LoadedData->GiveToAbilitySystemComponent(MainAbilitySystemComponent);
+		}
+	}
 }
 
 void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -57,10 +65,13 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 			PlayerEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, RPGGameplayTag::InputTag_Look_Mouse, ETriggerEvent::Triggered, this, &ThisClass::Input_Look);
 		}
 	}
-
-	
 }
 
+void APlayerCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+	
+}
 void APlayerCharacter::Input_Move(const FInputActionValue& InputActionValue)
 {
 	const FVector2D MovementVector = InputActionValue.Get<FVector2D>();

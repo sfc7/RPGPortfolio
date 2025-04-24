@@ -2,6 +2,8 @@
 
 
 #include "Character/RPGCharacterBase.h"
+#include "GameAbilitySystem/MainAbilitySystemComponent.h"
+#include "GameAbilitySystem/MainAttributeSet.h"
 
 // Sets default values
 ARPGCharacterBase::ARPGCharacterBase()
@@ -11,5 +13,24 @@ ARPGCharacterBase::ARPGCharacterBase()
 	PrimaryActorTick.bStartWithTickEnabled =false;
 	
 	GetMesh()->bReceivesDecals = false;
+
+	MainAbilitySystemComponent = CreateDefaultSubobject<UMainAbilitySystemComponent>(TEXT("MainAbilitySystemComponent"));
+	MainAttributeSet = CreateDefaultSubobject<UMainAttributeSet>(TEXT("MainAttributeSet"));
+}
+
+UAbilitySystemComponent* ARPGCharacterBase::GetAbilitySystemComponent() const
+{
+	return GetMainAbilitySystemComponent();
+}
+
+void ARPGCharacterBase::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	if (IsValid(MainAbilitySystemComponent))
+	{
+		MainAbilitySystemComponent->InitAbilityActorInfo(this, this);
+		
+	}
 }
 
