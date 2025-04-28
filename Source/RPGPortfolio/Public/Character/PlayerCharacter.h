@@ -10,6 +10,8 @@ class UCameraComponent;
 class USpringArmComponent;
 class UDataAsset_InputConfig;
 struct FInputActionValue;
+class UPlayerCombatComponent;
+
 /**
  * 
  */
@@ -20,7 +22,8 @@ class RPGPORTFOLIO_API APlayerCharacter : public ARPGCharacterBase
 
 public:
 	APlayerCharacter();
-	
+
+	FORCEINLINE UPlayerCombatComponent* GetHeroCombatComponent() const { return PlayerCombatComponent; }
 protected:
 	virtual void PossessedBy(AController* NewController) override;
 	
@@ -29,21 +32,19 @@ protected:
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 	
 private:
-
-#pragma region DefaultSetting
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", meta = (AllowPrivateAccess = "true"))
 		USpringArmComponent* SpringArmComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", meta = (AllowPrivateAccess = "true"))
 		UCameraComponent* CameraComponent;
-
-
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", meta = (AllowPrivateAccess = "true"))
+		UPlayerCombatComponent* PlayerCombatComponent;
+			
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "CharacterData", meta = (AllowPrivateAccess = "true"))
 		UDataAsset_InputConfig* InputConfigDataAsset;
 
 	void Input_Move(const FInputActionValue& InputActionValue);
 	void Input_Look(const FInputActionValue& InputActionValue);
 
-#pragma endregion DefaultSetting
 };

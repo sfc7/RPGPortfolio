@@ -6,12 +6,13 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "EnhancedInputSubsystems.h"
-#include "Component/PlayerEnhancedInputComponent.h"
+#include "Component/Player/PlayerEnhancedInputComponent.h"
 #include "DataAsset/DataAsset_InputConfig.h"
 #include "DataAsset/DataAsset_AbilitySetBase.h"
 #include "GameAbilitySystem/GamePlayAbility/RPGGamePlayTag.h"
 #include "GameAbilitySystem/MainAbilitySystemComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Component/Player/PlayerCombatComponent.h"
 
 APlayerCharacter::APlayerCharacter()
 {
@@ -32,6 +33,8 @@ APlayerCharacter::APlayerCharacter()
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
 	CameraComponent->SetupAttachment(SpringArmComponent);
 	CameraComponent->bUsePawnControlRotation = true;
+
+	PlayerCombatComponent = CreateDefaultSubobject<UPlayerCombatComponent>(TEXT("PlayerCombatComponent"));
 }
 
 void APlayerCharacter::PossessedBy(AController* NewController)

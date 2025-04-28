@@ -1,5 +1,5 @@
 // LJS
 
 
-#include "Component/PlayerEnhancedInputComponent.h"
+#include "Component/Player/PlayerEnhancedInputComponent.h"
 
