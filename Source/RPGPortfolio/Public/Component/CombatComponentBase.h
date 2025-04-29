@@ -4,8 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "GameplayTagContainer.h"
 #include "CombatComponentBase.generated.h"
 
+class AWeaponBase;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class RPGPORTFOLIO_API UCombatComponentBase : public UActorComponent
@@ -29,4 +31,20 @@ protected:
 	{
 		return GetOwningPawn<APawn>()->GetController<T>();
 	}
+
+public:
+	UFUNCTION(BlueprintCallable, Category = "Weapon")
+	void RegisterSpawnedWeapon(FGameplayTag _WeaponTagToRegister, AWeaponBase* _WeaponToRegister, bool bEquippedWeaponState = false);
+
+	UFUNCTION(BlueprintCallable, Category = "Weapon")
+	AWeaponBase* GetCharacterCarriedWeaponByTag(FGameplayTag _WeaponTagToGet) const;
+
+	UFUNCTION(BlueprintCallable, Category = "Weapon")
+	AWeaponBase* GetCharacterCurrentEquippedWeapon() const;
+	
+	UPROPERTY(BlueprintReadWrite, Category = "Weapon")
+	FGameplayTag CurrentEquippedWeaponTag;
+
+private:
+	TMap<FGameplayTag, AWeaponBase*> CharacterWeapons;
 };
