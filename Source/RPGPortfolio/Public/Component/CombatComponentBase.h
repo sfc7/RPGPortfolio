@@ -42,7 +42,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
 	AWeaponBase* GetCharacterCurrentEquippedWeapon() const;
 	
-	UPROPERTY(BlueprintReadWrite, Category = "Weapon")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Weapon")
 	FGameplayTag CurrentEquippedWeaponTag;
 
 private:

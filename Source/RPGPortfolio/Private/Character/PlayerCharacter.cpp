@@ -10,7 +10,7 @@
 #include "DataAsset/DataAsset_InputConfig.h"
 #include "DataAsset/DataAsset_AbilitySetBase.h"
 #include "GameAbilitySystem/GamePlayAbility/RPGGamePlayTag.h"
-#include "GameAbilitySystem/MainAbilitySystemComponent.h"
+#include "GameAbilitySystem/RPGAbilitySystemComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Component/Player/PlayerCombatComponent.h"
 
@@ -45,7 +45,7 @@ void APlayerCharacter::PossessedBy(AController* NewController)
 	{
 		if (UDataAsset_AbilitySetBase* LoadedData = CharacterStartUpData.LoadSynchronous())
 		{
-			LoadedData->GiveToAbilitySystemComponent(MainAbilitySystemComponent);
+			LoadedData->GiveToAbilitySystemComponent(RPGAbilitySystemComponent);
 		}
 	}
 }

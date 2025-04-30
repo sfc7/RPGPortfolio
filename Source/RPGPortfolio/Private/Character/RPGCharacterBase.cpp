@@ -2,8 +2,8 @@
 
 
 #include "Character/RPGCharacterBase.h"
-#include "GameAbilitySystem/MainAbilitySystemComponent.h"
-#include "GameAbilitySystem/MainAttributeSet.h"
+#include "GameAbilitySystem/RPGAbilitySystemComponent.h"
+#include "GameAbilitySystem/RPGAttributeSet.h"
 
 // Sets default values
 ARPGCharacterBase::ARPGCharacterBase()
@@ -14,22 +14,22 @@ ARPGCharacterBase::ARPGCharacterBase()
 	
 	GetMesh()->bReceivesDecals = false;
 
-	MainAbilitySystemComponent = CreateDefaultSubobject<UMainAbilitySystemComponent>(TEXT("MainAbilitySystemComponent"));
-	MainAttributeSet = CreateDefaultSubobject<UMainAttributeSet>(TEXT("MainAttributeSet"));
+	RPGAbilitySystemComponent = CreateDefaultSubobject<URPGAbilitySystemComponent>(TEXT("RPGAbilitySystemComponent"));
+	RPGAttributeSet = CreateDefaultSubobject<URPGAttributeSet>(TEXT("RPGAttributeSet"));
 }
 
 UAbilitySystemComponent* ARPGCharacterBase::GetAbilitySystemComponent() const
 {
-	return GetMainAbilitySystemComponent();
+	return GetRPGAbilitySystemComponent();
 }
 
 void ARPGCharacterBase::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 
-	if (IsValid(MainAbilitySystemComponent))
+	if (IsValid(RPGAbilitySystemComponent))
 	{
-		MainAbilitySystemComponent->InitAbilityActorInfo(this, this);
+		RPGAbilitySystemComponent->InitAbilityActorInfo(this, this);
 		
 	}
 }

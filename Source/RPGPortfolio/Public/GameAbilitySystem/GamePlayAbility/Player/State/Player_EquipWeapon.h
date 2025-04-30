@@ -30,5 +30,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FName SocketNameToAttach;
-	
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FGameplayTag WeaponTagtoRegister;
 };

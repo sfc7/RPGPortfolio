@@ -7,8 +7,8 @@
 #include "AbilitySystemInterface.h"
 #include "RPGCharacterBase.generated.h"
 
-class UMainAttributeSet;
-class UMainAbilitySystemComponent;
+class URPGAttributeSet;
+class URPGAbilitySystemComponent;
 class UDataAsset_AbilitySetBase;
 
 UCLASS()
@@ -21,18 +21,18 @@ public:
 
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const;
 	
-	FORCEINLINE UMainAbilitySystemComponent* GetMainAbilitySystemComponent() const {return MainAbilitySystemComponent;}
+	FORCEINLINE URPGAbilitySystemComponent* GetRPGAbilitySystemComponent() const {return RPGAbilitySystemComponent;}
 
-	FORCEINLINE UMainAttributeSet* GetMainAttributeSet() const {return MainAttributeSet;}
+	FORCEINLINE URPGAttributeSet* GetRPGAttributeSet() const {return RPGAttributeSet;}
 
 protected:
 	virtual void PossessedBy(AController* NewController) override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AbilitySystem")
-	UMainAbilitySystemComponent* MainAbilitySystemComponent;
+	URPGAbilitySystemComponent* RPGAbilitySystemComponent;
  
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AbilitySystem")
-	UMainAttributeSet* MainAttributeSet;
+	URPGAttributeSet* RPGAttributeSet;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "CharacterData")
 	TSoftObjectPtr<UDataAsset_AbilitySetBase> CharacterStartUpData;

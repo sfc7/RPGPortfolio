@@ -3,15 +3,15 @@
 
 #include "DataAsset/DataAsset_AbilitySetBase.h"
 #include "GameAbilitySystem/GamePlayAbility/RPGGameplayAbility.h"
-#include "GameAbilitySystem/MainAbilitySystemComponent.h"
+#include "GameAbilitySystem/RPGAbilitySystemComponent.h"
 
-void UDataAsset_AbilitySetBase::GiveToAbilitySystemComponent(UMainAbilitySystemComponent* InASCToGive, int32 ApplyLevel)
+void UDataAsset_AbilitySetBase::GiveToAbilitySystemComponent(URPGAbilitySystemComponent* InASCToGive, int32 ApplyLevel)
 {
 	GrantAbilities(ActivateOnGivenAbilities,InASCToGive,ApplyLevel);
 	GrantAbilities(ReactiveAbilities,InASCToGive,ApplyLevel); 
 }
 
-void UDataAsset_AbilitySetBase::GrantAbilities(const TArray<TSubclassOf<URPGGameplayAbility>>& InAbilitiesToGive, UMainAbilitySystemComponent* InASCToGive, int32 ApplyLevel)
+void UDataAsset_AbilitySetBase::GrantAbilities(const TArray<TSubclassOf<URPGGameplayAbility>>& InAbilitiesToGive, URPGAbilitySystemComponent* InASCToGive, int32 ApplyLevel)
 {
 	if (InAbilitiesToGive.IsEmpty())
 	{

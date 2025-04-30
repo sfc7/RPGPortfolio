@@ -3,6 +3,7 @@
 
 #include "GameAbilitySystem/GamePlayAbility/Player/State/Player_EquipWeapon.h"
 #include "Character/PlayerCharacter.h"
+#include "Component/CombatComponentBase.h"
 #include "WorldStatic/Weapon/PlayerWeapon.h"
 
 UPlayer_EquipWeapon::UPlayer_EquipWeapon()
@@ -32,6 +33,8 @@ void UPlayer_EquipWeapon::ActivateAbility(const FGameplayAbilitySpecHandle Handl
 		FAttachmentTransformRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepRelative, true),
 			SocketNameToAttach);
 	}
+
+	GetCombatComponentFromActorInfo()->RegisterSpawnedWeapon(WeaponTagtoRegister, PlayerWeapon);
 }
 
 void UPlayer_EquipWeapon::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)

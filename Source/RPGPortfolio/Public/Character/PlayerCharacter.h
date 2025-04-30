@@ -23,7 +23,7 @@ class RPGPORTFOLIO_API APlayerCharacter : public ARPGCharacterBase
 public:
 	APlayerCharacter();
 
-	FORCEINLINE UPlayerCombatComponent* GetHeroCombatComponent() const { return PlayerCombatComponent; }
+	FORCEINLINE UPlayerCombatComponent* GetPlayerCombatComponent() const { return PlayerCombatComponent; }
 protected:
 	virtual void PossessedBy(AController* NewController) override;
 	

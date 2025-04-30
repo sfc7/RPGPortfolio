@@ -2,8 +2,8 @@
 
 
 #include "GameAbilitySystem/GamePlayAbility/RPGGameplayAbility.h"
-#include "GameAbilitySystem/MainAbilitySystemComponent.h"
-#include "GameAbilitySystem/MainAttributeSet.h"
+#include "GameAbilitySystem/RPGAbilitySystemComponent.h"
+#include "Component/CombatComponentBase.h"
 
 void URPGGameplayAbility::OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
 {
@@ -30,3 +30,13 @@ void URPGGameplayAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, co
 		}
 	}
 }
+
+UCombatComponentBase* URPGGameplayAbility::GetCombatComponentFromActorInfo() const
+{
+	return GetAvatarActorFromActorInfo()->FindComponentByClass<UCombatComponentBase>();
+}
+
+URPGAbilitySystemComponent* URPGGameplayAbility::GetRPGAbilitySystemComponentFromActorInfo() const
+{
+	return Cast<URPGAbilitySystemComponent>(CurrentActorInfo->AbilitySystemComponent);
+}	
