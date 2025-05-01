@@ -11,3 +11,11 @@
 공격이나 스킬은 항상 나가게 해도 될거같은데? noncombat이든 combat이든
 
 ******* ppt 영상 촬영시 gameplay  디버깅 옵저버? 상황에서 하기
+
+
+확실히 정하기
+Idle->combat 끝
+달리기시 combat 공격시 등 combat 끝
+
+약간 정함
+spawn weapon gameability에 스킬이 사용 가능한 상태(일종의 combat) 추가(why? 면접용 이유 : 컷신, 연출 등에서 animation idle 자세등과 스킬사용불가능등)

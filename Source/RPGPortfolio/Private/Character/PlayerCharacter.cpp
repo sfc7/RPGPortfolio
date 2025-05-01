@@ -45,7 +45,7 @@ void APlayerCharacter::PossessedBy(AController* NewController)
 	{
 		if (UDataAsset_AbilitySetBase* LoadedData = CharacterStartUpData.LoadSynchronous())
 		{
-			LoadedData->GiveToAbilitySystemComponent(RPGAbilitySystemComponent);
+			LoadedData->GiveAbilitySystemComponent(RPGAbilitySystemComponent);
 		}
 	}
 }
@@ -64,7 +64,7 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 		if (IsValid(PlayerEnhancedInputComponent))
 		{
-			PlayerEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, RPGGameplayTag::InputTag_Move_Mouse, ETriggerEvent::Triggered, this, &ThisClass::Input_Move);
+			PlayerEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, RPGGameplayTag::InputTag_Move_Keyboard, ETriggerEvent::Triggered, this, &ThisClass::Input_Move);
 			PlayerEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, RPGGameplayTag::InputTag_Look_Mouse, ETriggerEvent::Triggered, this, &ThisClass::Input_Look);
 		}
 	}

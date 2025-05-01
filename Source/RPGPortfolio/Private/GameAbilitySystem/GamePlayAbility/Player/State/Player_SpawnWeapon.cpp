@@ -1,17 +1,17 @@
 // LJS
 
 
-#include "GameAbilitySystem/GamePlayAbility/Player/State/Player_EquipWeapon.h"
+#include "GameAbilitySystem/GamePlayAbility/Player/State/Player_SpawnWeapon.h"
 #include "Character/PlayerCharacter.h"
 #include "Component/CombatComponentBase.h"
 #include "WorldStatic/Weapon/PlayerWeapon.h"
 
-UPlayer_EquipWeapon::UPlayer_EquipWeapon()
+UPlayer_SpawnWeapon::UPlayer_SpawnWeapon()
 {
 	AbilityActivationPolicy = ERPGGameplayAbilityActivationType::OnGiven;
 }
 
-void UPlayer_EquipWeapon::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
+void UPlayer_SpawnWeapon::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
@@ -37,7 +37,7 @@ void UPlayer_EquipWeapon::ActivateAbility(const FGameplayAbilitySpecHandle Handl
 	GetCombatComponentFromActorInfo()->RegisterSpawnedWeapon(WeaponTagtoRegister, PlayerWeapon);
 }
 
-void UPlayer_EquipWeapon::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
+void UPlayer_SpawnWeapon::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 }

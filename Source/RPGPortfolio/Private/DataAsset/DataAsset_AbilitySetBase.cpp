@@ -5,27 +5,27 @@
 #include "GameAbilitySystem/GamePlayAbility/RPGGameplayAbility.h"
 #include "GameAbilitySystem/RPGAbilitySystemComponent.h"
 
-void UDataAsset_AbilitySetBase::GiveToAbilitySystemComponent(URPGAbilitySystemComponent* InASCToGive, int32 ApplyLevel)
+void UDataAsset_AbilitySetBase::GiveAbilitySystemComponent(URPGAbilitySystemComponent* _ASC, int32 ApplyLevel)
 {
-	GrantAbilities(ActivateOnGivenAbilities,InASCToGive,ApplyLevel);
-	GrantAbilities(ReactiveAbilities,InASCToGive,ApplyLevel); 
+	GrantAbilities(ActivateOnGivenAbilities,_ASC,ApplyLevel);
+	GrantAbilities(ReactiveAbilities,_ASC,ApplyLevel); 
 }
 
-void UDataAsset_AbilitySetBase::GrantAbilities(const TArray<TSubclassOf<URPGGameplayAbility>>& InAbilitiesToGive, URPGAbilitySystemComponent* InASCToGive, int32 ApplyLevel)
+void UDataAsset_AbilitySetBase::GrantAbilities(const TArray<TSubclassOf<URPGGameplayAbility>>& _ToBeGrantedAbilities, URPGAbilitySystemComponent* _ASC, int32 ApplyLevel)
 {
-	if (InAbilitiesToGive.IsEmpty())
+	if (_ToBeGrantedAbilities.IsEmpty())
 	{
 		return;
 	}
  
-	for (const TSubclassOf<URPGGameplayAbility>& Ability : InAbilitiesToGive)
+	for (const TSubclassOf<URPGGameplayAbility>& Ability : _ToBeGrantedAbilities)
 	{
 		if(!Ability) continue;
  
 		FGameplayAbilitySpec AbilitySpec(Ability);
-		AbilitySpec.SourceObject = InASCToGive->GetAvatarActor();
+		AbilitySpec.SourceObject = _ASC->GetAvatarActor();
 		AbilitySpec.Level = ApplyLevel;
  
-		InASCToGive->GiveAbility(AbilitySpec);
+		_ASC->GiveAbility(AbilitySpec);
 	}	
 }

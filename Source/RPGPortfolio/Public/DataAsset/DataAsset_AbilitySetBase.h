@@ -18,15 +18,15 @@ class RPGPORTFOLIO_API UDataAsset_AbilitySetBase : public UDataAsset
 	GENERATED_BODY()
 
 public:
-	virtual void GiveToAbilitySystemComponent(URPGAbilitySystemComponent* InASCToGive,int32 ApplyLevel = 1);
+	virtual void GiveAbilitySystemComponent(URPGAbilitySystemComponent* _ASC,int32 ApplyLevel = 1);
  
 protected:
-	UPROPERTY(EditDefaultsOnly, Category = "StartUpData")
+	UPROPERTY(EditDefaultsOnly, Category = "GA")
 	TArray< TSubclassOf <URPGGameplayAbility>> ActivateOnGivenAbilities;
  
-	UPROPERTY(EditDefaultsOnly, Category = "StartUpData")
-	TArray< TSubclassOf <URPGGameplayAbility>> ReactiveAbilities; // 언젠가 이름 바꿀수도 Reactive가 무슨뜻인지 안 와닿음
+	UPROPERTY(EditDefaultsOnly, Category = "GA")
+	TArray< TSubclassOf <URPGGameplayAbility>> ReactiveAbilities; 
  
-	void GrantAbilities(const TArray< TSubclassOf <URPGGameplayAbility> >& InAbilitiesToGive,URPGAbilitySystemComponent* InASCToGive,int32 ApplyLevel = 1);
+	void GrantAbilities(const TArray< TSubclassOf <URPGGameplayAbility> >& _ToBeGrantedAbilities,URPGAbilitySystemComponent* _ASC,int32 ApplyLevel = 1);
 };
 

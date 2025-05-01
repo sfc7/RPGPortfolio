@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameAbilitySystem/GamePlayAbility/RPGGameplayAbility.h"
-#include "Player_EquipWeapon.generated.h"
+#include "Player_SpawnWeapon.generated.h"
 
 class APlayerCharacter;
 class APlayerWeapon;
@@ -12,11 +12,11 @@ class APlayerWeapon;
  * 
  */
 UCLASS()
-class RPGPORTFOLIO_API UPlayer_EquipWeapon : public URPGGameplayAbility
+class RPGPORTFOLIO_API UPlayer_SpawnWeapon : public URPGGameplayAbility
 {
 	GENERATED_BODY()
 public:
-	UPlayer_EquipWeapon();
+	UPlayer_SpawnWeapon();
 	
 protected:
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;

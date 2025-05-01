@@ -22,6 +22,8 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	UInputAction* InputAction;
+
+	bool IsValid() const { return InputTag.IsValid() && InputAction; }
 };
 
 /**
@@ -39,5 +41,10 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TArray<FInputActionGA> NativeInputActionGAs;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TArray<FInputActionGA> AbilityInputActionGAs;
+	
 	UInputAction* FindNativeInputActionGAs(const FGameplayTag& InInputTag) const;
+
+	
 };
