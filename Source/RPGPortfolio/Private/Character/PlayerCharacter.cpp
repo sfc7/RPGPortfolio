@@ -66,6 +66,7 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 		{
 			PlayerEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, RPGGameplayTag::InputTag_Move_Keyboard, ETriggerEvent::Triggered, this, &ThisClass::Input_Move);
 			PlayerEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, RPGGameplayTag::InputTag_Look_Mouse, ETriggerEvent::Triggered, this, &ThisClass::Input_Look);
+			PlayerEnhancedInputComponent->BindAbilityInputAction(InputConfigDataAsset, this, &ThisClass::Input_AbilityInputPressed, &ThisClass::Input_AbilityInputReleased);
 		}
 	}
 }
@@ -110,4 +111,14 @@ void APlayerCharacter::Input_Look(const FInputActionValue& InputActionValue)
 	{
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
+}
+
+void APlayerCharacter::Input_AbilityInputPressed(FGameplayTag _InputTag)
+{
+	RPGAbilitySystemComponent->OnAbilityInputPressed(_InputTag);
+}
+
+void APlayerCharacter::Input_AbilityInputReleased(FGameplayTag _InputTag)
+{
+	RPGAbilitySystemComponent->OnAbilityInputReleased(_InputTag);
 }

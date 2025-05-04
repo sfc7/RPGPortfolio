@@ -5,11 +5,6 @@
 #include "GameAbilitySystem/RPGAbilitySystemComponent.h"
 #include "GameAbilitySystem/GamePlayAbility/RPGGameplayAbility.h"
 
-bool FPlayerAbilitySet::IsValid() const
-{
-	return InputTag.IsValid() && AbilityToGrant;
-}
-
 void UDataAsset_PlayerAbilitySet::GiveAbilitySystemComponent(URPGAbilitySystemComponent* _ASC, int32 ApplyLevel)
 {
 	Super::GiveAbilitySystemComponent(_ASC, ApplyLevel);
@@ -21,7 +16,7 @@ void UDataAsset_PlayerAbilitySet::GiveAbilitySystemComponent(URPGAbilitySystemCo
 		FGameplayAbilitySpec AbilitySpec(AbilitySet.AbilityToGrant);
 		AbilitySpec.SourceObject = _ASC->GetAvatarActor();
 		AbilitySpec.Level = ApplyLevel;
-		AbilitySpec.DynamicAbilityTags.AddTag(AbilitySet.InputTag);
+		AbilitySpec.GetDynamicSpecSourceTags().AddTag(AbilitySet.InputTag);
 
 		_ASC->GiveAbility(AbilitySpec);
 	}

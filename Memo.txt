@@ -14,8 +14,12 @@
 
 
 확실히 정하기
-Idle->combat 끝
+*Idle->combat 끝
 달리기시 combat 공격시 등 combat 끝
+*light attack 3타 heavyattack 3타
+필살기는 아마 에너지파로 생각중(https://www.youtube.com/watch?v=LPe4a_RQAOE&t=1113s 이것에서 따오고 슬로우, 호밍(or느비예트E) 등등넣기?)
+
 
 약간 정함
 spawn weapon gameability에 스킬이 사용 가능한 상태(일종의 combat) 추가(why? 면접용 이유 : 컷신, 연출 등에서 animation idle 자세등과 스킬사용불가능등)
+

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Character/RPGCharacterBase.h"
+#include "GameplayTagContainer.h"
 #include "PlayerCharacter.generated.h"
 
 class UCameraComponent;
@@ -46,5 +47,8 @@ private:
 
 	void Input_Move(const FInputActionValue& InputActionValue);
 	void Input_Look(const FInputActionValue& InputActionValue);
+	void Input_AbilityInputPressed(FGameplayTag _InputTag);
+	void Input_AbilityInputReleased(FGameplayTag _InputTag);
+	
 
 };

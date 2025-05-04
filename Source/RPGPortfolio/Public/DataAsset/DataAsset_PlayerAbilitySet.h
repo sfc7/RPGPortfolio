@@ -4,22 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "DataAsset/DataAsset_AbilitySetBase.h"
-#include "GameplayTagContainer.h"
+#include "RPGStructTypes.h"
 #include "DataAsset_PlayerAbilitySet.generated.h"
-
-USTRUCT(BlueprintType)
-struct FPlayerAbilitySet
-{
-	GENERATED_BODY()
-	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	FGameplayTag InputTag;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TSubclassOf<URPGGameplayAbility> AbilityToGrant;
-
-	bool IsValid() const;
-};
 
 /**
  * 
@@ -34,7 +20,5 @@ public:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "GA")
 	TArray<FPlayerAbilitySet> PlayerInitialAbilitySet;
-	
-	
 	
 };
