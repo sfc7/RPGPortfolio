@@ -35,4 +35,13 @@ protected:
 
 	UFUNCTION(BlueprintPure, Category = "GA")
 	URPGAbilitySystemComponent* GetRPGAbilitySystemComponentFromActorInfo() const ;
+
+	UFUNCTION(BlueprintCallable, Category = "GA")
+	void AddGameplayTag(AActor* _Actor,FGameplayTag _GameplayTag);
+
+	UFUNCTION(BlueprintCallable, Category = "GA")
+	void RemoveGameplayTag(AActor* _Actor,FGameplayTag _GameplayTag);
+
+	UFUNCTION(BlueprintCallable, Category = "GA")
+	bool HasMatchingGameplayTag(FGameplayTag _GameplayTag);
 };

@@ -39,4 +39,31 @@ UCombatComponentBase* URPGGameplayAbility::GetCombatComponentFromActorInfo() con
 URPGAbilitySystemComponent* URPGGameplayAbility::GetRPGAbilitySystemComponentFromActorInfo() const
 {
 	return Cast<URPGAbilitySystemComponent>(CurrentActorInfo->AbilitySystemComponent);
+}
+
+void URPGGameplayAbility::AddGameplayTag(AActor* _Actor, FGameplayTag _GameplayTag)
+{
+	URPGAbilitySystemComponent* ASC = GetRPGAbilitySystemComponentFromActorInfo();
+
+	if (!ASC->HasMatchingGameplayTag(_GameplayTag))
+	{
+		ASC->AddLooseGameplayTag(_GameplayTag);
+	}
+}
+
+void URPGGameplayAbility::RemoveGameplayTag(AActor* _Actor, FGameplayTag _GameplayTag)
+{
+	URPGAbilitySystemComponent* ASC = GetRPGAbilitySystemComponentFromActorInfo();
+
+	if (ASC->HasMatchingGameplayTag(_GameplayTag))
+	{
+		ASC->RemoveLooseGameplayTag(_GameplayTag);
+	}
+}
+
+bool URPGGameplayAbility::HasMatchingGameplayTag(FGameplayTag _GameplayTag)
+{
+	URPGAbilitySystemComponent* ASC = GetRPGAbilitySystemComponentFromActorInfo();
+
+	return ASC->HasMatchingGameplayTag(_GameplayTag);
 }	
