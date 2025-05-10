@@ -19,7 +19,7 @@ void URPGGameplayAbility::OnGiveAbility(const FGameplayAbilityActorInfo* ActorIn
 }
 
 void URPGGameplayAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
-{
+{	
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 
 	if (AbilityActivationPolicy == ERPGGameplayAbilityActivationType::OnGiven)
@@ -61,9 +61,10 @@ void URPGGameplayAbility::RemoveGameplayTag(AActor* _Actor, FGameplayTag _Gamepl
 	}
 }
 
-bool URPGGameplayAbility::HasMatchingGameplayTag(FGameplayTag _GameplayTag)
+bool URPGGameplayAbility::HasMatchingGameplayTag(FGameplayTag _GameplayTag)	
 {
 	URPGAbilitySystemComponent* ASC = GetRPGAbilitySystemComponentFromActorInfo();
 
 	return ASC->HasMatchingGameplayTag(_GameplayTag);
 }	
+

@@ -12,6 +12,7 @@
 #include "GameAbilitySystem/GamePlayAbility/RPGGamePlayTag.h"
 #include "GameAbilitySystem/RPGAbilitySystemComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "GameAbilitySystem/GamePlayAbility/Player/PlayerAttributeSet.h"
 #include "Component/Player/PlayerCombatComponent.h"
 
 APlayerCharacter::APlayerCharacter()
@@ -35,6 +36,7 @@ APlayerCharacter::APlayerCharacter()
 	CameraComponent->bUsePawnControlRotation = true;
 
 	PlayerCombatComponent = CreateDefaultSubobject<UPlayerCombatComponent>(TEXT("PlayerCombatComponent"));
+	CreateDefaultAttributeSet();
 }
 
 void APlayerCharacter::PossessedBy(AController* NewController)
@@ -69,6 +71,12 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 			PlayerEnhancedInputComponent->BindAbilityInputAction(InputConfigDataAsset, this, &ThisClass::Input_AbilityInputPressed, &ThisClass::Input_AbilityInputReleased);
 		}
 	}
+}
+
+void APlayerCharacter::CreateDefaultAttributeSet()
+{
+	UE_LOG(LogTemp,Log,TEXT("PlayerAttributeSet"));
+	RPGAttributeSet = CreateDefaultSubobject<UPlayerAttributeSet>(TEXT("PlayerAttributeSet"));
 }
 
 void APlayerCharacter::BeginPlay()

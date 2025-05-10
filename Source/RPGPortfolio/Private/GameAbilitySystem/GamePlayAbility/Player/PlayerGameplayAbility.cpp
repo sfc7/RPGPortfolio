@@ -11,10 +11,9 @@ APlayerCharacter* UPlayerGameplayAbility::GetPlayerCharacterFromActorInfo()
 	if (!PlayerCharacter.IsValid())
 	{
 		PlayerCharacter = CastChecked<APlayerCharacter>(CurrentActorInfo->AvatarActor);
-		return PlayerCharacter.Get();
 	}
 	
-	return nullptr;
+	return PlayerCharacter.IsValid() ? PlayerCharacter.Get() : nullptr;
 }
 
 APlayerCharacterController* UPlayerGameplayAbility::GetPlayerControllerFromActorInfo()
@@ -22,10 +21,9 @@ APlayerCharacterController* UPlayerGameplayAbility::GetPlayerControllerFromActor
 	if (!PlayerCharacterController.IsValid())
 	{
 		PlayerCharacterController = CastChecked<APlayerCharacterController>(CurrentActorInfo->PlayerController);
-		return PlayerCharacterController.Get();
 	}
 	
-	return nullptr;
+	return PlayerCharacterController.IsValid() ? PlayerCharacterController.Get() : nullptr;
 }
 
 UPlayerCombatComponent* UPlayerGameplayAbility::GetPlayerCombatComponentFromActorInfo()

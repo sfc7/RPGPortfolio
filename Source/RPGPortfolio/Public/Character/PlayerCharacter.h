@@ -31,7 +31,8 @@ protected:
 	virtual void BeginPlay() override;
 	
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
-	
+
+	virtual void CreateDefaultAttributeSet() override;
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", meta = (AllowPrivateAccess = "true"))
 		USpringArmComponent* SpringArmComponent;

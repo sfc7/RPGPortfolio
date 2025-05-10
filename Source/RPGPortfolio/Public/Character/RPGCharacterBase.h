@@ -20,6 +20,8 @@ public:
 	ARPGCharacterBase();
 
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const;
+
+	virtual void CreateDefaultAttributeSet();
 	
 	FORCEINLINE URPGAbilitySystemComponent* GetRPGAbilitySystemComponent() const {return RPGAbilitySystemComponent;}
 
