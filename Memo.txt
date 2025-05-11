@@ -1,21 +1,24 @@
-2단점프및
+1. 2단점프및
 떨어질때 apex fall 등 모두 구현
 <<<<< ALS 참조?
 
 
-회피시 성공한다면 속도 느리게
+2. 회피시 성공한다면 속도 느리게
 + 패링시?
 
-일단은 E를 눌러서 combat상태에 gameplay_combat도 들어가고
+3. 일단은 E를 눌러서 combat상태에 gameplay_combat도 들어가고
 이후에는 달리기가 끝난후 혹은 적 몬스터가 나를 탐지한후 등으로 구현 
 공격이나 스킬은 항상 나가게 해도 될거같은데? noncombat이든 combat이든
+
+4. 특정 heavy attack 타격 적중시 느리게하기? 혹은 타격 이전
 
 ******* ppt 영상 촬영시 gameplay  디버깅 옵저버? 상황에서 하기
 
 
 확실히 정하기
-Idle->combat 끝
+1. Idle->combat 끝
 달리기시 combat 공격시 등 combat 끝
 
 약간 정함
-spawn weapon gameability에 스킬이 사용 가능한 상태(일종의 combat) 추가(why? 면접용 이유 : 컷신, 연출 등에서 animation idle 자세등과 스킬사용불가능등)
+1. spawn weapon gameability에 스킬이 사용 가능한 상태(일종의 combat) 추가(why? 면접용 이유 : 컷신, 연출 등에서 animation idle 자세등과 스킬사용불가능등)
+2. 
