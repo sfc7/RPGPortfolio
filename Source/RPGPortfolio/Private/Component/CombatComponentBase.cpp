@@ -26,6 +26,7 @@ AWeaponBase* UCombatComponentBase::GetCharacterCarriedWeaponByTag(FGameplayTag _
 	return nullptr;
 }
 
+//Test2
 AWeaponBase* UCombatComponentBase::GetCharacterCurrentEquippedWeapon() const
 {
 	if (!CurrentEquippedWeaponTag.IsValid()) return nullptr; 
