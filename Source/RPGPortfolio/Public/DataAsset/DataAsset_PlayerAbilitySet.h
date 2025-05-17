@@ -17,7 +17,8 @@ class RPGPORTFOLIO_API UDataAsset_PlayerAbilitySet : public UDataAsset_AbilitySe
 	
 public:
 	virtual void GiveAbilitySystemComponent(URPGAbilitySystemComponent* _ASC,int32 ApplyLevel = 1);
-	
+
+private:
 	UPROPERTY(EditDefaultsOnly, Category = "GA")
 	TArray<FPlayerAbilitySet> PlayerInitialAbilitySet;
 	

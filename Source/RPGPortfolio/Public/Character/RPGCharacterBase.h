@@ -10,6 +10,7 @@
 class URPGAttributeSet;
 class URPGAbilitySystemComponent;
 class UDataAsset_AbilitySetBase;
+class UCombatComponentBase;
 
 UCLASS()
 class RPGPORTFOLIO_API ARPGCharacterBase : public ACharacter, public IAbilitySystemInterface
@@ -20,12 +21,15 @@ public:
 	ARPGCharacterBase();
 
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const;
-
-	virtual void CreateDefaultAttributeSet();
 	
 	FORCEINLINE URPGAbilitySystemComponent* GetRPGAbilitySystemComponent() const {return RPGAbilitySystemComponent;}
-
+	
 	FORCEINLINE URPGAttributeSet* GetRPGAttributeSet() const {return RPGAttributeSet;}
+
+	UFUNCTION(BlueprintCallable)
+	virtual UCombatComponentBase* GetCombatComponent() const;
+	
+	virtual void CreateDefaultAttributeSet();
 
 protected:
 	virtual void PossessedBy(AController* NewController) override;

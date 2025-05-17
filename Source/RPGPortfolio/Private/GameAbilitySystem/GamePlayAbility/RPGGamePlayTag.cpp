@@ -10,12 +10,17 @@ namespace RPGGameplayTag
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Jump_Keyboard, "InputTag.Jump.Keyboard");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_LightAttack_Keyboard, "InputTag.LightAttack.Keyboard");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_HeavyAttack_Keyboard, "InputTag.HeavyAttack.Keyboard");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_ShowDebug_Keyboard, "InputTag.ShowDebug.Keyboard");
+
 	
+	//Player
 	UE_DEFINE_GAMEPLAY_TAG(Player_Weapon_FighterNone, "Player.Weapon.FighterNone");
 
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Light, "Player.Ability.Attack.Light");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Heavy, "Player.Ability.Attack.Heavy");
 
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_CanHeavyAttackCombo, "Player.Status.CanHeavyAttackCombo");
-	
+
+	//Monster
+	UE_DEFINE_GAMEPLAY_TAG(Monster_Weapon, "Monster.Weapon");
 }	

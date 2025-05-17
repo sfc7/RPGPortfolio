@@ -1,4 +1,4 @@
-ㅁ// LJS
+// LJS
 
 #pragma once
 

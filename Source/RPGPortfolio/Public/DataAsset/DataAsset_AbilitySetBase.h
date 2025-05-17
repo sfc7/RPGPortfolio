@@ -9,6 +9,7 @@
 
 class URPGGameplayAbility;
 class URPGAbilitySystemComponent;
+class UGameplayEffect;
 /**
  * 
  */
@@ -25,7 +26,10 @@ protected:
 	TArray< TSubclassOf <URPGGameplayAbility>> ActivateOnGivenAbilities;
  
 	UPROPERTY(EditDefaultsOnly, Category = "GA")
-	TArray< TSubclassOf <URPGGameplayAbility>> ReactiveAbilities; 
+	TArray< TSubclassOf <URPGGameplayAbility>> ReactiveAbilities;
+
+	UPROPERTY(EditDefaultsOnly, Category = "GA")
+	TArray<TSubclassOf<UGameplayEffect>> InitGameplayEffects;
  
 	void GrantAbilities(const TArray< TSubclassOf <URPGGameplayAbility> >& _ToBeGrantedAbilities,URPGAbilitySystemComponent* _ASC,int32 ApplyLevel = 1);
 };

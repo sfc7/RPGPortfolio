@@ -4,6 +4,8 @@
 #include "Character/MonsterCharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Component/Monster/MonsterCombatComponent.h"
+#include "Engine/AssetManager.h"
+#include "DataAsset/DataAsset_AbilitySetBase.h"
 
 AMonsterCharacter::AMonsterCharacter()
 {
@@ -20,4 +22,39 @@ AMonsterCharacter::AMonsterCharacter()
 	GetCharacterMovement()->BrakingDecelerationWalking = 1000.f;
 
 	MonsterCombatComponent = CreateDefaultSubobject<UMonsterCombatComponent>(" MonsterCombatComponent");
+
+	CreateDefaultAttributeSet();
+}
+
+UCombatComponentBase* AMonsterCharacter::GetCombatComponent() const
+{
+	return MonsterCombatComponent;
+}
+
+void AMonsterCharacter::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	InitEnemyStartUpData();
+}
+
+void AMonsterCharacter::InitEnemyStartUpData()
+{
+	if (CharacterStartUpData.IsNull())
+	{
+		return;
+	}
+
+	UAssetManager::GetStreamableManager().RequestAsyncLoad(
+		CharacterStartUpData.ToSoftObjectPath(),
+		FStreamableDelegate::CreateLambda(
+		[this]()
+				{
+					if (UDataAsset_AbilitySetBase* LoadedData = CharacterStartUpData.Get())
+					{
+						LoadedData->GiveAbilitySystemComponent(RPGAbilitySystemComponent);
+					}
+				}
+			)
+		);
 }

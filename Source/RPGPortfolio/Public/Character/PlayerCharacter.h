@@ -25,6 +25,9 @@ public:
 	APlayerCharacter();
 
 	FORCEINLINE UPlayerCombatComponent* GetPlayerCombatComponent() const { return PlayerCombatComponent; }
+	
+	virtual UCombatComponentBase* GetCombatComponent() const override;
+	
 protected:
 	virtual void PossessedBy(AController* NewController) override;
 	
@@ -50,6 +53,7 @@ private:
 	void Input_Look(const FInputActionValue& InputActionValue);
 	void Input_AbilityInputPressed(FGameplayTag _InputTag);
 	void Input_AbilityInputReleased(FGameplayTag _InputTag);
+	void Input_ShowDebug();
 	
 
 };

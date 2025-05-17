@@ -12,7 +12,7 @@
 #include "GameAbilitySystem/GamePlayAbility/RPGGamePlayTag.h"
 #include "GameAbilitySystem/RPGAbilitySystemComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "GameAbilitySystem/GamePlayAbility/Player/PlayerAttributeSet.h"
+#include "GameAbilitySystem/GamePlayAbility/Common/Player/PlayerAttributeSet.h"
 #include "Component/Player/PlayerCombatComponent.h"
 
 APlayerCharacter::APlayerCharacter()
@@ -37,6 +37,11 @@ APlayerCharacter::APlayerCharacter()
 
 	PlayerCombatComponent = CreateDefaultSubobject<UPlayerCombatComponent>(TEXT("PlayerCombatComponent"));
 	CreateDefaultAttributeSet();
+}
+
+UCombatComponentBase* APlayerCharacter::GetCombatComponent() const
+{
+	return PlayerCombatComponent;
 }
 
 void APlayerCharacter::PossessedBy(AController* NewController)
@@ -69,13 +74,13 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 			PlayerEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, RPGGameplayTag::InputTag_Move_Keyboard, ETriggerEvent::Triggered, this, &ThisClass::Input_Move);
 			PlayerEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, RPGGameplayTag::InputTag_Look_Mouse, ETriggerEvent::Triggered, this, &ThisClass::Input_Look);
 			PlayerEnhancedInputComponent->BindAbilityInputAction(InputConfigDataAsset, this, &ThisClass::Input_AbilityInputPressed, &ThisClass::Input_AbilityInputReleased);
+			PlayerEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, RPGGameplayTag::InputTag_ShowDebug_Keyboard, ETriggerEvent::Triggered, this, &ThisClass::Input_ShowDebug);
 		}
 	}
 }
 
 void APlayerCharacter::CreateDefaultAttributeSet()
 {
-	UE_LOG(LogTemp,Log,TEXT("PlayerAttributeSet"));
 	RPGAttributeSet = CreateDefaultSubobject<UPlayerAttributeSet>(TEXT("PlayerAttributeSet"));
 }
 
@@ -129,4 +134,14 @@ void APlayerCharacter::Input_AbilityInputPressed(FGameplayTag _InputTag)
 void APlayerCharacter::Input_AbilityInputReleased(FGameplayTag _InputTag)
 {
 	RPGAbilitySystemComponent->OnAbilityInputReleased(_InputTag);
+}
+
+void APlayerCharacter::Input_ShowDebug()
+{
+	APlayerController* PC = GetWorld()->GetFirstPlayerController();
+	if (PC)
+	{
+		UE_LOG(LogTemp, Display, TEXT("PlayerCharacter::Input_ShowDebug"));
+		PC->ConsoleCommand(TEXT("showdebug abilitysystem"), true);
+	}
 }

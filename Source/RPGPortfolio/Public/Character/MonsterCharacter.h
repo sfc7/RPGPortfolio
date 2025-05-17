@@ -19,9 +19,17 @@ public:
 	AMonsterCharacter();
 
 	FORCEINLINE UMonsterCombatComponent* GetMonsterCombatComponent() const { return MonsterCombatComponent; }
+	
+	virtual UCombatComponentBase* GetCombatComponent() const override;
+
 protected:
+
+	virtual void PossessedBy(AController* NewController) override;
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UMonsterCombatComponent* MonsterCombatComponent;
 
+private:
+	void InitEnemyStartUpData();
 	
 };

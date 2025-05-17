@@ -4,6 +4,7 @@
 #include "Character/RPGCharacterBase.h"
 #include "GameAbilitySystem/RPGAbilitySystemComponent.h"
 #include "GameAbilitySystem/RPGAttributeSet.h"
+#include "Component/CombatComponentBase.h"
 
 // Sets default values
 ARPGCharacterBase::ARPGCharacterBase()
@@ -15,7 +16,6 @@ ARPGCharacterBase::ARPGCharacterBase()
 	GetMesh()->bReceivesDecals = false;
 
 	RPGAbilitySystemComponent = CreateDefaultSubobject<URPGAbilitySystemComponent>(TEXT("RPGAbilitySystemComponent"));
-	// CreateDefaultAttributeSet(); // 생성자에서는 override 함수 써도 자식의 함수가 실행 안되니 각자 만들기
 }
 
 UAbilitySystemComponent* ARPGCharacterBase::GetAbilitySystemComponent() const
@@ -23,9 +23,13 @@ UAbilitySystemComponent* ARPGCharacterBase::GetAbilitySystemComponent() const
 	return GetRPGAbilitySystemComponent();
 }
 
+UCombatComponentBase* ARPGCharacterBase::GetCombatComponent() const
+{
+	return nullptr;
+}
+
 void ARPGCharacterBase::CreateDefaultAttributeSet()
 {
-	UE_LOG(LogTemp,Log,TEXT("RPGAttributeSet"));
 	RPGAttributeSet = CreateDefaultSubobject<URPGAttributeSet>(TEXT("RPGAttributeSet"));
 }
 
