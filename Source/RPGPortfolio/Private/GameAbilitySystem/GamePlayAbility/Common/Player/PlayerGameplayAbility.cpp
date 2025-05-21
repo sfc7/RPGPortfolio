@@ -2,15 +2,16 @@
 
 
 #include "GameAbilitySystem/GamePlayAbility/Common/Player/PlayerGameplayAbility.h"
-#include "Character/PlayerCharacter.h"
+#include "Character/Player/PlayerCharacterBase.h"
 #include "Controller/PlayerCharacterController.h"
-#include "Component/Player/PlayerCombatComponent.h"
+#include "GameAbilitySystem/RPGAbilitySystemComponent.h"
+#include "GameAbilitySystem/GamePlayAbility/RPGGamePlayTag.h"
 
-APlayerCharacter* UPlayerGameplayAbility::GetPlayerCharacterFromActorInfo()
+APlayerCharacterBase* UPlayerGameplayAbility::GetPlayerCharacterFromActorInfo()
 {
 	if (!PlayerCharacter.IsValid())
 	{
-		PlayerCharacter = CastChecked<APlayerCharacter>(CurrentActorInfo->AvatarActor);
+		PlayerCharacter = CastChecked<APlayerCharacterBase>(CurrentActorInfo->AvatarActor);
 	}
 	
 	return PlayerCharacter.IsValid() ? PlayerCharacter.Get() : nullptr;
@@ -29,4 +30,31 @@ APlayerCharacterController* UPlayerGameplayAbility::GetPlayerControllerFromActor
 UPlayerCombatComponent* UPlayerGameplayAbility::GetPlayerCombatComponentFromActorInfo()
 {
 	return GetPlayerCharacterFromActorInfo()->GetPlayerCombatComponent();
+}
+
+FGameplayEffectSpecHandle UPlayerGameplayAbility::MakePlayerDamageEffectSpecHandle(TSubclassOf<UGameplayEffect> _EffectClass, float _WeaponBaseDamage, FGameplayTag _CurrentAttackTypeTag, int32 _UsedComboCount)
+{
+	check(_EffectClass);
+	
+	FGameplayEffectContextHandle ContextHandle = GetRPGAbilitySystemComponentFromActorInfo()->MakeEffectContext();
+	ContextHandle.SetAbility(this);
+	ContextHandle.AddSourceObject(GetAvatarActorFromActorInfo());
+	ContextHandle.AddInstigator(GetAvatarActorFromActorInfo(), GetAvatarActorFromActorInfo());
+	
+	FGameplayEffectSpecHandle SpecHandle = GetRPGAbilitySystemComponentFromActorInfo()->MakeOutgoingSpec(
+		_EffectClass,
+		GetAbilityLevel(),
+		ContextHandle);
+
+	SpecHandle.Data->SetSetByCallerMagnitude(
+		RPGGameplayTag::Data_Value_SetByCaller_BaseDamage,
+		_WeaponBaseDamage
+	);
+
+	if (_CurrentAttackTypeTag.IsValid())
+	{
+		SpecHandle.Data->SetSetByCallerMagnitude(_CurrentAttackTypeTag, _UsedComboCount);
+	}
+	
+	return SpecHandle;
 }

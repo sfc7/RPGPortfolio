@@ -2,7 +2,7 @@
 
 
 #include "Animation/PlayerCharacterAnimInstance.h"
-#include "Character/PlayerCharacter.h"
+#include "Character/Player/PlayerCharacterBase.h"
 
 void UPlayerCharacterAnimInstance::NativeInitializeAnimation()
 {
@@ -10,7 +10,7 @@ void UPlayerCharacterAnimInstance::NativeInitializeAnimation()
 
 	if (OwningCharacter)
 	{
-		OwningPlayerCharacter = Cast<APlayerCharacter>(OwningCharacter);
+		OwningPlayerCharacter = Cast<APlayerCharacterBase>(OwningCharacter);
 	}
 }
 

@@ -4,6 +4,7 @@
 #include "GameAbilitySystem/GamePlayAbility/RPGGameplayAbility.h"
 #include "GameAbilitySystem/RPGAbilitySystemComponent.h"
 #include "Component/CombatComponentBase.h"
+#include "AbilitySystemBlueprintLibrary.h"
 
 void URPGGameplayAbility::OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
 {
@@ -40,6 +41,20 @@ URPGAbilitySystemComponent* URPGGameplayAbility::GetRPGAbilitySystemComponentFro
 {
 	return Cast<URPGAbilitySystemComponent>(CurrentActorInfo->AbilitySystemComponent);
 }
+
+FActiveGameplayEffectHandle URPGGameplayAbility::ApplyEffectsSpecHandleToTarget(AActor* TargetActor, const FGameplayEffectSpecHandle& _SpecHandle)
+{
+	UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
+
+	check (TargetASC && _SpecHandle.IsValid());
+	
+	return GetRPGAbilitySystemComponentFromActorInfo()->ApplyGameplayEffectSpecToTarget(
+		*_SpecHandle.Data,
+		TargetASC
+	);
+}
+
+
 
 void URPGGameplayAbility::AddGameplayTag(AActor* _Actor, FGameplayTag _GameplayTag)
 {

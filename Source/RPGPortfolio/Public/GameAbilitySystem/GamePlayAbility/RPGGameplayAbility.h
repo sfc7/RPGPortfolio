@@ -31,10 +31,14 @@ protected:
 	ERPGGameplayAbilityActivationType AbilityActivationPolicy = ERPGGameplayAbilityActivationType::OnTriggered;
 
 	UFUNCTION(BlueprintPure, Category = "GA")
-	UCombatComponentBase* GetCombatComponentFromActorInfo() const ;
+	UCombatComponentBase* GetCombatComponentFromActorInfo() const;
 
 	UFUNCTION(BlueprintPure, Category = "GA")
-	URPGAbilitySystemComponent* GetRPGAbilitySystemComponentFromActorInfo() const ;
+	URPGAbilitySystemComponent* GetRPGAbilitySystemComponentFromActorInfo() const;
+
+	FActiveGameplayEffectHandle ApplyEffectsSpecHandleToTarget(AActor* TargetActor, const FGameplayEffectSpecHandle& _SpecHandle);
+
+	//bp_NativeApplyEffectsSpecHandleToTarget;
 
 	UFUNCTION(BlueprintCallable, Category = "GA")
 	void AddGameplayTag(AActor* _Actor,FGameplayTag _GameplayTag);

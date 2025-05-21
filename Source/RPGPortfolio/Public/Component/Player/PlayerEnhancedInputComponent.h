@@ -35,7 +35,6 @@ inline void UPlayerEnhancedInputComponent::BindNativeInputAction(const UDataAsse
 			BindAction(FoundInputAction,TriggerEvent,ContextObject,Func);
 		}
 	}
-	else UE_LOG(LogTemp, Warning, TEXT("InputConfig invalid"));
 }
 
 template <class UserObject, typename CallbackFunc>
@@ -52,8 +51,5 @@ void UPlayerEnhancedInputComponent::BindAbilityInputAction(const UDataAsset_Inpu
 			}
 		}
 	}
-	else UE_LOG(LogTemp, Warning, TEXT("InputConfig invalid"));
-
-
 }
 

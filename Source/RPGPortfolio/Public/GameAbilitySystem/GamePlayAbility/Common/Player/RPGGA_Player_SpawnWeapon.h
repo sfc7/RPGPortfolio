@@ -6,7 +6,7 @@
 #include "GameAbilitySystem/GamePlayAbility/Common/RPGGA_SpawnWeaponBase.h"
 #include "RPGGA_Player_SpawnWeapon.generated.h"
 
-class APlayerCharacter;
+class APlayerCharacterBase;
 class APlayerWeapon;
 /**
  * 

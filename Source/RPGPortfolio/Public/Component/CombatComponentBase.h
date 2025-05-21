@@ -13,6 +13,7 @@ UENUM(BlueprintType)
 enum class EToggleDamageType : uint8
 {
 	CurrentEquippedWeapon,
+	CarriedWeapon,
 	LeftHand,
 	RightHand
 };
@@ -49,15 +50,32 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
 	AWeaponBase* GetCharacterCarriedWeaponByTag(FGameplayTag _WeaponTagToGet) const;
-
+	
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
 	AWeaponBase* GetCharacterCurrentEquippedWeapon() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Weapon")
+	AWeaponBase* GetCharacterEquippedWeaponByTag(FGameplayTag _WeaponTagToGet) const;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Weapon")
 	FGameplayTag CurrentEquippedWeaponTag;
 
 	UFUNCTION(BlueprintCallable)
-	void ToggleWeaponCollision(bool _bShouldEnable, EToggleDamageType _ToggleDamageType = EToggleDamageType::CurrentEquippedWeapon);
+	void SetWeaponCollision(AWeaponBase* _Weapon, bool _bShouldEnable);
+	
+	UFUNCTION(BlueprintCallable)
+	void ToggleCurrentWeaponCollision(bool _bShouldEnable, EToggleDamageType _ToggleDamageType = EToggleDamageType::CurrentEquippedWeapon);
+
+	UFUNCTION(BlueprintCallable)
+	void ToggleCarriedWeaponCollision(AWeaponBase* _ToggleWeapon, bool _bShouldEnable, EToggleDamageType _ToggleDamageType = EToggleDamageType::CarriedWeapon);
+
+	virtual void OnHitTargetActor(AActor* _HitActor, float _WeaponBaseDamage);
+	virtual void OnWeaponPulledFromTargetActor(AActor* _InteractedActor, float _WeaponBaseDamage);
+
+protected:
+	TArray<AActor*> OVerlappedActors;
+	
 private:
+	UPROPERTY(VisibleAnywhere)
 	TMap<FGameplayTag, AWeaponBase*> CharacterWeapons;
 };

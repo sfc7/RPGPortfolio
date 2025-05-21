@@ -6,7 +6,7 @@
 #include "Animation/CharacterAnimInstance.h"
 #include "PlayerCharacterAnimInstance.generated.h"
 
-class APlayerCharacter;
+class APlayerCharacterBase;
 /**
  * 
  */
@@ -21,7 +21,7 @@ public:
  
 protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "")
-	APlayerCharacter* OwningPlayerCharacter;
+	APlayerCharacterBase* OwningPlayerCharacter;
  
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "AnimData|LocomotionData")
 	bool bShouldEnterRelaxState;

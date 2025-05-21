@@ -2,6 +2,8 @@
 
 
 #include "WorldStatic/Weapon/WeaponBase.h"
+
+#include "RPGStructTypes.h"
 #include "Components/BoxComponent.h"
 
 // Sets default values
@@ -17,5 +19,38 @@ AWeaponBase::AWeaponBase()
 	WeaponCollisionBox->SetupAttachment(GetRootComponent());
 	WeaponCollisionBox->SetBoxExtent(FVector(20.f));
 	WeaponCollisionBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	WeaponCollisionBox->OnComponentBeginOverlap.AddUniqueDynamic(this, &ThisClass::OnCollisionBoxBeginOverlap);
+	WeaponCollisionBox->OnComponentEndOverlap.AddUniqueDynamic(this, &ThisClass::OnCollisionBoxEndOverlap);
+}
 
+void AWeaponBase::OnCollisionBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	APawn* WeaponOwner = GetInstigator<APawn>();
+	
+	if (IsValid(WeaponOwner))
+	{
+		if (APawn* HitPawn = Cast<APawn>(OtherActor))
+		{
+			if (WeaponOwner != OtherActor)
+			{
+				OnWeaponHitTarget.ExecuteIfBound(OtherActor, WeaponDefaultData.WeaponBaseDamage);
+			}
+		}
+	}
+}
+
+void AWeaponBase::OnCollisionBoxEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	APawn* WeaponOwner = GetInstigator<APawn>();
+	
+	if (IsValid(WeaponOwner))
+	{
+		if (APawn* HitPawn = Cast<APawn>(OtherActor))
+		{
+			if (WeaponOwner != OtherActor)
+			{
+				OnWeaponPulledFromTarget.ExecuteIfBound(OtherActor, WeaponDefaultData.WeaponBaseDamage);
+			}
+		}
+	}
 }

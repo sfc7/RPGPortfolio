@@ -6,7 +6,7 @@
 #include "GameAbilitySystem/GamePlayAbility/RPGGameplayAbility.h"
 #include "PlayerGameplayAbility.generated.h"
 
-class APlayerCharacter;
+class APlayerCharacterBase;
 class APlayerCharacterController;
 class UPlayerCombatComponent;
 /**
@@ -18,15 +18,19 @@ class RPGPORTFOLIO_API UPlayerGameplayAbility : public URPGGameplayAbility
 	GENERATED_BODY()
 public:
 	UFUNCTION(BlueprintPure, Category = "GA")
-	APlayerCharacter* GetPlayerCharacterFromActorInfo();
+	APlayerCharacterBase* GetPlayerCharacterFromActorInfo();
 
 	UFUNCTION(BlueprintPure, Category = "GA")
 	APlayerCharacterController* GetPlayerControllerFromActorInfo();
 
 	UFUNCTION(BlueprintPure, Category = "GA")
 	UPlayerCombatComponent* GetPlayerCombatComponentFromActorInfo();
+
+	UFUNCTION(BlueprintPure, Category = "GA")
+	FGameplayEffectSpecHandle MakePlayerDamageEffectSpecHandle(TSubclassOf<UGameplayEffect> _EffectClass, float _WeaponBaseDamage, FGameplayTag _CurrentAttackTypeTag,int32 _UsedComboCount);
+	
 	
 private:
-	TWeakObjectPtr<APlayerCharacter> PlayerCharacter;
+	TWeakObjectPtr<APlayerCharacterBase> PlayerCharacter;
 	TWeakObjectPtr<APlayerCharacterController> PlayerCharacterController;
 };

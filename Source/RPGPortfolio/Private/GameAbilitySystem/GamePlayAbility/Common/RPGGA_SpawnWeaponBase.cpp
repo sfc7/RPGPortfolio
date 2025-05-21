@@ -22,7 +22,7 @@ void URPGGA_SpawnWeaponBase::ActivateAbility(const FGameplayAbilitySpecHandle Ha
 	SpawnParameters.TransformScaleMethod = ESpawnActorScaleMethod::MultiplyWithRoot;
 	SpawnParameters.Owner = OwnerCharacter;
 	SpawnParameters.Instigator = CastChecked<APawn>(OwnerCharacter);
-
+	
 	FVector SocketLocation = OwnerCharacter->GetMesh()->GetSocketLocation(SocketNameToAttach);
 	FRotator SocketRotation = OwnerCharacter->GetMesh()->GetSocketRotation(SocketNameToAttach);
 

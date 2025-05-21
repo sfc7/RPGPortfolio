@@ -5,9 +5,13 @@
 #include "WorldStatic/Weapon/WeaponBase.h"
 #include "Components/BoxComponent.h"
 
+
 void UCombatComponentBase::RegisterSpawnedWeapon(FGameplayTag _WeaponTagToRegister, AWeaponBase* _WeaponToRegister, bool bEquippedWeaponState)
 {
 	if (_WeaponToRegister && !CharacterWeapons.Contains(_WeaponTagToRegister)) CharacterWeapons.Emplace(_WeaponTagToRegister, _WeaponToRegister);
+
+	_WeaponToRegister->OnWeaponHitTarget.BindUObject(this, &ThisClass::OnHitTargetActor);
+	_WeaponToRegister->OnWeaponPulledFromTarget.BindUObject(this, &ThisClass::OnWeaponPulledFromTargetActor);
 	
 	if (bEquippedWeaponState) CurrentEquippedWeaponTag = _WeaponTagToRegister;
 }
@@ -26,7 +30,7 @@ AWeaponBase* UCombatComponentBase::GetCharacterCarriedWeaponByTag(FGameplayTag _
 	return nullptr;
 }
 
-//Test2
+
 AWeaponBase* UCombatComponentBase::GetCharacterCurrentEquippedWeapon() const
 {
 	if (!CurrentEquippedWeaponTag.IsValid()) return nullptr; 
@@ -34,21 +38,53 @@ AWeaponBase* UCombatComponentBase::GetCharacterCurrentEquippedWeapon() const
 	return GetCharacterCarriedWeaponByTag(CurrentEquippedWeaponTag);
 }
 
-void UCombatComponentBase::ToggleWeaponCollision(bool _bShouldEnable, EToggleDamageType _ToggleDamageType)
+AWeaponBase* UCombatComponentBase::GetCharacterEquippedWeaponByTag(FGameplayTag _WeaponTagToGet) const
+{
+	if (!_WeaponTagToGet.IsValid()) return nullptr; 
+	
+	return GetCharacterCarriedWeaponByTag(_WeaponTagToGet);
+}
+
+void UCombatComponentBase::SetWeaponCollision(AWeaponBase* _Weapon, bool _bShouldEnable)
+{
+	if (_Weapon && _bShouldEnable)
+	{
+		_Weapon->GetWeaponCollisionBox()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	}
+	else
+	{
+		_Weapon->GetWeaponCollisionBox()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+		OVerlappedActors.Empty();
+	}
+}
+
+void UCombatComponentBase::ToggleCurrentWeaponCollision(bool _bShouldEnable, EToggleDamageType _ToggleDamageType)
 {
 	if (_ToggleDamageType == EToggleDamageType::CurrentEquippedWeapon)
 	{
 		AWeaponBase* CurrentWeapon = GetCharacterCurrentEquippedWeapon();
 
-		if (CurrentWeapon && _bShouldEnable)
-		{
-			CurrentWeapon->GetWeaponCollisionBox()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-			UE_LOG(LogTemp, Warning, TEXT("QueryOnly"));
-		}
-		else
-		{
-			CurrentWeapon->GetWeaponCollisionBox()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-			UE_LOG(LogTemp, Warning, TEXT("NoCollision"));
-		}
+		SetWeaponCollision(CurrentWeapon, _bShouldEnable);
 	}
+
+	//TODO : Handlebody collision Boxes
+}
+
+void UCombatComponentBase::ToggleCarriedWeaponCollision(AWeaponBase* _CarriedWeapon, bool _bShouldEnable, EToggleDamageType _ToggleDamageType)
+{
+	if (_ToggleDamageType == EToggleDamageType::CarriedWeapon)
+	{
+		SetWeaponCollision(_CarriedWeapon, _bShouldEnable);
+	}
+
+	//TODO : Handlebody collision Boxes
+}
+
+void UCombatComponentBase::OnHitTargetActor(AActor* _HitActor, float _WeaponBaseDamage)
+{
+}
+
+void UCombatComponentBase::OnWeaponPulledFromTargetActor(AActor* _InteractedActor, float _WeaponBaseDamage)
+{
 }
