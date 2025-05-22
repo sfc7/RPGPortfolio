@@ -81,10 +81,11 @@ void UCombatComponentBase::ToggleCarriedWeaponCollision(AWeaponBase* _CarriedWea
 	//TODO : Handlebody collision Boxes
 }
 
-void UCombatComponentBase::OnHitTargetActor(AActor* _HitActor, float _WeaponBaseDamage)
+void UCombatComponentBase::OnHitTargetActor(AActor* _HitActor, float _WeaponBaseDamage, EWeaponAttackType AttackType)
 {
 }
 
-void UCombatComponentBase::OnWeaponPulledFromTargetActor(AActor* _InteractedActor, float _WeaponBaseDamage)
+void UCombatComponentBase::OnWeaponPulledFromTargetActor(AActor* _InteractedActor, float _WeaponBaseDamage, EWeaponAttackType AttackType)
 {
 }
+

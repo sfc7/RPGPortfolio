@@ -13,6 +13,7 @@
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
 #include "Component/Player/PlayerCombatComponent.h"
 
+#include "WorldStatic/Weapon/PlayerWeapon.h"
 URPGGA_Player_LightAttack::URPGGA_Player_LightAttack()
 {
 	InstancingPolicy = EGameplayAbilityInstancingPolicy::InstancedPerActor;
@@ -24,6 +25,16 @@ void URPGGA_Player_LightAttack::ActivateAbility(const FGameplayAbilitySpecHandle
 
 	GetWorld()->GetTimerManager().ClearTimer(ComboTimerHandle);
 
+	UPlayerCombatComponent* CombatComponent = GetPlayerCombatComponentFromActorInfo();
+	if (CombatComponent)
+	{
+		AWeaponBase* CurrentWeapon = CombatComponent->GetCharacterCurrentEquippedWeapon();
+		if (CurrentWeapon)
+		{
+			CurrentWeapon->SetCurrentAttackType(EWeaponAttackType::Light);
+		}
+	}
+	
 	float CurrentComboCount  = GetAbilitySystemComponentFromActorInfo()->GetNumericAttribute(UPlayerAttributeSet::GetCurrentLightAttackComboAttribute());
 	UsedComboCount = CurrentComboCount;
 	
@@ -84,6 +95,13 @@ void URPGGA_Player_LightAttack::ApplyEffectsSpecHandleToTargetCallback(FGameplay
 	LocalTargetActor = const_cast<AActor*>(PayloadData.Target.Get());
 	float WeaponDamage = PayloadData.EventMagnitude;
 	FGameplayEffectSpecHandle SpecHandle = MakePlayerDamageEffectSpecHandle(DamageEffectClass, WeaponDamage, RPGGameplayTag::Data_DamageType_SetByCaller_Light, UsedComboCount);
+
+	UAbilitySystemComponent* ASC = GetAbilitySystemComponentFromActorInfo();
+	if (ASC)
+	{
+		FGameplayEffectContextHandle EffectContext = ASC->MakeEffectContext();
+		ASC->ExecuteGameplayCue(RPGGameplayTag::GameplayCue_Player_Fighter_Sound_AttackHit_Melee_Light, EffectContext);
+	}
 	
 	FActiveGameplayEffectHandle ActiveGameplayEffectHandle = ApplyEffectsSpecHandleToTarget(LocalTargetActor, SpecHandle);
 	if (ActiveGameplayEffectHandle.WasSuccessfullyApplied())

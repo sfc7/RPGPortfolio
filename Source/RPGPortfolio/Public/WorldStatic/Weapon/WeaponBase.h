@@ -7,9 +7,11 @@
 #include "GameFramework/Actor.h"
 #include "WeaponBase.generated.h"
 
+
 class UBoxComponent;
 
-DECLARE_DELEGATE_TwoParams(FOnWeaponHitTarget, AActor*, float)
+DECLARE_DELEGATE_ThreeParams(FOnWeaponHitTarget, AActor*, float, EWeaponAttackType);
+
 
 UCLASS()
 class RPGPORTFOLIO_API AWeaponBase : public AActor
@@ -26,6 +28,9 @@ public:
 	FOnWeaponHitTarget OnWeaponHitTarget;
 	FOnWeaponHitTarget OnWeaponPulledFromTarget;
 
+	void SetCurrentAttackType(EWeaponAttackType AttackType);
+	
+
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
 	UStaticMeshComponent* WeaponMesh;
@@ -33,6 +38,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
 	UBoxComponent* WeaponCollisionBox;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
+	EWeaponAttackType CurrentAttackType;
+	
 	UFUNCTION()
 	virtual void OnCollisionBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 

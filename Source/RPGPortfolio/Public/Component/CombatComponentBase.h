@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "GameplayTagContainer.h"
+#include "RPGStructTypes.h"
 #include "CombatComponentBase.generated.h"
 
 class AWeaponBase;
@@ -69,8 +70,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ToggleCarriedWeaponCollision(AWeaponBase* _ToggleWeapon, bool _bShouldEnable, EToggleDamageType _ToggleDamageType = EToggleDamageType::CarriedWeapon);
 
-	virtual void OnHitTargetActor(AActor* _HitActor, float _WeaponBaseDamage);
-	virtual void OnWeaponPulledFromTargetActor(AActor* _InteractedActor, float _WeaponBaseDamage);
+	virtual void OnHitTargetActor(AActor* _HitActor, float _WeaponBaseDamage, EWeaponAttackType AttackType);
+	virtual void OnWeaponPulledFromTargetActor(AActor* _InteractedActor, float _WeaponBaseDamage, EWeaponAttackType AttackType);
+
 
 protected:
 	TArray<AActor*> OVerlappedActors;

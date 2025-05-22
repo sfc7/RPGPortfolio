@@ -23,6 +23,12 @@ AWeaponBase::AWeaponBase()
 	WeaponCollisionBox->OnComponentEndOverlap.AddUniqueDynamic(this, &ThisClass::OnCollisionBoxEndOverlap);
 }
 
+void AWeaponBase::SetCurrentAttackType(EWeaponAttackType AttackType)
+{
+	CurrentAttackType = AttackType;
+
+}
+
 void AWeaponBase::OnCollisionBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	APawn* WeaponOwner = GetInstigator<APawn>();
@@ -33,7 +39,8 @@ void AWeaponBase::OnCollisionBoxBeginOverlap(UPrimitiveComponent* OverlappedComp
 		{
 			if (WeaponOwner != OtherActor)
 			{
-				OnWeaponHitTarget.ExecuteIfBound(OtherActor, WeaponDefaultData.WeaponBaseDamage);
+				OnWeaponHitTarget.ExecuteIfBound(OtherActor, WeaponDefaultData.WeaponBaseDamage, CurrentAttackType);
+
 			}
 		}
 	}
@@ -49,7 +56,7 @@ void AWeaponBase::OnCollisionBoxEndOverlap(UPrimitiveComponent* OverlappedCompon
 		{
 			if (WeaponOwner != OtherActor)
 			{
-				OnWeaponPulledFromTarget.ExecuteIfBound(OtherActor, WeaponDefaultData.WeaponBaseDamage);
+				OnWeaponHitTarget.ExecuteIfBound(OtherActor, WeaponDefaultData.WeaponBaseDamage, CurrentAttackType);
 			}
 		}
 	}

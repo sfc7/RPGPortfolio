@@ -10,7 +10,8 @@
 #include "GameAbilitySystem/GamePlayAbility/Common/Player/PlayerAttributeSet.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
-#include "Character/Player/PlayerCharacterBase.h"
+#include "Component/Player/PlayerCombatComponent.h"
+#include "WorldStatic/Weapon/PlayerWeapon.h"
 
 
 URPGGA_Player_HeavyAttack::URPGGA_Player_HeavyAttack()
@@ -23,12 +24,22 @@ void URPGGA_Player_HeavyAttack::ActivateAbility(const FGameplayAbilitySpecHandle
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
 	CurrentLightAttackComboCount = 1;
+
+	UPlayerCombatComponent* CombatComponent = GetPlayerCombatComponentFromActorInfo();
+	if (CombatComponent)
+	{
+		AWeaponBase* CurrentWeapon = CombatComponent->GetCharacterCurrentEquippedWeapon();
+		if (CurrentWeapon)
+		{
+			CurrentWeapon->SetCurrentAttackType(EWeaponAttackType::Heavy);
+		}
+	}
 	
 	if (HasMatchingGameplayTag(RPGGameplayTag::Player_Status_CanHeavyAttackCombo))
 	{
 		CurrentLightAttackComboCount = GetAbilitySystemComponentFromActorInfo()->GetNumericAttribute(UPlayerAttributeSet::GetCurrentLightAttackComboAttribute());
 	}
-
+	
 	UAnimMontage* MontageToPlay = nullptr;
 	if(HeavyAttackMontages.Contains(CurrentLightAttackComboCount))
 	{
@@ -50,6 +61,8 @@ void URPGGA_Player_HeavyAttack::ActivateAbility(const FGameplayAbilitySpecHandle
 
 	GameplayEventTask->EventReceived.AddDynamic(this, &ThisClass::ApplyEffectsSpecHandleToTargetCallback);
 	GameplayEventTask->ReadyForActivation();
+	
+
 }
 
 void URPGGA_Player_HeavyAttack::OnEndAbilityCallback()
@@ -63,6 +76,13 @@ void URPGGA_Player_HeavyAttack::ApplyEffectsSpecHandleToTargetCallback(FGameplay
 	float WeaponDamage = PayloadData.EventMagnitude;
 	FGameplayEffectSpecHandle SpecHandle = MakePlayerDamageEffectSpecHandle(DamageEffectClass, WeaponDamage, RPGGameplayTag::Data_DamageType_SetByCaller_Heavy, CurrentLightAttackComboCount);
 
+	UAbilitySystemComponent* ASC = GetAbilitySystemComponentFromActorInfo();
+	if (ASC)
+	{
+		FGameplayEffectContextHandle EffectContext = ASC->MakeEffectContext();
+		ASC->ExecuteGameplayCue(RPGGameplayTag::GameplayCue_Player_Fighter_Sound_AttackHit_Melee_Heavy, EffectContext);
+	}
+	
 	FActiveGameplayEffectHandle ActiveGameplayEffectHandle = ApplyEffectsSpecHandleToTarget(LocalTargetActor, SpecHandle);
 	if (ActiveGameplayEffectHandle.WasSuccessfullyApplied())
 	{

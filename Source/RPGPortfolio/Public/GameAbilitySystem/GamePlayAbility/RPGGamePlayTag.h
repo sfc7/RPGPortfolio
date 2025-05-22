@@ -45,6 +45,7 @@ namespace RPGGameplayTag
 	RPGPORTFOLIO_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_DamageType_SetByCaller_Light);
 	RPGPORTFOLIO_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_DamageType_SetByCaller_Heavy);
 
-	
-	
+	//GamePlayCue
+	RPGPORTFOLIO_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_Player_Fighter_Sound_AttackHit_Melee_Light);
+	RPGPORTFOLIO_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_Player_Fighter_Sound_AttackHit_Melee_Heavy);
 }

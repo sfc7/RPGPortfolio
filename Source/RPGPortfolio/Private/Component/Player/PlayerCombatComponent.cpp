@@ -21,7 +21,7 @@ float UPlayerCombatComponent::GetPlayerCurrentEquippedWeaponDamageAtLevel() cons
 	return GetPlayerCurrentEquippedWeapon()->WeaponDefaultData.WeaponBaseDamage;
 }
 
-void UPlayerCombatComponent::OnHitTargetActor(AActor* _HitActor, float _WeaponBaseDamage)
+void UPlayerCombatComponent::OnHitTargetActor(AActor* _HitActor, float _WeaponBaseDamage, EWeaponAttackType AttackType)
 {
 	if (OVerlappedActors.Contains(_HitActor)) return;
 
@@ -37,8 +37,27 @@ void UPlayerCombatComponent::OnHitTargetActor(AActor* _HitActor, float _WeaponBa
 		RPGGameplayTag::Character_Event_AttackHit_Melee,
 		EventData
 	);
+
+	if (AttackType == EWeaponAttackType::Heavy)
+	{
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
+			GetOwningPawn(),
+			RPGGameplayTag::Player_Event_HitPause,
+			FGameplayEventData()
+		);
+	}
+
 }
 
-void UPlayerCombatComponent::OnWeaponPulledFromTargetActor(AActor* _InteractedActor, float _WeaponBaseDamage)
+void UPlayerCombatComponent::OnWeaponPulledFromTargetActor(AActor* _InteractedActor, float _WeaponBaseDamage, EWeaponAttackType AttackType)
 {
+	if (AttackType == EWeaponAttackType::Heavy)
+	{
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
+			GetOwningPawn(),
+			RPGGameplayTag::Player_Event_HitPause,
+			FGameplayEventData()
+		);
+	}
+
 }

@@ -40,3 +40,10 @@ struct FWeaponDefaultData
 	float WeaponBaseDamage;
 };
 
+UENUM(BlueprintType)
+enum class EWeaponAttackType : uint8
+{
+	Light,
+	Heavy,
+	None
+};

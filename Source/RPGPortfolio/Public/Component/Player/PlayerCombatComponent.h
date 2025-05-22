@@ -25,7 +25,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
 	float GetPlayerCurrentEquippedWeaponDamageAtLevel() const;
 	
-	virtual void OnHitTargetActor(AActor* _HitActor, float _WeaponBaseDamage);
-	virtual void OnWeaponPulledFromTargetActor(AActor* _InteractedActor, float _WeaponBaseDamage);
+	virtual void OnHitTargetActor(AActor* _HitActor, float _WeaponBaseDamage, EWeaponAttackType AttackType);
+	virtual void OnWeaponPulledFromTargetActor(AActor* _InteractedActor, float _WeaponBaseDamage, EWeaponAttackType AttackType);
 	
 };

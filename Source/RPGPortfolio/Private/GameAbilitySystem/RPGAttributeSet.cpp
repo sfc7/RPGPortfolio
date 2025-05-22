@@ -41,10 +41,6 @@ void URPGAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectMod
 		float CalcCurrentHp = FMath::Clamp(PreCurrentHp - CalcDamage, 0.f, GetMaxHp());
 
 		SetCurrentHp(CalcCurrentHp);
-
-		UE_LOG(LogTemp, Log, TEXT("PreCurrentHp : %f"), PreCurrentHp);
-		UE_LOG(LogTemp, Log, TEXT("CalcDamage : %f"), CalcDamage);
-		UE_LOG(LogTemp, Log, TEXT("CalcCurrentHp : %f"), CalcCurrentHp);
 	}
 }
 
