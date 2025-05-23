@@ -4,6 +4,7 @@
 #include "Character/MonsterCharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Component/Monster/MonsterCombatComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "Engine/AssetManager.h"
 #include "DataAsset/DataAsset_AbilitySetBase.h"
 
@@ -36,6 +37,12 @@ void AMonsterCharacter::PossessedBy(AController* NewController)
 	Super::PossessedBy(NewController);
 
 	InitEnemyStartUpData();
+}
+
+void AMonsterCharacter::MonsterDeath()
+{
+	GetMesh()->bPauseAnims = true;
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 void AMonsterCharacter::InitEnemyStartUpData()

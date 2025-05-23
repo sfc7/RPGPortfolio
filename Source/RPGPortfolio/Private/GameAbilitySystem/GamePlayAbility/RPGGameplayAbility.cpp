@@ -54,8 +54,6 @@ FActiveGameplayEffectHandle URPGGameplayAbility::ApplyEffectsSpecHandleToTarget(
 	);
 }
 
-
-
 void URPGGameplayAbility::AddGameplayTag(AActor* _Actor, FGameplayTag _GameplayTag)
 {
 	URPGAbilitySystemComponent* ASC = GetRPGAbilitySystemComponentFromActorInfo();

@@ -94,8 +94,6 @@ void UGEEC_DamageTaken::Execute_Implementation(const FGameplayEffectCustomExecut
 				FinalDamage
 			)
 		);
-
-		UE_LOG(LogTemp, Log, TEXT("FinalDamage: %f"), FinalDamage);
 	}
 
 	

@@ -52,5 +52,7 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, Category = "Stat")
 	FGameplayAttributeData Damage;
-	
+
+	UFUNCTION(BlueprintCallable, Category = "Warrior|FunctionLibrary")
+	static void AddGameplayTagToActor(AActor* _Actor, FGameplayTag TagToAdd);
 };

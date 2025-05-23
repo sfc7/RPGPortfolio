@@ -22,6 +22,7 @@ public:
 	
 	virtual UCombatComponentBase* GetCombatComponent() const override;
 
+	virtual void MonsterDeath();
 protected:
 
 	virtual void PossessedBy(AController* NewController) override;

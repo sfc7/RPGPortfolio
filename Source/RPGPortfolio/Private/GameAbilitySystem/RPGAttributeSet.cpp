@@ -2,7 +2,11 @@
 
 
 #include "GameAbilitySystem/RPGAttributeSet.h"
+
+#include "AbilitySystemBlueprintLibrary.h"
 #include "GameplayEffectExtension.h"
+#include "GameAbilitySystem/RPGAbilitySystemComponent.h"
+#include "GameAbilitySystem/GamePlayAbility/RPGGamePlayTag.h"
 
 
 URPGAttributeSet::URPGAttributeSet()
@@ -41,6 +45,23 @@ void URPGAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectMod
 		float CalcCurrentHp = FMath::Clamp(PreCurrentHp - CalcDamage, 0.f, GetMaxHp());
 
 		SetCurrentHp(CalcCurrentHp);
+
+		if (CalcCurrentHp == 0.f)
+		{
+			AddGameplayTagToActor(Data.Target.GetAvatarActor(),RPGGameplayTag::Character_Status_Dead);
+		}
+	}
+}
+
+void URPGAttributeSet::AddGameplayTagToActor(AActor* _Actor, FGameplayTag TagToAdd)
+{
+	check(_Actor);
+
+	URPGAbilitySystemComponent* ASC = CastChecked<URPGAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(_Actor));
+
+	if (!ASC->HasMatchingGameplayTag(TagToAdd))
+	{
+		ASC->AddLooseGameplayTag(TagToAdd);
 	}
 }
 
