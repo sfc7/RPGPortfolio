@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "Character/RPGCharacterBase.h"
+#include "NiagaraComponent.h"
 #include "MonsterCharacter.generated.h"
 
 class UMonsterCombatComponent;
-
+class UNiagaraSystem;
 /**
  * 
  */
@@ -22,7 +23,7 @@ public:
 	
 	virtual UCombatComponentBase* GetCombatComponent() const override;
 
-	virtual void MonsterDeath();
+	virtual void MonsterDeath(TSoftObjectPtr<UNiagaraSystem> _DeathNiagaraEffectSoftObject);
 protected:
 
 	virtual void PossessedBy(AController* NewController) override;

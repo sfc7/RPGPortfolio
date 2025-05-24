@@ -4,11 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameAbilitySystem/GamePlayAbility/Common/Monster/MonsterGameplayAbility.h"
+#include "NiagaraSystem.h" 
 #include "RPGGA_Montser_Death_Base.generated.h"
 
-/**
- * 
- */
+class UNiagaraSystem;
+
 UCLASS()
 class RPGPORTFOLIO_API URPGGA_Montser_Death_Base : public UMonsterGameplayAbility
 {
@@ -26,6 +26,10 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FGameplayTag DeathSoudnGameplayTag;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSoftObjectPtr<UNiagaraSystem> DeathNiagaraEffect;
+
+	
 	UFUNCTION()
 	void OnEndAbilityCallback();
 };

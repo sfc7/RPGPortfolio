@@ -43,7 +43,8 @@ void URPGGA_Montser_Death_Base::EndAbility(const FGameplayAbilitySpecHandle Hand
 {
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 
-	GetMonsterCharacterFromActorInfo()->MonsterDeath();
+	
+	GetMonsterCharacterFromActorInfo()->MonsterDeath(DeathNiagaraEffect);
 }
 
 void URPGGA_Montser_Death_Base::OnEndAbilityCallback()

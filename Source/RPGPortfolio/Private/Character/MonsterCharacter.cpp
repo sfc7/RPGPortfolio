@@ -6,6 +6,7 @@
 #include "Component/Monster/MonsterCombatComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Engine/AssetManager.h"
+#include "NiagaraFunctionLibrary.h"
 #include "DataAsset/DataAsset_AbilitySetBase.h"
 
 AMonsterCharacter::AMonsterCharacter()
@@ -39,10 +40,15 @@ void AMonsterCharacter::PossessedBy(AController* NewController)
 	InitEnemyStartUpData();
 }
 
-void AMonsterCharacter::MonsterDeath()
+void AMonsterCharacter::MonsterDeath(TSoftObjectPtr<UNiagaraSystem> _DeathNiagaraEffectSoftObject)
 {
 	GetMesh()->bPauseAnims = true;
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	UNiagaraSystem* DeathNiagara = _DeathNiagaraEffectSoftObject.LoadSynchronous();
+
+	UNiagaraFunctionLibrary::SpawnSystemAttached(DeathNiagara, GetMesh(), NAME_None,FVector::ZeroVector,  FRotator::ZeroRotator,
+		EAttachLocation::KeepWorldPosition, true, true, ENCPoolMethod::None, true);
 }
 
 void AMonsterCharacter::InitEnemyStartUpData()
