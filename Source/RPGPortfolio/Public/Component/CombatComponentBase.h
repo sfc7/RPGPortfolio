@@ -25,8 +25,6 @@ class RPGPORTFOLIO_API UCombatComponentBase : public UActorComponent
 
 #pragma region GetOwningPawn(), GetOwningController()
 protected:
-
-
 	template<class T>
 	T* GetOwningPawn() const
 	{

@@ -7,6 +7,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Engine/AssetManager.h"
 #include "NiagaraFunctionLibrary.h"
+#include "Component/Monster/MonsterUIComponent.h"
 #include "DataAsset/DataAsset_AbilitySetBase.h"
 
 AMonsterCharacter::AMonsterCharacter()
@@ -23,8 +24,8 @@ AMonsterCharacter::AMonsterCharacter()
 	GetCharacterMovement()->MaxWalkSpeed = 300.f;
 	GetCharacterMovement()->BrakingDecelerationWalking = 1000.f;
 
-	MonsterCombatComponent = CreateDefaultSubobject<UMonsterCombatComponent>(" MonsterCombatComponent");
-
+	MonsterCombatComponent = CreateDefaultSubobject<UMonsterCombatComponent>("MonsterCombatComponent");
+	MonsterUIComponent = CreateDefaultSubobject<UMonsterUIComponent>("MonsterUIComponent");
 	CreateDefaultAttributeSet();
 }
 
@@ -49,6 +50,16 @@ void AMonsterCharacter::MonsterDeath(TSoftObjectPtr<UNiagaraSystem> _DeathNiagar
 
 	UNiagaraFunctionLibrary::SpawnSystemAttached(DeathNiagara, GetMesh(), NAME_None,FVector::ZeroVector,  FRotator::ZeroRotator,
 		EAttachLocation::KeepWorldPosition, true, true, ENCPoolMethod::None, true);
+}
+
+UUIComponentBase* AMonsterCharacter::GetUIComponent() const
+{
+	return MonsterUIComponent;
+}
+
+UMonsterUIComponent* AMonsterCharacter::GetMonsterUIComponent() const
+{
+	return MonsterUIComponent;
 }
 
 void AMonsterCharacter::InitEnemyStartUpData()

@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "AbilitySystemInterface.h"
+#include "Interface/UIInterface.h"
 #include "RPGCharacterBase.generated.h"
 
 class URPGAttributeSet;
@@ -13,7 +14,7 @@ class UDataAsset_AbilitySetBase;
 class UCombatComponentBase;
 
 UCLASS()
-class RPGPORTFOLIO_API ARPGCharacterBase : public ACharacter, public IAbilitySystemInterface
+class RPGPORTFOLIO_API ARPGCharacterBase : public ACharacter, public IAbilitySystemInterface, public IUIInterface
 {
 	GENERATED_BODY()
 
@@ -31,6 +32,7 @@ public:
 	
 	virtual void CreateDefaultAttributeSet();
 
+	virtual UUIComponentBase* GetUIComponent() const override;
 protected:
 	virtual void PossessedBy(AController* NewController) override;
 

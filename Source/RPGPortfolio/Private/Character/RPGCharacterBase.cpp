@@ -33,6 +33,11 @@ void ARPGCharacterBase::CreateDefaultAttributeSet()
 	RPGAttributeSet = CreateDefaultSubobject<URPGAttributeSet>(TEXT("RPGAttributeSet"));
 }
 
+UUIComponentBase* ARPGCharacterBase::GetUIComponent() const
+{
+	return nullptr;
+}
+
 void ARPGCharacterBase::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);

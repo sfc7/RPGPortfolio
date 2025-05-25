@@ -7,6 +7,8 @@
 #include "AbilitySystemComponent.h"
 #include "RPGAttributeSet.generated.h"
 
+class IUIInterface;
+
 #define ATTRIBUTE_ACCESSORS(ClassName, PropertyName) \
 GAMEPLAYATTRIBUTE_PROPERTY_GETTER(ClassName, PropertyName) \
 GAMEPLAYATTRIBUTE_VALUE_GETTER(PropertyName) \
@@ -55,4 +57,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Warrior|FunctionLibrary")
 	static void AddGameplayTagToActor(AActor* _Actor, FGameplayTag TagToAdd);
+
+private:
+	TWeakInterfacePtr<IUIInterface> UIInterface;
 };

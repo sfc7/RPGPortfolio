@@ -12,7 +12,7 @@ class USpringArmComponent;
 class UDataAsset_InputConfig;
 struct FInputActionValue;
 class UPlayerCombatComponent;
-
+class UPlayerUIComponent;
 /**
  * 
  */
@@ -27,6 +27,10 @@ public:
 	FORCEINLINE UPlayerCombatComponent* GetPlayerCombatComponent() const { return PlayerCombatComponent; }
 	
 	virtual UCombatComponentBase* GetCombatComponent() const override;
+
+	virtual UUIComponentBase* GetUIComponent() const override;
+
+	virtual UPlayerUIComponent* GetPlayerUIComponent() const override;
 	
 protected:
 	virtual void PossessedBy(AController* NewController) override;
@@ -48,6 +52,9 @@ private:
 			
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "CharacterData", meta = (AllowPrivateAccess = "true"))
 		UDataAsset_InputConfig* InputConfigDataAsset;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", meta = (AllowPrivateAccess = "true"))
+		UPlayerUIComponent* PlayerUIComponent;
 
 	void Input_Move(const FInputActionValue& InputActionValue);
 	void Input_Look(const FInputActionValue& InputActionValue);

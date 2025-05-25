@@ -14,6 +14,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameAbilitySystem/GamePlayAbility/Common/Player/PlayerAttributeSet.h"
 #include "Component/Player/PlayerCombatComponent.h"
+#include "Component/Player/PlayerUIComponent.h"
 
 APlayerCharacterBase::APlayerCharacterBase()
 {
@@ -36,12 +37,24 @@ APlayerCharacterBase::APlayerCharacterBase()
 	CameraComponent->bUsePawnControlRotation = true;
 
 	PlayerCombatComponent = CreateDefaultSubobject<UPlayerCombatComponent>(TEXT("PlayerCombatComponent"));
+	PlayerUIComponent = CreateDefaultSubobject<UPlayerUIComponent>(TEXT("PlayerUIComponent"));
+	
 	CreateDefaultAttributeSet();
 }
 
 UCombatComponentBase* APlayerCharacterBase::GetCombatComponent() const
 {
 	return PlayerCombatComponent;
+}
+
+UUIComponentBase* APlayerCharacterBase::GetUIComponent() const
+{
+	return PlayerUIComponent;
+}
+
+UPlayerUIComponent* APlayerCharacterBase::GetPlayerUIComponent() const
+{
+	return PlayerUIComponent;
 }
 
 void APlayerCharacterBase::PossessedBy(AController* NewController)

@@ -9,6 +9,7 @@
 
 class UMonsterCombatComponent;
 class UNiagaraSystem;
+class UMonsterUIComponent;
 /**
  * 
  */
@@ -24,12 +25,19 @@ public:
 	virtual UCombatComponentBase* GetCombatComponent() const override;
 
 	virtual void MonsterDeath(TSoftObjectPtr<UNiagaraSystem> _DeathNiagaraEffectSoftObject);
+
+	virtual UUIComponentBase* GetUIComponent() const override;
+
+	virtual UMonsterUIComponent* GetMonsterUIComponent() const override;
 protected:
 
 	virtual void PossessedBy(AController* NewController) override;
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
 	UMonsterCombatComponent* MonsterCombatComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
+	UMonsterUIComponent* MonsterUIComponent;
 
 private:
 	void InitEnemyStartUpData();
