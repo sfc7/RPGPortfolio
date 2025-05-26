@@ -8,7 +8,9 @@
 #include "Engine/AssetManager.h"
 #include "NiagaraFunctionLibrary.h"
 #include "Component/Monster/MonsterUIComponent.h"
+#include "Components/WidgetComponent.h"
 #include "DataAsset/DataAsset_AbilitySetBase.h"
+#include "Widget/RPGWidgetBase.h"
 
 AMonsterCharacter::AMonsterCharacter()
 {
@@ -26,6 +28,9 @@ AMonsterCharacter::AMonsterCharacter()
 
 	MonsterCombatComponent = CreateDefaultSubobject<UMonsterCombatComponent>("MonsterCombatComponent");
 	MonsterUIComponent = CreateDefaultSubobject<UMonsterUIComponent>("MonsterUIComponent");
+	MonsterHpWidgetComponent = CreateDefaultSubobject<UWidgetComponent>("MonsterHpWidgetComponent");
+	MonsterHpWidgetComponent->SetupAttachment(GetMesh());
+	
 	CreateDefaultAttributeSet();
 }
 
@@ -60,6 +65,17 @@ UUIComponentBase* AMonsterCharacter::GetUIComponent() const
 UMonsterUIComponent* AMonsterCharacter::GetMonsterUIComponent() const
 {
 	return MonsterUIComponent;
+}
+
+void AMonsterCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+
+	URPGWidgetBase* HpWidget = Cast<URPGWidgetBase>(MonsterHpWidgetComponent->GetUserWidgetObject());
+	if (HpWidget)
+	{
+		HpWidget->InitMonsterCreatedWidget(this);
+	}
 }
 
 void AMonsterCharacter::InitEnemyStartUpData()

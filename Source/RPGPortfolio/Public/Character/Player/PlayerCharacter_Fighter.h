@@ -13,5 +13,8 @@ UCLASS()
 class RPGPORTFOLIO_API APlayerCharacter_Fighter : public APlayerCharacterBase
 {
 	GENERATED_BODY()
+public:
+	APlayerCharacter_Fighter();
+
 	
 };

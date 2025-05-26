@@ -6,7 +6,7 @@
 #include "Component/UIComponentBase.h"
 #include "PlayerUIComponent.generated.h"
 
-
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInitPlayerUIbyClassDelegate, EPlayerCharacterClass , PlayerCharacterClass);
 /**
  * 
  */
@@ -18,4 +18,8 @@ class RPGPORTFOLIO_API UPlayerUIComponent : public UUIComponentBase
 public:
 	UPROPERTY(BlueprintAssignable)
 	FOnPercentChangedDelegate OnCurrentMpChanged;
+
+	UPROPERTY(BlueprintCallable, BlueprintAssignable)
+	FOnInitPlayerUIbyClassDelegate OnInitPlayerUIbyClassDelegate;
+
 };

@@ -47,3 +47,13 @@ enum class EWeaponAttackType : uint8
 	Heavy,
 	None
 };
+
+UENUM(BlueprintType)
+enum class EPlayerCharacterClass : uint8
+{
+	Fighter,
+	Magician,
+	None
+};
+
+

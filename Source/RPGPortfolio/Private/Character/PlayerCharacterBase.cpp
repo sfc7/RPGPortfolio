@@ -2,7 +2,6 @@
 
 
 #include "Character/Player/PlayerCharacterBase.h"
-#include "Components/CapsuleComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "EnhancedInputSubsystems.h"
@@ -67,6 +66,11 @@ void APlayerCharacterBase::PossessedBy(AController* NewController)
 		{
 			LoadedData->GiveAbilitySystemComponent(RPGAbilitySystemComponent);
 		}
+	}
+
+	if (IsValid(PlayerUIComponent))
+	{
+		PlayerUIComponent->OnInitPlayerUIbyClassDelegate.Broadcast(PlayerCharacterClass);
 	}
 }
 

@@ -1,7 +1,7 @@
 // LJS
 
 
-#include "GameAbilitySystem/GamePlayAbility/Common/Player/RPGGA_Player_InitPlayUIWidget.h"
+#include "GameAbilitySystem/GamePlayAbility/Common/Player/State/RPGGA_Player_InitPlayUIWidget.h"
 #include "Widget/RPGWidgetBase.h"
 #include "Blueprint/UserWidget.h"
 #include "Controller/PlayerCharacterController.h"
@@ -12,7 +12,7 @@ void URPGGA_Player_InitPlayUIWidget::ActivateAbility(const FGameplayAbilitySpecH
 	
 	URPGWidgetBase* PlayerUI = CreateWidget<URPGWidgetBase>(GetPlayerControllerFromActorInfo(), WidgetClass);
 	PlayerUI->AddToViewport();
-
+	
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 }
 

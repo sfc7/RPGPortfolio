@@ -10,6 +10,7 @@
 class UMonsterCombatComponent;
 class UNiagaraSystem;
 class UMonsterUIComponent;
+class UWidgetComponent;
 /**
  * 
  */
@@ -30,7 +31,8 @@ public:
 
 	virtual UMonsterUIComponent* GetMonsterUIComponent() const override;
 protected:
-
+	virtual void BeginPlay() override;
+	
 	virtual void PossessedBy(AController* NewController) override;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
@@ -38,6 +40,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
 	UMonsterUIComponent* MonsterUIComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
+	UWidgetComponent* MonsterHpWidgetComponent;
 
 private:
 	void InitEnemyStartUpData();

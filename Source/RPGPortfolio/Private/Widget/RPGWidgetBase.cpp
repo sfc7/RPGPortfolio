@@ -3,6 +3,7 @@
 
 #include "Widget/RPGWidgetBase.h"
 #include "Component/Player/PlayerUIComponent.h"
+#include "Component/Monster/MonsterUIComponent.h"
 #include "Interface/UIInterface.h"
 
 void URPGWidgetBase::NativeOnInitialized()

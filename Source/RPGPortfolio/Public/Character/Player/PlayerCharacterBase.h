@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Character/RPGCharacterBase.h"
+#include "RPGStructTypes.h"
 #include "GameplayTagContainer.h"
 #include "PlayerCharacterBase.generated.h"
 
@@ -40,6 +41,10 @@ protected:
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
 	virtual void CreateDefaultAttributeSet() override;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Class", meta = (AllowPrivateAccess = "true"))
+	EPlayerCharacterClass PlayerCharacterClass;
+	
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", meta = (AllowPrivateAccess = "true"))
 		USpringArmComponent* SpringArmComponent;
@@ -52,7 +57,7 @@ private:
 			
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "CharacterData", meta = (AllowPrivateAccess = "true"))
 		UDataAsset_InputConfig* InputConfigDataAsset;
-
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", meta = (AllowPrivateAccess = "true"))
 		UPlayerUIComponent* PlayerUIComponent;
 
