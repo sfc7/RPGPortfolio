@@ -7,6 +7,8 @@
 #include "Perception/AISenseConfig_Sight.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "BehaviorTree/BehaviorTree.h"
+#include "GameFramework/Character.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 ARPGAIController::ARPGAIController(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer.SetDefaultSubobjectClass<UCrowdFollowingComponent>("PathFollowingComponent"))
@@ -74,6 +76,16 @@ void ARPGAIController::OnPossess(APawn* InPawn)
 	if (IsValid(BehaviorTree))
 	{
 		RunBehaviorTree(BehaviorTree);
+
+		ACharacter* InCharacter = Cast<ACharacter>(InPawn);
+		if (IsValid(InCharacter))
+		{
+			UBlackboardComponent* BlackboardComp = GetBlackboardComponent();
+			if (BlackboardComp)
+			{
+				BlackboardComp->SetValueAsFloat(FName("MaxWalkSpeed"), InCharacter->GetCharacterMovement()->MaxWalkSpeed);
+			}
+		}	
 	}
 }
 

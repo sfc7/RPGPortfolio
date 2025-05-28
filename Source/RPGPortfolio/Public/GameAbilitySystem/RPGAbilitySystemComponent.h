@@ -17,5 +17,7 @@ class RPGPORTFOLIO_API URPGAbilitySystemComponent : public UAbilitySystemCompone
 public:
 	void OnAbilityInputPressed(const FGameplayTag& _InputTag);
 	void OnAbilityInputReleased(const FGameplayTag& _InputTag);
-	
+
+	UFUNCTION(BlueprintCallable)
+	bool ActivateGamePlayAbilityByTag(FGameplayTag _ActivateAbilityTag);
 };

@@ -17,15 +17,10 @@ class RPGPORTFOLIO_API URPGGA_Player_HeavyAttack : public UPlayerGameplayAbility
 public:
 	URPGGA_Player_HeavyAttack();
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-	TMap<int32, UAnimMontage*> HeavyAttackMontages;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-	TSubclassOf<UGameplayEffect> DamageEffectClass;
-	
+protected:
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 
-protected:
+	
 	UFUNCTION()
 	void OnEndAbilityCallback();
 	
@@ -35,4 +30,10 @@ protected:
 	float CurrentLightAttackComboCount = 1;
 
 	AActor* LocalTargetActor;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	TMap<int32, UAnimMontage*> HeavyAttackMontages;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<UGameplayEffect> DamageEffectClass;
 };

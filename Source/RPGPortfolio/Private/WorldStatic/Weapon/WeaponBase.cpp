@@ -2,7 +2,7 @@
 
 
 #include "WorldStatic/Weapon/WeaponBase.h"
-
+#include "RPGFunc.h"
 #include "RPGStructTypes.h"
 #include "Components/BoxComponent.h"
 
@@ -37,10 +37,9 @@ void AWeaponBase::OnCollisionBoxBeginOverlap(UPrimitiveComponent* OverlappedComp
 	{
 		if (APawn* HitPawn = Cast<APawn>(OtherActor))
 		{
-			if (WeaponOwner != OtherActor)
+			if (URPGFunc::CheckTargetTeamAgent(WeaponOwner, HitPawn))
 			{
 				OnWeaponHitTarget.ExecuteIfBound(OtherActor, WeaponDefaultData.WeaponBaseDamage, CurrentAttackType);
-
 			}
 		}
 	}
@@ -54,7 +53,7 @@ void AWeaponBase::OnCollisionBoxEndOverlap(UPrimitiveComponent* OverlappedCompon
 	{
 		if (APawn* HitPawn = Cast<APawn>(OtherActor))
 		{
-			if (WeaponOwner != OtherActor)
+			if (URPGFunc::CheckTargetTeamAgent(WeaponOwner, HitPawn))
 			{
 				OnWeaponHitTarget.ExecuteIfBound(OtherActor, WeaponDefaultData.WeaponBaseDamage, CurrentAttackType);
 			}

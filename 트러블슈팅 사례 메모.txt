@@ -1,0 +1,49 @@
+
+------------ OwnerComp.GetAIOwner(); 와 AIController->GetPawn() 의 차이
+
+``` cpp
+// 이전 코드
+float CalcDistance = OwnerComp.GetOwner()->GetDistanceTo(Target);
+
+// 현재 코드
+AAIController* AIController = OwnerComp.GetAIOwner();
+float CalcDistance = AIController->GetPawn()->GetDistanceTo(Target);
+```
+이 차이가 가장 중요합니다:
+- 이전 코드: 를 사용하여 거리를 계산합니다. `OwnerComp.GetOwner()`
+- 현재 코드: 로 AI 컨트롤러를 가져온 다음 `AIController->GetPawn()`을 사용하여 폰(Pawn)을 가져와 거리를 계산합니다. `OwnerComp.GetAIOwner()`
+
+### 3. NULL 체크 차이
+- 이전 코드에서는 `Target`에 대한 NULL 체크가 없었고, 현재 코드에서도 여전히 없습니다.
+- 그러나 현재 코드에서는 `AIController`에 대한 NULL 체크도 없는데, 이것이 문제가 될 수 있습니다.
+
+## 문제의 원인
+이전 코드에서 가 반환하는 객체와 현재 코드에서 `AIController->GetPawn()`이 반환하는 객체가 다르기 때문에 문제가 발생했을 가능성이 높습니다. `OwnerComp.GetOwner()`
+1. **오브젝트 참조 차이**:
+    - 는 행동 트리 컴포넌트의 소유자를 반환합니다. 이것은 AI 컨트롤러일 가능성이 높습니다. `OwnerComp.GetOwner()`
+    - `AIController->GetPawn()`은 AI 컨트롤러가 제어하는 실제 폰(몬스터 등)을 반환합니다.
+
+2. **Move To 태스크와의 호환성**:
+    - Move To 태스크는 AI 컨트롤러의 폰을 이동시킵니다.
+    - 이전 코드에서는 AI 컨트롤러(BT 컴포넌트의 소유자)에서 타겟까지의 거리를 측정했지만, 실제로는 컨트롤러가 제어하는 폰과 타겟 사이의 거리를 측정해야 합니다.
+
+3. **GetDistanceTo의 작동 방식**:
+    - `GetDistanceTo` 메서드는 두 액터 사이의 거리를 계산합니다.
+    - AI 컨트롤러와 타겟 액터 사이의 거리보다 폰과 타겟 액터 사이의 거리가 실제로 게임 플레이에 관련이 있습니다.
+
+## 결론
+이전 코드의 문제는 거리 계산에 사용된 객체가 AI 컨트롤러였기 때문입니다. 이는 실제로 움직이는 폰의 위치를 정확히 반영하지 못합니다. 특히 Move To 태스크가 실행 중일 때, 폰은 이동하지만 컨트롤러의 위치는 변하지 않아서 거리 값이 제대로 업데이트되지 않았을 것입니다.
+현재 코드에서는 실제로 이동하는 폰의 위치를 기준으로 거리를 계산하므로 폰이 타겟을 향해 이동할 때 거리가 올바르게 업데이트됩니다.
+안전을 위해 다음과 같은 추가 체크를 구현하는 것이 좋습니다:
+``` cpp
+AAIController* AIController = OwnerComp.GetAIOwner();
+if (!AIController) return;
+
+APawn* ControlledPawn = AIController->GetPawn();
+if (!ControlledPawn) return;
+
+if (!Target) return;
+
+float CalcDistance = ControlledPawn->GetDistanceTo(Target);
+```
+이렇게 하면 NULL 포인터 참조로 인한 크래시를 방지할 수 있습니다.

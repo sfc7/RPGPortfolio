@@ -35,6 +35,8 @@ void URPGGA_SpawnWeaponBase::ActivateAbility(const FGameplayAbilitySpecHandle Ha
 	}
 
 	GetCombatComponentFromActorInfo()->RegisterSpawnedWeapon(WeaponTagtoRegister, PlayerWeapon, bShouldRegisterEquipWeapon);
+
+	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 }
 
 void URPGGA_SpawnWeaponBase::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)

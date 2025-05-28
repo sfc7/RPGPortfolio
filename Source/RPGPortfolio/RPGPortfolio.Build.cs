@@ -9,7 +9,7 @@ public class RPGPortfolio : ModuleRules
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", 
-			"GameplayTags", "GameplayTasks", "Niagara" });
+			"GameplayTags", "GameplayTasks", "Niagara", "AnimGraphRuntime"});
 	}
 }
 	

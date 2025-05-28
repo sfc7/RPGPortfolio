@@ -1,4 +1,4 @@
-// LJS
+	// LJS
 
 #pragma once
 
@@ -33,7 +33,9 @@ namespace RPGGameplayTag
 	RPGPORTFOLIO_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Monster_Ability_Attack_Melee);
 	RPGPORTFOLIO_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Monster_Ability_Attack_Ranged);
 
-	// Characte
+	RPGPORTFOLIO_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Monster_Status_Strafe);
+
+	// Character
 	RPGPORTFOLIO_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Event_AttackHit_Melee);
 	RPGPORTFOLIO_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Event_HitReact);
 	
