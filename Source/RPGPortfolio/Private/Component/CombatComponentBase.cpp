@@ -55,7 +55,7 @@ void UCombatComponentBase::SetWeaponCollision(AWeaponBase* _Weapon, bool _bShoul
 	{
 		_Weapon->GetWeaponCollisionBox()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
-		OVerlappedActors.Empty();
+		OverlappedActors.Empty();
 	}
 }
 

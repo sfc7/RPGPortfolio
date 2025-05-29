@@ -12,6 +12,7 @@ class URPGAttributeSet;
 class URPGAbilitySystemComponent;
 class UDataAsset_AbilitySetBase;
 class UCombatComponentBase;
+class UMotionWarpingComponent;
 
 UCLASS()
 class RPGPORTFOLIO_API ARPGCharacterBase : public ACharacter, public IAbilitySystemInterface, public IUIInterface
@@ -33,6 +34,9 @@ public:
 	virtual void CreateDefaultAttributeSet();
 
 	virtual UUIComponentBase* GetUIComponent() const override;
+
+	virtual UMotionWarpingComponent* GetMotionWarpingComponent() const {return MotionWarpingComponent;};
+	
 protected:
 	virtual void PossessedBy(AController* NewController) override;
 
@@ -42,6 +46,11 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AbilitySystem")
 	URPGAttributeSet* RPGAttributeSet;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "MotionWarping")
+	UMotionWarpingComponent* MotionWarpingComponent;
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "CharacterData")
 	TSoftObjectPtr<UDataAsset_AbilitySetBase> CharacterStartUpData;
+	
+	
 };

@@ -23,9 +23,9 @@ float UPlayerCombatComponent::GetPlayerCurrentEquippedWeaponDamageAtLevel() cons
 
 void UPlayerCombatComponent::OnHitTargetActor(AActor* _HitActor, float _WeaponBaseDamage, EWeaponAttackType AttackType)
 {
-	if (OVerlappedActors.Contains(_HitActor)) return;
+	if (OverlappedActors.Contains(_HitActor)) return;
 
-	OVerlappedActors.AddUnique(_HitActor);
+	OverlappedActors.AddUnique(_HitActor);
 
 	FGameplayEventData EventData;
 	EventData.Instigator = GetOwningPawn();

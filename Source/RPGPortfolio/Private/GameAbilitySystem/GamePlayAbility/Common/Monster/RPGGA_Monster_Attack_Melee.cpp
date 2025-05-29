@@ -3,6 +3,8 @@
 
 #include "GameAbilitySystem/GamePlayAbility/Common/Monster/RPGGA_Monster_Attack_Melee.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
+#include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
+#include "GameAbilitySystem/GamePlayAbility/RPGGamePlayTag.h"
 
 URPGGA_Monster_Attack_Melee::URPGGA_Monster_Attack_Melee()
 {
@@ -26,10 +28,33 @@ true, 1.0f, false);
 		PlayMontageTask->OnInterrupted.AddDynamic(this, &URPGGA_Monster_Attack_Melee::OnEndAbilityCallback);
 		PlayMontageTask->OnCancelled.AddDynamic(this, &URPGGA_Monster_Attack_Melee::OnEndAbilityCallback);
 		PlayMontageTask->ReadyForActivation();
+
+		UAbilityTask_WaitGameplayEvent* WaitGameplayEvent = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
+			this, RPGGameplayTag::Character_Event_AttackHit_Melee, nullptr, false, true
+		);
+
+		WaitGameplayEvent->EventReceived.AddDynamic(this, &ThisClass::ApplyDamage);
+		WaitGameplayEvent->ReadyForActivation();
+
+		
 	}
+}
+
+void URPGGA_Monster_Attack_Melee::OnEventReceived(FGameplayEventData PayloadData)
+{
+	UE_LOG(LogTemp, Log, TEXT("Instigator : %s, Target : %s"), *PayloadData.Instigator.Get()->GetName(), *PayloadData.Target.Get()->GetName());
 }
 
 void URPGGA_Monster_Attack_Melee::OnEndAbilityCallback()
 {
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 }
+
+void URPGGA_Monster_Attack_Melee::ApplyDamage(FGameplayEventData PayloadData)
+{
+	LocalTargetActor = const_cast<AActor*>(PayloadData.Target.Get());
+	FGameplayEffectSpecHandle SpecHandle = MakeMonsterDamageEffectSpecHandle(DamageEffectClass, DamageScale);
+	ApplyEffectsSpecHandleToTarget(LocalTargetActor, SpecHandle);
+}
+
+//ApplyEffectsSpecHandleToTargetCallback 비교 필요

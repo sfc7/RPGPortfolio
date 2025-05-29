@@ -31,9 +31,9 @@ protected:
 
 	AActor* LocalTargetActor;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	TMap<int32, UAnimMontage*> HeavyAttackMontages;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	TSubclassOf<UGameplayEffect> DamageEffectClass;
-};
+};	

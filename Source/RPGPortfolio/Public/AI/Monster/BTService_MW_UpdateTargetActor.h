@@ -4,24 +4,23 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/BTService.h"
-#include "BTService_DistanceFromTarget.generated.h"
+#include "BTService_MW_UpdateTargetActor.generated.h"
 
+class AMonsterCharacter;
 /**
  * 
  */
 UCLASS()
-class RPGPORTFOLIO_API UBTService_DistanceFromTarget : public UBTService
+class RPGPORTFOLIO_API UBTService_MW_UpdateTargetActor : public UBTService
 {
 	GENERATED_BODY()
 public:
-	UBTService_DistanceFromTarget();
+	UBTService_MW_UpdateTargetActor();
 protected:
 	virtual void TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
 
 	UPROPERTY(EditAnywhere)
 	FBlackboardKeySelector TargetActorKey;
-
-	UPROPERTY(EditAnywhere)
-	FBlackboardKeySelector DistanceFromTarget;
-
+	
+	AMonsterCharacter* MonsterCharacter;
 };

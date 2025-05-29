@@ -15,6 +15,7 @@
 #include "Component/Player/PlayerCombatComponent.h"
 #include "Component/Player/PlayerUIComponent.h"
 
+
 APlayerCharacterBase::APlayerCharacterBase()
 {
 	bUseControllerRotationPitch = false;
@@ -37,6 +38,8 @@ APlayerCharacterBase::APlayerCharacterBase()
 
 	PlayerCombatComponent = CreateDefaultSubobject<UPlayerCombatComponent>(TEXT("PlayerCombatComponent"));
 	PlayerUIComponent = CreateDefaultSubobject<UPlayerUIComponent>(TEXT("PlayerUIComponent"));
+	
+
 	
 	CreateDefaultAttributeSet();
 }

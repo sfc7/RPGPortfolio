@@ -5,6 +5,7 @@
 #include "GameAbilitySystem/RPGAbilitySystemComponent.h"
 #include "GameAbilitySystem/RPGAttributeSet.h"
 #include "Component/CombatComponentBase.h"
+#include "MotionWarpingComponent.h"
 
 // Sets default values
 ARPGCharacterBase::ARPGCharacterBase()
@@ -16,6 +17,9 @@ ARPGCharacterBase::ARPGCharacterBase()
 	GetMesh()->bReceivesDecals = false;
 
 	RPGAbilitySystemComponent = CreateDefaultSubobject<URPGAbilitySystemComponent>(TEXT("RPGAbilitySystemComponent"));
+
+	MotionWarpingComponent = CreateDefaultSubobject<UMotionWarpingComponent>(TEXT("MotionWarpingComponent"));
+	
 }
 
 UAbilitySystemComponent* ARPGCharacterBase::GetAbilitySystemComponent() const

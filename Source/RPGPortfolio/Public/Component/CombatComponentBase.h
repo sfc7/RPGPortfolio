@@ -73,7 +73,7 @@ public:
 
 
 protected:
-	TArray<AActor*> OVerlappedActors;
+	TArray<AActor*> OverlappedActors;
 	
 private:
 	UPROPERTY(VisibleAnywhere)
