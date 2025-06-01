@@ -32,6 +32,9 @@ protected:
 	TSubclassOf<UGameplayEffect> DamageEffectClass;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	FGameplayTag HitSoundGameplayCueTag;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	FScalableFloat DamageScale;
 
 	AActor* LocalTargetActor;

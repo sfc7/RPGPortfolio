@@ -4,6 +4,7 @@
 #include "GameAbilitySystem/GamePlayAbility/Common/Monster/RPGGA_Montser_HitReact_Base.h"
 #include "Character/MonsterCharacter.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
+#include "GameAbilitySystem/RPGAbilitySystemComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 
 void URPGGA_Montser_HitReact_Base::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
@@ -44,7 +45,17 @@ void URPGGA_Montser_HitReact_Base::ActivateAbility(const FGameplayAbilitySpecHan
 			false  
 		);
 	}
+
+	if (IsBeingAttackedGameplayEffect)
+	{
+		FGameplayEffectContextHandle ContextHandle = GetRPGAbilitySystemComponentFromActorInfo()->MakeEffectContext();
+		ContextHandle.AddSourceObject(this);
 	
+		FGameplayEffectSpecHandle SpecHandle = GetRPGAbilitySystemComponentFromActorInfo()->MakeOutgoingSpec(
+			IsBeingAttackedGameplayEffect, GetAbilityLevel(), ContextHandle);
+	
+		GetRPGAbilitySystemComponentFromActorInfo()->BP_ApplyGameplayEffectSpecToSelf(SpecHandle);
+	}
 }
 
 void URPGGA_Montser_HitReact_Base::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)

@@ -4,6 +4,7 @@
 #include "GameAbilitySystem/GamePlayAbility/Common/Monster/RPGGA_Monster_Attack_Melee.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
+#include "GameAbilitySystem/RPGAbilitySystemComponent.h"
 #include "GameAbilitySystem/GamePlayAbility/RPGGamePlayTag.h"
 
 URPGGA_Monster_Attack_Melee::URPGGA_Monster_Attack_Melee()
@@ -35,8 +36,6 @@ true, 1.0f, false);
 
 		WaitGameplayEvent->EventReceived.AddDynamic(this, &ThisClass::ApplyDamage);
 		WaitGameplayEvent->ReadyForActivation();
-
-		
 	}
 }
 
@@ -55,6 +54,9 @@ void URPGGA_Monster_Attack_Melee::ApplyDamage(FGameplayEventData PayloadData)
 	LocalTargetActor = const_cast<AActor*>(PayloadData.Target.Get());
 	FGameplayEffectSpecHandle SpecHandle = MakeMonsterDamageEffectSpecHandle(DamageEffectClass, DamageScale);
 	ApplyEffectsSpecHandleToTarget(LocalTargetActor, SpecHandle);
+
+	FGameplayEffectContextHandle ContextHandle = GetRPGAbilitySystemComponentFromActorInfo()->MakeEffectContext();
+	GetRPGAbilitySystemComponentFromActorInfo()->ExecuteGameplayCue(HitSoundGameplayCueTag, ContextHandle);
 }
 
 //ApplyEffectsSpecHandleToTargetCallback 비교 필요

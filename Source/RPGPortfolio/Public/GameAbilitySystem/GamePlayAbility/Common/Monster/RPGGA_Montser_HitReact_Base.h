@@ -26,6 +26,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bHasHitReactMontagesToPlay = true;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<UGameplayEffect> IsBeingAttackedGameplayEffect;
+	
 	UFUNCTION()
 	void OnEndAbilityCallback();
 
