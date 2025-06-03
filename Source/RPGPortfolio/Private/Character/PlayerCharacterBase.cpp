@@ -95,6 +95,7 @@ void APlayerCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 			PlayerEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, RPGGameplayTag::InputTag_Look_Mouse, ETriggerEvent::Triggered, this, &ThisClass::Input_Look);
 			PlayerEnhancedInputComponent->BindAbilityInputAction(InputConfigDataAsset, this, &ThisClass::Input_AbilityInputPressed, &ThisClass::Input_AbilityInputReleased);
 			PlayerEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, RPGGameplayTag::InputTag_ShowDebug_Keyboard, ETriggerEvent::Triggered, this, &ThisClass::Input_ShowDebug);
+			
 		}
 	}
 }
@@ -110,7 +111,7 @@ void APlayerCharacterBase::BeginPlay()
 	
 }
 void APlayerCharacterBase::Input_Move(const FInputActionValue& InputActionValue)
-{
+{	
 	const FVector2D MovementVector = InputActionValue.Get<FVector2D>();
  
 	const FRotator MovementRotation(0.f,Controller->GetControlRotation().Yaw,0.f);

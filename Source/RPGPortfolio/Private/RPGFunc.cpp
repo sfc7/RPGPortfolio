@@ -2,7 +2,11 @@
 
 
 #include "RPGFunc.h"
+#include "GameplayTagContainer.h"
 #include "GenericTeamAgentInterface.h"
+#include "ScalableFloat.h"
+#include "GameAbilitySystem/GamePlayAbility/RPGGamePlayTag.h"
+#include "Kismet/KismetMathLibrary.h"
 
 bool URPGFunc::CheckTargetTeamAgent(APawn* SourcePawn, APawn* TargetPawn)
 {
@@ -18,4 +22,59 @@ bool URPGFunc::CheckTargetTeamAgent(APawn* SourcePawn, APawn* TargetPawn)
 	}
 
 	return false;
+}
+
+float URPGFunc::GetScalableFloatconst(const FScalableFloat& ScalableFloat, float Level)
+{
+	return ScalableFloat.GetValueAtLevel(Level);
+}
+
+FGameplayTag URPGFunc::GetHitReactDirection(AActor* Attacker, AActor* HitReactActor, float& OutHitReactDirection)
+{
+	check(Attacker && HitReactActor);
+
+	const FVector ActorForward = HitReactActor->GetActorForwardVector();
+	const FVector ActorLocation = HitReactActor->GetActorLocation();
+	const FVector AttackerLocation = Attacker->GetActorLocation();
+	const FVector ActorToAttackerNormalize = (AttackerLocation - ActorLocation).GetSafeNormal();
+
+	const float InnerProduct = FVector::DotProduct(ActorForward, ActorToAttackerNormalize);
+	OutHitReactDirection = UKismetMathLibrary::DegAcos(InnerProduct);
+
+	const FVector CrossProduct = FVector::CrossProduct(ActorForward, ActorToAttackerNormalize);
+	const float ZVectorInnerProduct = FVector::DotProduct(HitReactActor->GetActorUpVector(), CrossProduct);
+
+	if (ZVectorInnerProduct < 0.f)
+	{
+		OutHitReactDirection *= -1.f;
+	}
+	
+	if (OutHitReactDirection>=-45.f && OutHitReactDirection <=45.f)
+	{
+		return RPGGameplayTag::Character_Status_HitReact_Front;
+	}
+	else if (OutHitReactDirection<-135.f || OutHitReactDirection>135.f)
+	{
+		return RPGGameplayTag::Character_Status_HitReact_Back;
+	}
+	else if (OutHitReactDirection<-45.f && OutHitReactDirection>=-135.f)
+	{
+		return RPGGameplayTag::Character_Status_HitReact_Left;
+	}
+	else if(OutHitReactDirection>45.f && OutHitReactDirection<=135.f)
+	{
+		return RPGGameplayTag::Character_Status_HitReact_Right;
+	}
+
+	return RPGGameplayTag::Character_Status_HitReact_Front;
+}
+
+bool URPGFunc::IsValidDefense(AActor* Attacker, AActor* Defender)
+{
+	check(Attacker && Defender);
+
+	const float InnerProduct = FVector::DotProduct(Attacker->GetActorForwardVector(), Defender->GetActorForwardVector());
+
+	return InnerProduct < -0.1f;
+	
 }

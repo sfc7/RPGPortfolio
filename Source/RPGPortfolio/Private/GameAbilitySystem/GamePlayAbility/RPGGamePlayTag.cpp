@@ -12,7 +12,8 @@ namespace RPGGameplayTag
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_HeavyAttack_Keyboard, "InputTag.HeavyAttack.Keyboard");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_ShowDebug_Keyboard, "InputTag.ShowDebug.Keyboard");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Dodge_Keyboard, "InputTag.Dodge.Keyboard");
-	
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_Hold, "InputTag.Hold");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_Hold_Defense_Keyboard, "InputTag.Hold.Defense.Keyboard");
 	//Player
 	UE_DEFINE_GAMEPLAY_TAG(Player_Weapon_Fighter_Hand_l, "Player.Weapon.Fighter.Hand.l");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Weapon_Fighter_Hand_r, "Player.Weapon.Fighter.Hand.r");
@@ -23,12 +24,17 @@ namespace RPGGameplayTag
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Heavy, "Player.Ability.Attack.Heavy");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_HitPause, "Player.Ability.HitPause");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Dodge, "Player.Ability.Dodge");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Defense, "Player.Ability.Defense");
+	
 
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_CanHeavyAttackCombo, "Player.Status.CanHeavyAttackCombo");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Dodge, "Player.Status.Dodge");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Defense, "Player.Status.Defense");
 	
 	UE_DEFINE_GAMEPLAY_TAG(Player_Event_HitPause, "Player.Event.HitPause");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Event_DefenseSuccess, "Player.Event.DefenseSuccess");
 
+	
 	//Monster
 	UE_DEFINE_GAMEPLAY_TAG(Monster_Weapon, "Monster.Weapon");
 	
@@ -45,6 +51,10 @@ namespace RPGGameplayTag
 	UE_DEFINE_GAMEPLAY_TAG(Character_Ability_Death, "Character.Ability.Death");
 
 	UE_DEFINE_GAMEPLAY_TAG(Character_Status_Dead, "Character.Status.Dead");
+	UE_DEFINE_GAMEPLAY_TAG(Character_Status_HitReact_Front, "Character.Status.HitReact.Front");
+	UE_DEFINE_GAMEPLAY_TAG(Character_Status_HitReact_Back, "Character.Status.HitReact.Back");
+	UE_DEFINE_GAMEPLAY_TAG(Character_Status_HitReact_Left, "Character.Status.HitReact.Left");
+	UE_DEFINE_GAMEPLAY_TAG(Character_Status_HitReact_Right, "Character.Status.HitReact.Right");
 	
 	// Data
 	UE_DEFINE_GAMEPLAY_TAG(Data_Value_SetByCaller_BaseDamage, "Data.Value.SetByCaller.BaseDamage");
@@ -55,4 +65,7 @@ namespace RPGGameplayTag
 	//GamePlayCue
 	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Player_Fighter_Sound_AttackHit_Melee_Light, "GameplayCue.Player.Fighter.Sound.AttackHit.Melee.Light");
 	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Player_Fighter_Sound_AttackHit_Melee_Heavy, "GameplayCue.Player.Fighter.Sound.AttackHit.Melee.Heavy");
+	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Player_Fighter_Effect_Defense, "GameplayCue.Player.Fighter.Effect.Defense");
+	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Player_Fighter_Effect_DefenseSucess, "GameplayCue.Player.ighter.Effect.DefenseSucess");
+	
 }

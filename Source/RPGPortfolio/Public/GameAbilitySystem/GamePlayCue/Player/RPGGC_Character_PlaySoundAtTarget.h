@@ -16,9 +16,9 @@ class RPGPORTFOLIO_API URPGGC_Character_PlaySoundAtTarget_AttackHit : public UGa
 public:
 	URPGGC_Character_PlaySoundAtTarget_AttackHit();
 
-	virtual bool OnExecute_Implementation(AActor* Target, const FGameplayCueParameters& Parameters) const override;
-
 protected:
+	virtual bool OnExecute_Implementation(AActor* Target, const FGameplayCueParameters& Parameters) const override;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<USoundBase> SoundToPlay;
 };

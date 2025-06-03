@@ -3,23 +3,36 @@
 
 #include "GameAbilitySystem/RPGAbilitySystemComponent.h"
 
+#include "GameAbilitySystem/GamePlayAbility/RPGGamePlayTag.h"
+
 void URPGAbilitySystemComponent::OnAbilityInputPressed(const FGameplayTag& _InputTag)
 {
 	if (!_InputTag.IsValid())
 	{
 		return;
 	}
-
+	
 	for (const FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
 	{
 		if (!AbilitySpec.GetDynamicSpecSourceTags().HasTagExact(_InputTag)) continue;
-
 		TryActivateAbility(AbilitySpec.Handle);
 	}
 }
 
 void URPGAbilitySystemComponent::OnAbilityInputReleased(const FGameplayTag& _InputTag)
 {
+	if (!_InputTag.IsValid() || !_InputTag.MatchesTag(RPGGameplayTag::InputTag_Hold))
+	{
+		return;
+	}
+	
+	for (const FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
+	{
+		if (AbilitySpec.GetDynamicSpecSourceTags().HasTagExact(_InputTag) && AbilitySpec.IsActive())
+		{
+			CancelAbilityHandle(AbilitySpec.Handle);
+		}
+	}
 }
 
 bool URPGAbilitySystemComponent::ActivateGamePlayAbilityByTag(FGameplayTag _ActivateAbilityTag)

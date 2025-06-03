@@ -4,6 +4,8 @@
 #include "Component/Monster/MonsterCombatComponent.h"
 #include "GameAbilitySystem/GamePlayAbility/RPGGamePlayTag.h"
 #include "AbilitySystemBlueprintLibrary.h"
+#include "RPGFunc.h"
+#include "GameAbilitySystem/RPGAbilitySystemComponent.h"
 
 void UMonsterCombatComponent::OnHitTargetActor(AActor* _HitActor, float _WeaponBaseDamage, EWeaponAttackType AttackType)
 {
@@ -14,24 +16,28 @@ void UMonsterCombatComponent::OnHitTargetActor(AActor* _HitActor, float _WeaponB
 
 	OverlappedActors.AddUnique(_HitActor);
 
-	//TODO:: Implement block check
-	bool bIsValidBlock = false;
+	bool bIsFacing = false;
 
-	const bool bIsPlayerBlocking = false;
-	const bool bIsMyAttackUnblokcable = false;
+	URPGAbilitySystemComponent* ASC = CastChecked<URPGAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(_HitActor));
+	const bool bIsPlayerDefensing = ASC->HasMatchingGameplayTag(RPGGameplayTag::Player_Status_Defense);
+	bool bIsUnDefendableAttack = false;
 
-	if (bIsPlayerBlocking && !bIsMyAttackUnblokcable)
+	if (bIsPlayerDefensing && !bIsUnDefendableAttack)
 	{
-		//TODO::check if the block is valid
+		bIsFacing = URPGFunc::IsValidDefense(GetOwningPawn(), _HitActor);
 	}
 
 	FGameplayEventData EventData;
 	EventData.Instigator = GetOwningPawn();
 	EventData.Target = _HitActor;
 	
-	if (bIsValidBlock)
+	if (bIsFacing)
 	{
-		//TODO::Handle successful block
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
+			_HitActor,
+			RPGGameplayTag::Player_Event_DefenseSuccess,
+			EventData
+		);
 	}
 	else
 	{		

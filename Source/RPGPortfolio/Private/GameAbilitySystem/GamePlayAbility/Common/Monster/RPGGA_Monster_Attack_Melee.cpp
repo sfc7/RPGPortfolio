@@ -2,6 +2,8 @@
 
 
 #include "GameAbilitySystem/GamePlayAbility/Common/Monster/RPGGA_Monster_Attack_Melee.h"
+
+#include "AbilitySystemBlueprintLibrary.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
 #include "GameAbilitySystem/RPGAbilitySystemComponent.h"
@@ -21,7 +23,7 @@ void URPGGA_Monster_Attack_Melee::ActivateAbility(const FGameplayAbilitySpecHand
 		int32 RandomIndex = FMath::RandRange(0, AttackMontages.Num() -1);
 
 		UAbilityTask_PlayMontageAndWait* PlayMontageTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
-this,TEXT("Player_Light_Attack"), AttackMontages[RandomIndex], 1.0f,  NAME_None,
+	this,TEXT("Player_Light_Attack"), AttackMontages[RandomIndex], 1.0f,  NAME_None,
 true, 1.0f, false);
 
 		PlayMontageTask->OnCompleted.AddDynamic(this, &URPGGA_Monster_Attack_Melee::OnEndAbilityCallback);
@@ -55,8 +57,8 @@ void URPGGA_Monster_Attack_Melee::ApplyDamage(FGameplayEventData PayloadData)
 	FGameplayEffectSpecHandle SpecHandle = MakeMonsterDamageEffectSpecHandle(DamageEffectClass, DamageScale);
 	ApplyEffectsSpecHandleToTarget(LocalTargetActor, SpecHandle);
 
-	FGameplayEffectContextHandle ContextHandle = GetRPGAbilitySystemComponentFromActorInfo()->MakeEffectContext();
-	GetRPGAbilitySystemComponentFromActorInfo()->ExecuteGameplayCue(HitSoundGameplayCueTag, ContextHandle);
+
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(LocalTargetActor, RPGGameplayTag::Character_Event_HitReact, PayloadData);
 }
 
 //ApplyEffectsSpecHandleToTargetCallback 비교 필요

@@ -5,6 +5,9 @@
 #include "WorldStatic/Weapon/PlayerWeapon.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "GameAbilitySystem/GamePlayAbility/RPGGamePlayTag.h"
+#include "RPGFunc.h"
+#include "GameAbilitySystem/RPGAbilitySystemComponent.h"
+#include "GameAbilitySystem/GamePlayAbility/RPGGameplayAbility.h"
 
 APlayerWeapon* UPlayerCombatComponent::GetPlayerCarriedWeaponByTag(FGameplayTag _WeaponTagToGet) const
 {

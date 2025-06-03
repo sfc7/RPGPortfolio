@@ -6,6 +6,7 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "RPGFunc.generated.h"
 
+struct FScalableFloat;
 /**
  * 
  */
@@ -17,4 +18,13 @@ class RPGPORTFOLIO_API URPGFunc : public UBlueprintFunctionLibrary
 public:
 	UFUNCTION(BlueprintPure)
 	static bool CheckTargetTeamAgent(APawn* SourcePawn, APawn* TargetPawn);
+
+	UFUNCTION(BlueprintPure)
+	static float GetScalableFloatconst (const FScalableFloat& ScalableFloat, float Level = 1.f);
+
+	UFUNCTION(BlueprintPure)
+	static FGameplayTag GetHitReactDirection (AActor* Attacker, AActor* HitReactActor, float& OutHitReactDirection);
+
+	UFUNCTION(BlueprintPure)
+	static bool IsValidDefense(AActor* Attacker,AActor* Defender);
 };
