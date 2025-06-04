@@ -21,7 +21,7 @@ UMonsterCombatComponent* UMonsterGameplayAbility::GetMonsterCombatComponentFromA
 	return GetMonsterCharacterFromActorInfo()->GetMonsterCombatComponent();
 }
 
-FGameplayEffectSpecHandle UMonsterGameplayAbility::MakeMonsterDamageEffectSpecHandle(TSubclassOf<UGameplayEffect> _EffectClass, const FScalableFloat& _DamageScale)
+FGameplayEffectSpecHandle UMonsterGameplayAbility::MakeMonsterBaseDamageEffectSpecHandle(TSubclassOf<UGameplayEffect> _EffectClass, const FScalableFloat& _DamageScale)
 {
 	check(_EffectClass);
 
@@ -39,6 +39,7 @@ FGameplayEffectSpecHandle UMonsterGameplayAbility::MakeMonsterDamageEffectSpecHa
 		RPGGameplayTag::Data_Value_SetByCaller_BaseDamage,
 		_DamageScale.GetValueAtLevel(GetAbilityLevel())
 		);
+	
 
 	return SpecHandle;
 }

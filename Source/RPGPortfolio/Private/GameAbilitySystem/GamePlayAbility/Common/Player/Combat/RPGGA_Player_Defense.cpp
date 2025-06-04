@@ -4,12 +4,14 @@
 #include "GameAbilitySystem/GamePlayAbility/Common/Player/Combat/RPGGA_Player_Defense.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "BlueprintGameplayTagLibrary.h"
+#include "EnhancedInputSubsystems.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
 #include "Abilities/Tasks/AbilityTask_ApplyRootMotionConstantForce.h"
 #include "Character/Player/PlayerCharacterBase.h"
 #include "GameAbilitySystem/RPGAbilitySystemComponent.h"
 #include "GameAbilitySystem/GamePlayAbility/RPGGamePlayTag.h"
+#include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 
 URPGGA_Player_Defense::URPGGA_Player_Defense()
@@ -21,6 +23,8 @@ void URPGGA_Player_Defense::ActivateAbility(const FGameplayAbilitySpecHandle Han
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
+	DefenseActivateTime = GetWorld()->GetTimeSeconds();
+	
 	UAbilityTask_PlayMontageAndWait* PlayMontageTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this,
 	TEXT("Player_Defense"), DefenseMontage, 1.0f, NAME_None,
 	true, 1.0f, false);
@@ -29,15 +33,25 @@ void URPGGA_Player_Defense::ActivateAbility(const FGameplayAbilitySpecHandle Han
 	PlayMontageTask->OnCancelled.AddDynamic(this, &URPGGA_Player_Defense::OnEndAbilityCallback);
 	PlayMontageTask->ReadyForActivation();
 
-	FGameplayCueParameters DefenseGCEffectCueParam;
-	DefenseGCEffectCueParam.TargetAttachComponent = GetOwningComponentFromActorInfo();
-	GetPlayerCharacterFromActorInfo()->GetRPGAbilitySystemComponent()->AddGameplayCue(DefenseEffectGamePlayCue, DefenseGCEffectCueParam);
+	FGameplayCueParameters DefenseGCEffectParam;
+	DefenseGCEffectParam.TargetAttachComponent = GetOwningComponentFromActorInfo();
+	GetPlayerCharacterFromActorInfo()->GetRPGAbilitySystemComponent()->AddGameplayCue(DefenseEffectGamePlayCue, DefenseGCEffectParam);
 
 	UAbilityTask_WaitGameplayEvent* WaitGameplayEvent = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
 	this, RPGGameplayTag::Player_Event_DefenseSuccess, nullptr, false, true
 	);
 	WaitGameplayEvent->EventReceived.AddDynamic(this, &URPGGA_Player_Defense::SuccessDefenseCallback);
 	WaitGameplayEvent->ReadyForActivation();
+}
+
+void URPGGA_Player_Defense::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,bool bReplicateEndAbility, bool bWasCancelled)
+{
+	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
+
+	if (UGameplayStatics::GetGlobalTimeDilation(GetWorld()) != 1.0f)
+	{
+		UGameplayStatics::SetGlobalTimeDilation(GetWorld(), 1.0f);
+	}
 }
 
 void URPGGA_Player_Defense::SuccessDefenseCallback(FGameplayEventData PayloadData)
@@ -57,13 +71,63 @@ void URPGGA_Player_Defense::SuccessDefenseCallback(FGameplayEventData PayloadDat
 		ERootMotionFinishVelocityMode::MaintainLastRootMotionVelocity,
 		FVector::ZeroVector,         
 		0.0f, false);
+	
+	bool bIsParrying = (GetWorld()->GetTimeSeconds() - DefenseActivateTime) <= 0.5f;
+	
+	if(bIsParrying)
+	{
+		SetParryingAttackReady();
+		
+		FGameplayCueParameters DefenseParryingGCParam;
+		DefenseParryingGCParam.TargetAttachComponent = GetOwningComponentFromActorInfo();
+		GetPlayerCharacterFromActorInfo()->GetRPGAbilitySystemComponent()->ExecuteGameplayCue(DefenseParryingGamePlayCue, DefenseParryingGCParam);
+		UGameplayStatics::SetGlobalTimeDilation(GetWorld(), 0.2f);
 
-	FGameplayCueParameters DefenseSucessGCCueParam;
-	DefenseSucessGCCueParam.TargetAttachComponent = GetOwningComponentFromActorInfo();
-	GetPlayerCharacterFromActorInfo()->GetRPGAbilitySystemComponent()->ExecuteGameplayCue(DefenseSuccessGamePlayCue, DefenseSucessGCCueParam);
+		FTimerHandle DelayTimerHandle;
+		GetWorld()->GetTimerManager().SetTimer(DelayTimerHandle, [this]()
+		{
+			UGameplayStatics::SetGlobalTimeDilation(GetWorld(), 1.0f);
+			ResetParryingAttackTimer();
+		}, 0.12f, false);
+	}
+	else
+	{
+		FGameplayCueParameters DefenseSucessGCParam;
+		DefenseSucessGCParam.TargetAttachComponent = GetOwningComponentFromActorInfo();
+		GetPlayerCharacterFromActorInfo()->GetRPGAbilitySystemComponent()->ExecuteGameplayCue(DefenseSuccessGamePlayCue, DefenseSucessGCParam);
+	}
+}
+
+void URPGGA_Player_Defense::ResetParryingAttackTimer()
+{
+	GetWorld()->GetTimerManager().SetTimer(ParryingDelayTimerHandle, [this]()
+	{
+		RemoveGameplayTag(GetPlayerCharacterFromActorInfo(), RPGGameplayTag::Player_Status_CanParryingAttack);
+	}, 0.12f, false);
+}
+
+void URPGGA_Player_Defense::SetParryingAttackReady()
+{
+	// BP_ApplyGameplayEffectToOwner(InvincibleEffectClass, GetAbilityLevel(), 1); 
+
+	ULocalPlayer* LocalPlayer = GetPlayerCharacterFromActorInfo()->GetController<APlayerController>()->GetLocalPlayer();
+	UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(LocalPlayer);
+	if (IsValid(Subsystem))
+	{
+		Subsystem->AddMappingContext(ParryingInputMappingContext, 1);
+	}
+	
+	AddGameplayTag(GetPlayerCharacterFromActorInfo(), RPGGameplayTag::Player_Status_CanParryingAttack);
+	FGameplayAbilitySpec ParryAbilitySpec(ParryingAttackGA);
+	ParryAbilitySpec.SourceObject = GetPlayerCharacterFromActorInfo();
+	ParryAbilitySpec.Level = GetAbilityLevel();
+	ParryAbilitySpec.GetDynamicSpecSourceTags().AddTag(ParryingTag);
+	GetRPGAbilitySystemComponentFromActorInfo()->GiveAbility(ParryAbilitySpec);
 }
 
 void URPGGA_Player_Defense::OnEndAbilityCallback()
 {
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
+
+	ResetParryingAttackTimer();
 }

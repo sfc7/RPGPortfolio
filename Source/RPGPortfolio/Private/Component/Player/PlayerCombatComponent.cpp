@@ -41,7 +41,7 @@ void UPlayerCombatComponent::OnHitTargetActor(AActor* _HitActor, float _WeaponBa
 		EventData
 	);
 
-	if (AttackType == EWeaponAttackType::Heavy)
+	if (AttackType == EWeaponAttackType::Heavy || AttackType == EWeaponAttackType::Parrying)
 	{
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
 			GetOwningPawn(),
@@ -49,7 +49,6 @@ void UPlayerCombatComponent::OnHitTargetActor(AActor* _HitActor, float _WeaponBa
 			FGameplayEventData()
 		);
 	}
-
 }
 
 void UPlayerCombatComponent::OnWeaponPulledFromTargetActor(AActor* _InteractedActor, float _WeaponBaseDamage, EWeaponAttackType AttackType)

@@ -94,7 +94,7 @@ void URPGGA_Player_LightAttack::ApplyEffectsSpecHandleToTargetCallback(FGameplay
 {
 	LocalTargetActor = const_cast<AActor*>(PayloadData.Target.Get());
 	float WeaponDamage = PayloadData.EventMagnitude;
-	FGameplayEffectSpecHandle SpecHandle = MakePlayerDamageEffectSpecHandle(DamageEffectClass, WeaponDamage, RPGGameplayTag::Data_DamageType_SetByCaller_Light, UsedComboCount);
+	FGameplayEffectSpecHandle SpecHandle = MakePlayerComboDamageEffectSpecHandle(DamageEffectClass, WeaponDamage, RPGGameplayTag::Data_DamageType_SetByCaller_Light, UsedComboCount);
 
 	UAbilitySystemComponent* ASC = GetAbilitySystemComponentFromActorInfo();
 	if (ASC)

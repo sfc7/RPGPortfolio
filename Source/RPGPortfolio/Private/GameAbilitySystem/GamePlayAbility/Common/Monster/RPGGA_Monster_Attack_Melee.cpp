@@ -54,7 +54,7 @@ void URPGGA_Monster_Attack_Melee::OnEndAbilityCallback()
 void URPGGA_Monster_Attack_Melee::ApplyDamage(FGameplayEventData PayloadData)
 {
 	LocalTargetActor = const_cast<AActor*>(PayloadData.Target.Get());
-	FGameplayEffectSpecHandle SpecHandle = MakeMonsterDamageEffectSpecHandle(DamageEffectClass, DamageScale);
+	FGameplayEffectSpecHandle SpecHandle = MakeMonsterBaseDamageEffectSpecHandle(DamageEffectClass, DamageScale);
 	ApplyEffectsSpecHandleToTarget(LocalTargetActor, SpecHandle);
 
 

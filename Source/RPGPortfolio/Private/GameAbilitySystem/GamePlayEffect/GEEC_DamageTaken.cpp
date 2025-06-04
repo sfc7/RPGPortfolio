@@ -66,6 +66,11 @@ void UGEEC_DamageTaken::Execute_Implementation(const FGameplayEffectCustomExecut
 		{
 			UsedHeavyAttackComboCount = TagMagnitude.Value;
 		}
+
+		if (TagMagnitude.Key.MatchesTagExact(RPGGameplayTag::Data_DamageType_SetByCaller_Parrying))
+		{
+			BaseDamage *= 2;
+		}
 	}
 	
 	float TargetDefense = 0.f;

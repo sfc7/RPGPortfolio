@@ -23,7 +23,7 @@ public:
 	UMonsterCombatComponent* GetMonsterCombatComponentFromActorInfo();
 
 	UFUNCTION(BlueprintPure, Category = "GA")
-	FGameplayEffectSpecHandle MakeMonsterDamageEffectSpecHandle(TSubclassOf<UGameplayEffect> _EffectClass, const FScalableFloat& _DamageScale);
+	FGameplayEffectSpecHandle MakeMonsterBaseDamageEffectSpecHandle(TSubclassOf<UGameplayEffect> _EffectClass, const FScalableFloat& _DamageScale);
 private:
 	TWeakObjectPtr<AMonsterCharacter> MonsterCharacter;
 };

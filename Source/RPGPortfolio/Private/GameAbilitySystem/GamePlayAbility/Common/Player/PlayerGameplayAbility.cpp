@@ -32,7 +32,8 @@ UPlayerCombatComponent* UPlayerGameplayAbility::GetPlayerCombatComponentFromActo
 	return GetPlayerCharacterFromActorInfo()->GetPlayerCombatComponent();
 }
 
-FGameplayEffectSpecHandle UPlayerGameplayAbility::MakePlayerDamageEffectSpecHandle(TSubclassOf<UGameplayEffect> _EffectClass, float _WeaponBaseDamage, FGameplayTag _CurrentAttackTypeTag, int32 _UsedComboCount)
+// SpecHandle에 BaseDamage는 기본으로 하여 여러 gameplaytag를 같이 보내서 데미지 최종 계산
+FGameplayEffectSpecHandle UPlayerGameplayAbility::MakePlayerComboDamageEffectSpecHandle(TSubclassOf<UGameplayEffect> _EffectClass, float _WeaponBaseDamage, FGameplayTag _CurrentAttackTypeTag, int32 _UsedComboCount)
 {
 	check(_EffectClass);
 	
@@ -51,10 +52,38 @@ FGameplayEffectSpecHandle UPlayerGameplayAbility::MakePlayerDamageEffectSpecHand
 		_WeaponBaseDamage
 	);
 
-	if (_CurrentAttackTypeTag.IsValid())
+	if (_CurrentAttackTypeTag.IsValid() && _UsedComboCount > 0)
 	{
 		SpecHandle.Data->SetSetByCallerMagnitude(_CurrentAttackTypeTag, _UsedComboCount);
 	}
 	
+	return SpecHandle;
+}
+
+FGameplayEffectSpecHandle UPlayerGameplayAbility::MakePlayerBaseDamageEffectSpecHandle(TSubclassOf<UGameplayEffect> _EffectClass, float _WeaponBaseDamage, FGameplayTag _CurrentAttackTypeTag)
+{
+	check(_EffectClass);
+
+	FGameplayEffectContextHandle ContextHandle = GetRPGAbilitySystemComponentFromActorInfo()->MakeEffectContext();
+	ContextHandle.SetAbility(this);
+	ContextHandle.AddSourceObject(GetAvatarActorFromActorInfo());
+	ContextHandle.AddInstigator(GetAvatarActorFromActorInfo(), GetAvatarActorFromActorInfo());
+
+	FGameplayEffectSpecHandle SpecHandle = GetRPGAbilitySystemComponentFromActorInfo()->MakeOutgoingSpec(
+	_EffectClass,
+	GetAbilityLevel(),
+	ContextHandle);
+
+	SpecHandle.Data->SetSetByCallerMagnitude(
+		RPGGameplayTag::Data_Value_SetByCaller_BaseDamage,
+		_WeaponBaseDamage
+		);
+	
+	if (_CurrentAttackTypeTag.IsValid())
+	{
+		SpecHandle.Data->SetSetByCallerMagnitude(_CurrentAttackTypeTag, 0);
+	}
+	
+
 	return SpecHandle;
 }

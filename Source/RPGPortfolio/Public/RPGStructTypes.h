@@ -45,6 +45,7 @@ enum class EWeaponAttackType : uint8
 {
 	Light,
 	Heavy,
+	Parrying,
 	None
 };
 

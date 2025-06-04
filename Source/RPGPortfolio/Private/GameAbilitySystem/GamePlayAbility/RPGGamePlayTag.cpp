@@ -30,10 +30,10 @@ namespace RPGGameplayTag
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_CanHeavyAttackCombo, "Player.Status.CanHeavyAttackCombo");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Dodge, "Player.Status.Dodge");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Defense, "Player.Status.Defense");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Status_CanParryingAttack, "Player.Status.CanParryingAttack");
 	
 	UE_DEFINE_GAMEPLAY_TAG(Player_Event_HitPause, "Player.Event.HitPause");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Event_DefenseSuccess, "Player.Event.DefenseSuccess");
-
 	
 	//Monster
 	UE_DEFINE_GAMEPLAY_TAG(Monster_Weapon, "Monster.Weapon");
@@ -55,17 +55,23 @@ namespace RPGGameplayTag
 	UE_DEFINE_GAMEPLAY_TAG(Character_Status_HitReact_Back, "Character.Status.HitReact.Back");
 	UE_DEFINE_GAMEPLAY_TAG(Character_Status_HitReact_Left, "Character.Status.HitReact.Left");
 	UE_DEFINE_GAMEPLAY_TAG(Character_Status_HitReact_Right, "Character.Status.HitReact.Right");
+	UE_DEFINE_GAMEPLAY_TAG(Character_Status_Invincible, "Character.Status.Invincible");
+	
 	
 	// Data
 	UE_DEFINE_GAMEPLAY_TAG(Data_Value_SetByCaller_BaseDamage, "Data.Value.SetByCaller.BaseDamage");
 
 	UE_DEFINE_GAMEPLAY_TAG(Data_DamageType_SetByCaller_Light, "Data.DamageType.SetByCaller.Light");
 	UE_DEFINE_GAMEPLAY_TAG(Data_DamageType_SetByCaller_Heavy, "Data.DamageType.SetByCaller.Heavy");
+	UE_DEFINE_GAMEPLAY_TAG(Data_DamageType_SetByCaller_Parrying, "Data.DamageType.SetByCaller.Parrying");
 
 	//GamePlayCue
 	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Player_Fighter_Sound_AttackHit_Melee_Light, "GameplayCue.Player.Fighter.Sound.AttackHit.Melee.Light");
 	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Player_Fighter_Sound_AttackHit_Melee_Heavy, "GameplayCue.Player.Fighter.Sound.AttackHit.Melee.Heavy");
+	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Player_Fighter_Sound_AttackHit_Parrying, "GameplayCue.Player.Fighter.Sound.AttackHit.Parrying");
 	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Player_Fighter_Effect_Defense, "GameplayCue.Player.Fighter.Effect.Defense");
 	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Player_Fighter_Effect_DefenseSucess, "GameplayCue.Player.ighter.Effect.DefenseSucess");
+	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Player_Fighter_Effect_DefenseParrying, "GameplayCue.Player.Fighter.Effect.DefenseParrying");
+	
 	
 }
