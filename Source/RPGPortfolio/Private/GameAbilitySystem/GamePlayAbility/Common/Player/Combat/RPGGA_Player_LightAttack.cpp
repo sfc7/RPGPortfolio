@@ -25,6 +25,8 @@ void URPGGA_Player_LightAttack::ActivateAbility(const FGameplayAbilitySpecHandle
 
 	GetWorld()->GetTimerManager().ClearTimer(ComboTimerHandle);
 
+	FindNearestEnemyBeforeAttack(1000.f);
+	
 	UPlayerCombatComponent* CombatComponent = GetPlayerCombatComponentFromActorInfo();
 	if (CombatComponent)
 	{

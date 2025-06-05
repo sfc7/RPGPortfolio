@@ -10,10 +10,14 @@ namespace RPGGameplayTag
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Jump_Keyboard, "InputTag.Jump.Keyboard");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_LightAttack_Keyboard, "InputTag.LightAttack.Keyboard");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_HeavyAttack_Keyboard, "InputTag.HeavyAttack.Keyboard");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_ParryingAttack_Keyboard, "InputTag.ParryingAttack.Keyboard");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_ShowDebug_Keyboard, "InputTag.ShowDebug.Keyboard");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Dodge_Keyboard, "InputTag.Dodge.Keyboard");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Hold, "InputTag.Hold");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Hold_Defense_Keyboard, "InputTag.Hold.Defense.Keyboard");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_Toggle, "InputTag.Toggle");
+
+	
 	//Player
 	UE_DEFINE_GAMEPLAY_TAG(Player_Weapon_Fighter_Hand_l, "Player.Weapon.Fighter.Hand.l");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Weapon_Fighter_Hand_r, "Player.Weapon.Fighter.Hand.r");
@@ -25,7 +29,7 @@ namespace RPGGameplayTag
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_HitPause, "Player.Ability.HitPause");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Dodge, "Player.Ability.Dodge");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Defense, "Player.Ability.Defense");
-	
+	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Parry, "Player.Ability.Attack.Parry");
 
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_CanHeavyAttackCombo, "Player.Status.CanHeavyAttackCombo");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Dodge, "Player.Status.Dodge");

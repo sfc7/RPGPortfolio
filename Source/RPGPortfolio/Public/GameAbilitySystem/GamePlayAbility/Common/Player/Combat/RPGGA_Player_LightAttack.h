@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameAbilitySystem/GamePlayAbility/Common/Player/PlayerGameplayAbility.h"
+#include "GameAbilitySystem/GamePlayAbility/Common/Player/Combat/PlayerCombatGameplayAbility.h"
 #include "RPGGA_Player_LightAttack.generated.h"
 
 class UAnimMontage;
@@ -11,7 +11,7 @@ class UAnimMontage;
  * 
  */
 UCLASS()
-class RPGPORTFOLIO_API URPGGA_Player_LightAttack : public UPlayerGameplayAbility
+class RPGPORTFOLIO_API URPGGA_Player_LightAttack : public UPlayerCombatGameplayAbility
 {
 	GENERATED_BODY()
 public:

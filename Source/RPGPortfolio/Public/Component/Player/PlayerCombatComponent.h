@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Component/CombatComponentBase.h"
+#include "GameplayTagContainer.h"
 #include "PlayerCombatComponent.generated.h"
 
 class APlayerWeapon;
@@ -27,5 +28,11 @@ public:
 	
 	virtual void OnHitTargetActor(AActor* _HitActor, float _WeaponBaseDamage, EWeaponAttackType AttackType);
 	virtual void OnWeaponPulledFromTargetActor(AActor* _InteractedActor, float _WeaponBaseDamage, EWeaponAttackType AttackType);
-	
+
+protected:
+	virtual void BeginPlay() override;
+
+	void OnParryingStateChange(const FGameplayTag CallbackTag, int32 NewCount);
+
+	void InitRegisterGameplayTagEvent();
 };

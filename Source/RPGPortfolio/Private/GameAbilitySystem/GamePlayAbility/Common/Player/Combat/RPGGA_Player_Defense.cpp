@@ -37,11 +37,11 @@ void URPGGA_Player_Defense::ActivateAbility(const FGameplayAbilitySpecHandle Han
 	DefenseGCEffectParam.TargetAttachComponent = GetOwningComponentFromActorInfo();
 	GetPlayerCharacterFromActorInfo()->GetRPGAbilitySystemComponent()->AddGameplayCue(DefenseEffectGamePlayCue, DefenseGCEffectParam);
 
-	UAbilityTask_WaitGameplayEvent* WaitGameplayEvent = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
+	UAbilityTask_WaitGameplayEvent* DefenseSuccessGE = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
 	this, RPGGameplayTag::Player_Event_DefenseSuccess, nullptr, false, true
 	);
-	WaitGameplayEvent->EventReceived.AddDynamic(this, &URPGGA_Player_Defense::SuccessDefenseCallback);
-	WaitGameplayEvent->ReadyForActivation();
+	DefenseSuccessGE->EventReceived.AddDynamic(this, &URPGGA_Player_Defense::SuccessDefenseCallback);
+	DefenseSuccessGE->ReadyForActivation();
 }
 
 void URPGGA_Player_Defense::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,bool bReplicateEndAbility, bool bWasCancelled)
@@ -83,12 +83,11 @@ void URPGGA_Player_Defense::SuccessDefenseCallback(FGameplayEventData PayloadDat
 		GetPlayerCharacterFromActorInfo()->GetRPGAbilitySystemComponent()->ExecuteGameplayCue(DefenseParryingGamePlayCue, DefenseParryingGCParam);
 		UGameplayStatics::SetGlobalTimeDilation(GetWorld(), 0.2f);
 
-		FTimerHandle DelayTimerHandle;
-		GetWorld()->GetTimerManager().SetTimer(DelayTimerHandle, [this]()
+		RemoveParryingAttackReady();
+		GetWorld()->GetTimerManager().SetTimer(ParryingInputTimerHandle, [this]()
 		{
-			UGameplayStatics::SetGlobalTimeDilation(GetWorld(), 1.0f);
-			ResetParryingAttackTimer();
-		}, 0.12f, false);
+		RemoveGameplayTag(GetPlayerCharacterFromActorInfo(), RPGGameplayTag::Player_Status_CanParryingAttack);
+		}, 0.5f, false);
 	}
 	else
 	{
@@ -98,36 +97,35 @@ void URPGGA_Player_Defense::SuccessDefenseCallback(FGameplayEventData PayloadDat
 	}
 }
 
-void URPGGA_Player_Defense::ResetParryingAttackTimer()
-{
-	GetWorld()->GetTimerManager().SetTimer(ParryingDelayTimerHandle, [this]()
-	{
-		RemoveGameplayTag(GetPlayerCharacterFromActorInfo(), RPGGameplayTag::Player_Status_CanParryingAttack);
-	}, 0.12f, false);
-}
-
 void URPGGA_Player_Defense::SetParryingAttackReady()
 {
 	// BP_ApplyGameplayEffectToOwner(InvincibleEffectClass, GetAbilityLevel(), 1); 
-
-	ULocalPlayer* LocalPlayer = GetPlayerCharacterFromActorInfo()->GetController<APlayerController>()->GetLocalPlayer();
-	UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(LocalPlayer);
-	if (IsValid(Subsystem))
-	{
-		Subsystem->AddMappingContext(ParryingInputMappingContext, 1);
-	}
 	
-	AddGameplayTag(GetPlayerCharacterFromActorInfo(), RPGGameplayTag::Player_Status_CanParryingAttack);
+	AddGameplayTag(GetPlayerCharacterFromActorInfo(), RPGGameplayTag::Player_Status_CanParryingAttack); // IMC 관련
+	
 	FGameplayAbilitySpec ParryAbilitySpec(ParryingAttackGA);
 	ParryAbilitySpec.SourceObject = GetPlayerCharacterFromActorInfo();
 	ParryAbilitySpec.Level = GetAbilityLevel();
-	ParryAbilitySpec.GetDynamicSpecSourceTags().AddTag(ParryingTag);
-	GetRPGAbilitySystemComponentFromActorInfo()->GiveAbility(ParryAbilitySpec);
+	ParryAbilitySpec.GetDynamicSpecSourceTags().AddTag(ParryingInputTag);
+	ParryAbilityHandle = GetRPGAbilitySystemComponentFromActorInfo()->GiveAbility(ParryAbilitySpec);
+}
+
+void URPGGA_Player_Defense::RemoveParryingAttackReady()
+{
+	GetWorld()->GetTimerManager().SetTimer(ParryingDelayAndGATimerHandle, [this]()
+	{
+		UGameplayStatics::SetGlobalTimeDilation(GetWorld(), 1.0f);
+		if (ParryAbilityHandle.IsValid())
+		{
+			GetRPGAbilitySystemComponentFromActorInfo()->ClearAbility(ParryAbilityHandle);
+			ParryAbilityHandle = FGameplayAbilitySpecHandle(); 
+		}
+	}, 1.0f, false);
 }
 
 void URPGGA_Player_Defense::OnEndAbilityCallback()
 {
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 
-	ResetParryingAttackTimer();
+	RemoveParryingAttackReady();
 }

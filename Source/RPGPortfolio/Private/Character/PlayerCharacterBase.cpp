@@ -39,8 +39,6 @@ APlayerCharacterBase::APlayerCharacterBase()
 	PlayerCombatComponent = CreateDefaultSubobject<UPlayerCombatComponent>(TEXT("PlayerCombatComponent"));
 	PlayerUIComponent = CreateDefaultSubobject<UPlayerUIComponent>(TEXT("PlayerUIComponent"));
 	
-
-	
 	CreateDefaultAttributeSet();
 }
 
@@ -108,8 +106,8 @@ void APlayerCharacterBase::CreateDefaultAttributeSet()
 void APlayerCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
+
 void APlayerCharacterBase::Input_Move(const FInputActionValue& InputActionValue)
 {	
 	const FVector2D MovementVector = InputActionValue.Get<FVector2D>();

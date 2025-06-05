@@ -2,6 +2,8 @@
 
 
 #include "Component/CombatComponentBase.h"
+
+#include "Character/Player/PlayerCharacterBase.h"
 #include "WorldStatic/Weapon/WeaponBase.h"
 #include "Components/BoxComponent.h"
 
@@ -83,9 +85,14 @@ void UCombatComponentBase::ToggleCarriedWeaponCollision(AWeaponBase* _CarriedWea
 
 void UCombatComponentBase::OnHitTargetActor(AActor* _HitActor, float _WeaponBaseDamage, EWeaponAttackType AttackType)
 {
+
 }
 
 void UCombatComponentBase::OnWeaponPulledFromTargetActor(AActor* _InteractedActor, float _WeaponBaseDamage, EWeaponAttackType AttackType)
 {
 }
-
+URPGAbilitySystemComponent* UCombatComponentBase::GetRPGAbilitySystemComponent() const
+{
+	APlayerCharacterBase* PlayerCharacter = Cast<APlayerCharacterBase>(GetOwner());
+	return PlayerCharacter->GetRPGAbilitySystemComponent();
+}

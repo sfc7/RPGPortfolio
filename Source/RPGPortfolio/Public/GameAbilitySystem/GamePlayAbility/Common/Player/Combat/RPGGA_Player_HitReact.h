@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameAbilitySystem/GamePlayAbility/Common/Player/PlayerGameplayAbility.h"
+#include "GameAbilitySystem/GamePlayAbility/Common/Player/Combat/PlayerCombatGameplayAbility.h"
 #include "RPGGA_Player_HitReact.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class RPGPORTFOLIO_API URPGGA_Player_HitReact : public UPlayerGameplayAbility
+class RPGPORTFOLIO_API URPGGA_Player_HitReact : public UPlayerCombatGameplayAbility
 {
 	GENERATED_BODY()
 public:

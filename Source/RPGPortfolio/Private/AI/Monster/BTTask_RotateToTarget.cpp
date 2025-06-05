@@ -40,8 +40,6 @@ uint16 UBTTask_RotateToTarget::GetInstanceMemorySize() const
 FString UBTTask_RotateToTarget::GetStaticDescription() const
 {
 	const FString KeyDescription = TargetActorKey.SelectedKeyName.ToString();
-
-	UE_LOG(LogTemp, Warning, TEXT("KeyDescription: %s, precision : %f, Speed : %f"), *KeyDescription,AnglePrecision, RotationSpeed);
 	
 	return Super::GetStaticDescription();
 }

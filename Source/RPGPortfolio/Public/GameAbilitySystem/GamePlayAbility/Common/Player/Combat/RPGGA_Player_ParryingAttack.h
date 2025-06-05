@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameAbilitySystem/GamePlayAbility/Common/Player/PlayerGameplayAbility.h"
+#include "GameAbilitySystem/GamePlayAbility/Common/Player/Combat/PlayerCombatGameplayAbility.h"
 #include "RPGGA_Player_ParryingAttack.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class RPGPORTFOLIO_API URPGGA_Player_ParryingAttack : public UPlayerGameplayAbility
+class RPGPORTFOLIO_API URPGGA_Player_ParryingAttack : public UPlayerCombatGameplayAbility
 {
 	GENERATED_BODY()
 public:
@@ -27,9 +27,6 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	UAnimMontage* ParryingAttackMontage;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-	FScalableFloat DamageScale;
 	
 	AActor* LocalTargetActor;
 

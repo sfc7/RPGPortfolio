@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameAbilitySystem/GamePlayAbility/Common/Player/PlayerGameplayAbility.h"
+#include "GameAbilitySystem/GamePlayAbility/Common/Player/Combat/PlayerCombatGameplayAbility.h"
 #include "RPGGA_Player_Defense.generated.h"
 
 class UPlayerGameplayAbility;
@@ -12,7 +12,7 @@ class UGameplayEffect;
  * 
  */
 UCLASS()
-class RPGPORTFOLIO_API URPGGA_Player_Defense : public UPlayerGameplayAbility
+class RPGPORTFOLIO_API URPGGA_Player_Defense : public UPlayerCombatGameplayAbility
 {
 	GENERATED_BODY()
 public:
@@ -45,24 +45,24 @@ protected:
 	FGameplayTag DefenseParryingGamePlayCue;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-	UPlayerGameplayAbility* ParryingAttackGA;
+	TSubclassOf<UPlayerGameplayAbility> ParryingAttackGA;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-	FGameplayTag ParryingTag;
-	
+	FGameplayTag ParryingInputTag;
+		
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	TSubclassOf<UGameplayEffect> InvincibleEffectClass;
 
-	FTimerHandle ParryingDelayTimerHandle;
+	FTimerHandle ParryingDelayAndGATimerHandle;
+	FTimerHandle ParryingInputTimerHandle;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	UInputMappingContext* ParryingInputMappingContext;
-	
-	UFUNCTION()
-	void ResetParryingAttackTimer();
+	FGameplayAbilitySpecHandle ParryAbilityHandle;
 
 	UFUNCTION()
 	void SetParryingAttackReady();
+	
+	UFUNCTION()
+	void RemoveParryingAttackReady();
 	// Parry 
 	
 

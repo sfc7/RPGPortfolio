@@ -32,7 +32,6 @@ public:
 	UFUNCTION(BlueprintPure, Category = "GA")
 	FGameplayEffectSpecHandle MakePlayerBaseDamageEffectSpecHandle(TSubclassOf<UGameplayEffect> _EffectClass, float _WeaponBaseDamage, FGameplayTag _CurrentAttackTypeTag);
 	
-	
 private:
 	TWeakObjectPtr<APlayerCharacterBase> PlayerCharacter;
 	TWeakObjectPtr<APlayerCharacterController> PlayerCharacterController;

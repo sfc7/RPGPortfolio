@@ -41,12 +41,11 @@ void URPGGA_Player_ParryingAttack::ActivateAbility(const FGameplayAbilitySpecHan
 	PlayMontageTask->OnCancelled.AddDynamic(this, &URPGGA_Player_ParryingAttack::OnEndAbilityCallback);
 	PlayMontageTask->ReadyForActivation();
 
-	UAbilityTask_WaitGameplayEvent* GameplayEventTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
+	UAbilityTask_WaitGameplayEvent* AttackHitGE = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
 	this,RPGGameplayTag::Character_Event_AttackHit_Melee,nullptr, false, true);
 
-	GameplayEventTask->EventReceived.AddDynamic(this, &ThisClass::ApplyEffectsSpecHandleToTargetCallback);
-	GameplayEventTask->ReadyForActivation();
-	
+	AttackHitGE->EventReceived.AddDynamic(this, &ThisClass::ApplyEffectsSpecHandleToTargetCallback);
+	AttackHitGE->ReadyForActivation();
 }
 
 void URPGGA_Player_ParryingAttack::OnEndAbilityCallback()

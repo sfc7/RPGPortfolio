@@ -28,17 +28,14 @@ void URPGGA_Player_HitReact::ActivateAbility(const FGameplayAbilitySpecHandle Ha
 	if (HitReactGamePlayTag == RPGGameplayTag::Character_Status_HitReact_Front)
 	{
 		MontageToPlay = HitReactMontage_Front;
-		UE_LOG(LogTemp, Warning, TEXT("Front"));
 	}
 	else if (HitReactGamePlayTag == RPGGameplayTag::Character_Status_HitReact_Back)
 	{
 		MontageToPlay = HitReactMontage_Back;
-		UE_LOG(LogTemp, Warning, TEXT("Back"));
 	}
 	else if (HitReactGamePlayTag == RPGGameplayTag::Character_Status_HitReact_Left)
 	{
 		MontageToPlay = HitReactMontage_Left;
-		UE_LOG(LogTemp, Warning, TEXT("Left"));
 	}
 	else if (HitReactGamePlayTag == RPGGameplayTag::Character_Status_HitReact_Right)
 	{

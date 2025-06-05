@@ -14,6 +14,8 @@ class UDataAsset_InputConfig;
 struct FInputActionValue;
 class UPlayerCombatComponent;
 class UPlayerUIComponent;
+class UInputMappingContext;
+
 /**
  * 
  */
@@ -26,6 +28,8 @@ public:
 	APlayerCharacterBase();
 
 	FORCEINLINE UPlayerCombatComponent* GetPlayerCombatComponent() const { return PlayerCombatComponent; }
+
+	UInputMappingContext* GetParryingInputMappingContext() const { return ParryingInputMappingContext; }
 	
 	virtual UCombatComponentBase* GetCombatComponent() const override;
 
@@ -41,10 +45,13 @@ protected:
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
 	virtual void CreateDefaultAttributeSet() override;
-
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Class", meta = (AllowPrivateAccess = "true"))
 	EPlayerCharacterClass PlayerCharacterClass;
-	
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UInputMappingContext* ParryingInputMappingContext;
+
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", meta = (AllowPrivateAccess = "true"))
 		USpringArmComponent* SpringArmComponent;

@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
-
+#include "GameAbilitySystem/GamePlayAbility/RPGGamePlayTag.h"
 #include "DataAsset_AbilitySetBase.generated.h"
 
 class URPGGameplayAbility;

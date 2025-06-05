@@ -9,6 +9,7 @@
 #include "CombatComponentBase.generated.h"
 
 class AWeaponBase;
+class URPGAbilitySystemComponent;
 
 UENUM(BlueprintType)
 enum class EToggleDamageType : uint8
@@ -74,6 +75,9 @@ public:
 
 protected:
 	TArray<AActor*> OverlappedActors;
+
+	UFUNCTION(BlueprintPure, Category = "GA")
+	URPGAbilitySystemComponent* GetRPGAbilitySystemComponent() const;
 	
 private:
 	UPROPERTY(VisibleAnywhere)

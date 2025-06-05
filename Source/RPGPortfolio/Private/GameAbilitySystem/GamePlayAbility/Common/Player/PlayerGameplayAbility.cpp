@@ -6,6 +6,7 @@
 #include "Controller/PlayerCharacterController.h"
 #include "GameAbilitySystem/RPGAbilitySystemComponent.h"
 #include "GameAbilitySystem/GamePlayAbility/RPGGamePlayTag.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 APlayerCharacterBase* UPlayerGameplayAbility::GetPlayerCharacterFromActorInfo()
 {
