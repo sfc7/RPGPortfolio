@@ -19,6 +19,9 @@ public:
 
 protected:
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
+
+	UFUNCTION()
+	void Attack();
 	
 	UFUNCTION()
 	void OnEndAbilityCallback();
@@ -31,7 +34,7 @@ protected:
 
 	UFUNCTION()
 	void ResetComboCountTimer();
-
+	
 	FTimerHandle ComboTimerHandle;
 
 	float UsedComboCount;

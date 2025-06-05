@@ -6,7 +6,7 @@
 #include "Character/MonsterCharacter.h"
 #include "Character/Player/PlayerCharacterBase.h"
 #include "GameAbilitySystem/GamePlayAbility/RPGGamePlayTag.h"
-#include "GameAbilitySystem/GameplayTask/RPGAT_ExecuteTaskOnTick.h"
+#include "GameAbilitySystem/GameplayTask/Player/RPGAT_Player_RotateTarget.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -15,7 +15,7 @@ UPlayerCombatGameplayAbility::UPlayerCombatGameplayAbility()
 {
 }
 
-void UPlayerCombatGameplayAbility::FindNearestEnemyBeforeAttack(float BoxExtent)
+bool UPlayerCombatGameplayAbility::FindNearestEnemyBeforeAttack(float BoxExtent)
 {
 	TArray<FHitResult> HitResults;
 	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;
@@ -46,30 +46,27 @@ void UPlayerCombatGameplayAbility::FindNearestEnemyBeforeAttack(float BoxExtent)
 
 	if (FindEnemies.IsEmpty())
 	{
-		return;
+		return false;
 	}
 	else
 	{
 		float ClosetDistance = 0.f;
 		RotateTargetActor = UGameplayStatics::FindNearestActor(GetPlayerCharacterFromActorInfo()->GetActorLocation(), FindEnemies, ClosetDistance);
-
-		URPGAT_ExecuteTaskOnTick* TickTask = URPGAT_ExecuteTaskOnTick::ExecuteTaskOnTick(this);
-		TickTask->OnAbilityTaskTick.AddDynamic(this, &UPlayerCombatGameplayAbility::RotateTargetTickBeforeAttack);
-		TickTask->ReadyForActivation();
+		FindRototation = UKismetMathLibrary::FindLookAtRotation(
+				GetPlayerCharacterFromActorInfo()->GetActorLocation(),
+				RotateTargetActor->GetActorLocation()
+				);
 	}
-	
+
+	return true;
 }
 
 void UPlayerCombatGameplayAbility::RotateTargetTickBeforeAttack(float DeltaTime)
 {
 	if (HasMatchingGameplayTag(RPGGameplayTag::Character_Status_Dead)) return;
+	if (!RotateTargetActor) return;
 
-	const FRotator FindRototation = UKismetMathLibrary::FindLookAtRotation(
-			GetPlayerCharacterFromActorInfo()->GetActorLocation(),
-			RotateTargetActor->GetActorLocation()
-		);
-
-	const FRotator TargetRot = FMath::RInterpTo(GetPlayerCharacterFromActorInfo()->GetActorRotation(),FindRototation,DeltaTime,5.0f);
+	const FRotator TargetRot = FMath::RInterpTo(GetPlayerCharacterFromActorInfo()->GetActorRotation(),FindRototation,DeltaTime,15.0f);
 
 	GetPlayerCharacterFromActorInfo()->SetActorRotation(FRotator(0.f,TargetRot.Yaw,0.f));
 }

@@ -12,8 +12,9 @@
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
 #include "Component/Player/PlayerCombatComponent.h"
-
+#include "GameAbilitySystem/GameplayTask/Player/RPGAT_Player_RotateTarget.h"
 #include "WorldStatic/Weapon/PlayerWeapon.h"
+
 URPGGA_Player_LightAttack::URPGGA_Player_LightAttack()
 {
 	InstancingPolicy = EGameplayAbilityInstancingPolicy::InstancedPerActor;
@@ -25,8 +26,24 @@ void URPGGA_Player_LightAttack::ActivateAbility(const FGameplayAbilitySpecHandle
 
 	GetWorld()->GetTimerManager().ClearTimer(ComboTimerHandle);
 
-	FindNearestEnemyBeforeAttack(1000.f);
-	
+	bool bRotate = FindNearestEnemyBeforeAttack(1000.f); 
+
+	if (bRotate)
+	{
+		URPGAT_Player_RotateTarget* RotateTickTask = URPGAT_Player_RotateTarget::ExecuteTaskOnTick(this);
+		RotateTickTask->OnRotateTargetTaskTick.AddDynamic(this, &UPlayerCombatGameplayAbility::RotateTargetTickBeforeAttack);
+		RotateTickTask->SetTargetRotation(FindRototation);
+		RotateTickTask->OnRotationCompleted.AddDynamic(this, &URPGGA_Player_LightAttack::Attack);
+		RotateTickTask->ReadyForActivation();
+	}
+	else
+	{	
+		Attack();
+	}
+}
+
+void URPGGA_Player_LightAttack::Attack()
+{
 	UPlayerCombatComponent* CombatComponent = GetPlayerCombatComponentFromActorInfo();
 	if (CombatComponent)
 	{
