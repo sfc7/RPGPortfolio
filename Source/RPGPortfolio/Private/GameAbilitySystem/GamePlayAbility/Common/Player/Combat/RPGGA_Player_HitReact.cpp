@@ -16,7 +16,8 @@ URPGGA_Player_HitReact::URPGGA_Player_HitReact()
 void URPGGA_Player_HitReact::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-
+	
+	
 	OUT float HitReactDirection;
 	AActor* Attacker = const_cast<AActor*>(TriggerEventData->Instigator.Get());
 	check(Attacker);
@@ -40,14 +41,13 @@ void URPGGA_Player_HitReact::ActivateAbility(const FGameplayAbilitySpecHandle Ha
 	else if (HitReactGamePlayTag == RPGGameplayTag::Character_Status_HitReact_Right)
 	{
 		MontageToPlay = HitReactMontage_Right;
-		
 	}
 
 	if (IsValid(MontageToPlay))
 	{
 		UAbilityTask_PlayMontageAndWait* PlayMontageTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this,
 TEXT("Player_HitReact"), MontageToPlay, 1.0f, NAME_None,
-true, 1.0f, false);
+true, 1.0f, 0.f);
 	
 		PlayMontageTask->OnCompleted.AddDynamic(this, &URPGGA_Player_HitReact::OnEndAbilityCallback);
 		PlayMontageTask->OnBlendOut.AddDynamic(this, &URPGGA_Player_HitReact::OnEndAbilityCallback);
@@ -57,7 +57,12 @@ true, 1.0f, false);
 	}
 }
 
-void URPGGA_Player_HitReact::OnEndAbilityCallback()
+void URPGGA_Player_HitReact::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
+	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
+}
+
+void URPGGA_Player_HitReact::OnEndAbilityCallback()
+{	
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 }

@@ -65,6 +65,7 @@ void URPGAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectMod
 		float CalcCurrentHp = FMath::Clamp(PreCurrentHp - CalcDamage, 0.f, GetMaxHp());
 
 		SetCurrentHp(CalcCurrentHp);
+		
 
 		UIComponent->OnCurrentHpChanged.Broadcast(GetCurrentHp()/GetMaxHp());
 		
@@ -72,8 +73,6 @@ void URPGAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectMod
 		{
 			AddGameplayTagToActor(Data.Target.GetAvatarActor(),RPGGameplayTag::Character_Status_Dead);
 		}
-
-		
 	}
 }
 
