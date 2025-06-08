@@ -23,7 +23,7 @@ void URPGGA_Monster_Attack_Melee::ActivateAbility(const FGameplayAbilitySpecHand
 		int32 RandomIndex = FMath::RandRange(0, AttackMontages.Num() -1);
 
 		UAbilityTask_PlayMontageAndWait* PlayMontageTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
-	this,TEXT("Player_Light_Attack"), AttackMontages[RandomIndex], 1.0f,  NAME_None,
+	this,TEXT("Player_Attack_Melee"), AttackMontages[RandomIndex], 1.0f,  NAME_None,
 true, 1.0f, false);
 
 		PlayMontageTask->OnCompleted.AddDynamic(this, &URPGGA_Monster_Attack_Melee::OnEndAbilityCallback);
@@ -43,7 +43,6 @@ true, 1.0f, false);
 
 void URPGGA_Monster_Attack_Melee::OnEventReceived(FGameplayEventData PayloadData)
 {
-	UE_LOG(LogTemp, Log, TEXT("Instigator : %s, Target : %s"), *PayloadData.Instigator.Get()->GetName(), *PayloadData.Target.Get()->GetName());
 }
 
 void URPGGA_Monster_Attack_Melee::OnEndAbilityCallback()

@@ -30,7 +30,7 @@ AMonsterCharacter::AMonsterCharacter()
 	MonsterUIComponent = CreateDefaultSubobject<UMonsterUIComponent>("MonsterUIComponent");
 	MonsterHpWidgetComponent = CreateDefaultSubobject<UWidgetComponent>("MonsterHpWidgetComponent");
 	MonsterHpWidgetComponent->SetupAttachment(GetMesh());
-	
+		
 	CreateDefaultAttributeSet();
 }
 

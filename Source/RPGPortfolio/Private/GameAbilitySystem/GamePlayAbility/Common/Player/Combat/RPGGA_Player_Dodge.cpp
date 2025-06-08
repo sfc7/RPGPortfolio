@@ -60,4 +60,8 @@ void URPGGA_Player_Dodge::CalcDodgeDirectionAndDistance()
 	{
 		GetPlayerCharacterFromActorInfo()->GetMotionWarpingComponent()->AddOrUpdateWarpTargetFromLocation(WarpTargetNameDistance, FindGround.ImpactPoint);
 	}
+	else
+	{
+		GetPlayerCharacterFromActorInfo()->GetMotionWarpingComponent()->RemoveWarpTarget(WarpTargetNameDistance);
+	}
 }
