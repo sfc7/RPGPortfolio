@@ -10,6 +10,8 @@
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
 #include "Component/Player/PlayerCombatComponent.h"
+#include "GameAbilitySystem/GamePlayAbility/Common/Player/Combat/RPGGA_Player_LightAttack.h"
+#include "GameAbilitySystem/GameplayTask/Player/RPGAT_Player_RotateTarget.h"
 #include "WorldStatic/Weapon/PlayerWeapon.h"
 
 
@@ -22,6 +24,24 @@ void URPGGA_Player_HeavyAttack::ActivateAbility(const FGameplayAbilitySpecHandle
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
+	bool bRotate = FindNearestEnemyBeforeAttack(1000.f); 
+
+	if (bRotate)
+	{
+		URPGAT_Player_RotateTarget* RotateTickTask = URPGAT_Player_RotateTarget::ExecuteTaskOnTick(this);
+		RotateTickTask->OnRotateTargetTaskTick.AddDynamic(this, &UPlayerCombatGameplayAbility::RotateTargetTickBeforeAttack);
+		RotateTickTask->SetTargetRotation(FindRototation);
+		RotateTickTask->OnRotationCompleted.AddDynamic(this, &URPGGA_Player_HeavyAttack::Attack);
+		RotateTickTask->ReadyForActivation();
+	}
+	else
+	{	
+		Attack();
+	}
+}
+
+void URPGGA_Player_HeavyAttack::Attack()
+{
 	CurrentLightAttackComboCount = 1;
 
 	UPlayerCombatComponent* CombatComponent = GetPlayerCombatComponentFromActorInfo();
@@ -60,8 +80,6 @@ void URPGGA_Player_HeavyAttack::ActivateAbility(const FGameplayAbilitySpecHandle
 
 	GameplayEventTask->EventReceived.AddDynamic(this, &ThisClass::ApplyEffectsSpecHandleToTargetCallback);
 	GameplayEventTask->ReadyForActivation();
-	
-
 }
 
 void URPGGA_Player_HeavyAttack::OnEndAbilityCallback()

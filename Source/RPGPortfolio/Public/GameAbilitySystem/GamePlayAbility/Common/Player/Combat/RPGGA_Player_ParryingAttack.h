@@ -23,6 +23,9 @@ protected:
 	void OnEndAbilityCallback();
 
 	UFUNCTION()
+	void Attack();
+	
+	UFUNCTION()
 	void ApplyEffectsSpecHandleToTargetCallback(FGameplayEventData PayloadData);
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))

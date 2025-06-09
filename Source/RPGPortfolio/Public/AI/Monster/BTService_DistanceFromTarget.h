@@ -24,4 +24,6 @@ protected:
 	UPROPERTY(EditAnywhere)
 	FBlackboardKeySelector DistanceFromTarget;
 
+
+
 };

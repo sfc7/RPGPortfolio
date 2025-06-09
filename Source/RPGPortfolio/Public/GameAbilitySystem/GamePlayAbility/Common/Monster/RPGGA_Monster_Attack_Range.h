@@ -6,6 +6,7 @@
 #include "GameAbilitySystem/GamePlayAbility/Common/Monster/MonsterGameplayAbility.h"
 #include "RPGGA_Monster_Attack_Range.generated.h"
 
+class AProjectileBase;
 /**
  * 
  */
@@ -24,4 +25,16 @@ protected:
 	
 	UFUNCTION()
 	void OnEndAbilityCallback();
+
+	UFUNCTION()
+	void SpawnProjectile(FGameplayEventData PayloadData);
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	TSubclassOf<AProjectileBase> ProjectileClass;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	TSubclassOf<UGameplayEffect> DamageEffectClass;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	FScalableFloat DamageScale;
 };

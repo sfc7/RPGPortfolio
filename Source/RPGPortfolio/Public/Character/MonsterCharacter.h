@@ -27,6 +27,9 @@ public:
 
 	virtual void MonsterDeath(TSoftObjectPtr<UNiagaraSystem> _DeathNiagaraEffectSoftObject);
 
+	UFUNCTION()
+	void OnDeathEffectFinished(UNiagaraComponent* FinishedComponent);
+	
 	virtual UUIComponentBase* GetUIComponent() const override;
 
 	virtual UMonsterUIComponent* GetMonsterUIComponent() const override;

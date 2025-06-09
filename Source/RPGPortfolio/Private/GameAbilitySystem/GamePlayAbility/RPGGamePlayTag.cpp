@@ -47,10 +47,15 @@ namespace RPGGameplayTag
 
 	UE_DEFINE_GAMEPLAY_TAG(Monster_Status_Strafe, "Monster.Status.Strafe");
 	UE_DEFINE_GAMEPLAY_TAG(Monster_Status_IsBeingAttacked, "Monster.Status.IsBeingAttacked");
+	UE_DEFINE_GAMEPLAY_TAG(Monster_Status_IsBeingUndefendableAttacked, "Monster.Status.IsBeingUndefendableAttacked");
 	// Event
+
+	
 	UE_DEFINE_GAMEPLAY_TAG(Character_Event_AttackHit_Melee, "Character.Event.AttackHit.Melee");
 	UE_DEFINE_GAMEPLAY_TAG(Character_Event_HitReact, "Character.Event.HitReact");
+	UE_DEFINE_GAMEPLAY_TAG(Character_Event_SpawnProjectile, "Character.Event.SpawnProjectile");
 
+	
 	UE_DEFINE_GAMEPLAY_TAG(Character_Ability_HitReact, "Character.Ability.HitReact");
 	UE_DEFINE_GAMEPLAY_TAG(Character_Ability_Death, "Character.Ability.Death");
 

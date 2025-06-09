@@ -41,8 +41,7 @@ bool UBTDeco_StopBT::CalculateRawConditionValue(UBehaviorTreeComponent& OwnerCom
 			}
 		}
 	}
-
-	// why?
+	
 	float DistToTarget = BlackboardComp->GetValueAsFloat(DistToTargetKey.SelectedKeyName);
 	
 	return (bTargetActorDead || bOwnerActorDead || FMath::IsNearlyZero(DistToTarget));

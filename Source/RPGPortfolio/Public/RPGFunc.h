@@ -26,5 +26,8 @@ public:
 	static FGameplayTag GetHitReactDirection (AActor* Attacker, AActor* HitReactActor, float& OutHitReactDirection);
 
 	UFUNCTION(BlueprintPure)
-	static bool IsValidDefense(AActor* Attacker,AActor* Defender);
+	static bool IsValidDefense(AActor* Attacker, AActor* Defender);
+
+	UFUNCTION(BlueprintCallable)
+	static bool ApplyGameplayEffectSpecHandleToTargetActor(AActor* Instigator,AActor* TargetActor,const FGameplayEffectSpecHandle& SpecHandle);
 };

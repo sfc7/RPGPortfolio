@@ -62,7 +62,7 @@ void URPGGA_Player_Defense::SuccessDefenseCallback(FGameplayEventData PayloadDat
 	FVector PlayerBackVector = GetPlayerCharacterFromActorInfo()->GetActorForwardVector() * -1;
 	FVector TargetLocation = PayloadData.Instigator->GetActorLocation();
 
-	GetPlayerCharacterFromActorInfo()->SetActorRotation(UKismetMathLibrary::FindLookAtRotation(PlayerLocation, TargetLocation));
+	// GetPlayerCharacterFromActorInfo()->SetActorRotation(UKismetMathLibrary::FindLookAtRotation(PlayerLocation, TargetLocation));
 	UAbilityTask_ApplyRootMotionConstantForce::ApplyRootMotionConstantForce( this,                         
 		TEXT("None"),      
 		PlayerBackVector,         
@@ -88,7 +88,7 @@ void URPGGA_Player_Defense::SuccessDefenseCallback(FGameplayEventData PayloadDat
 		RemoveParryingAttackReady();
 		GetWorld()->GetTimerManager().SetTimer(ParryingInputTimerHandle, [this]()
 		{
-		RemoveGameplayTag(GetPlayerCharacterFromActorInfo(), RPGGameplayTag::Player_Status_CanParryingAttack);
+			RemoveGameplayTag(GetPlayerCharacterFromActorInfo(), RPGGameplayTag::Player_Status_CanParryingAttack);
 		}, 0.5f, false);
 	}
 	else
@@ -119,17 +119,24 @@ void URPGGA_Player_Defense::RemoveParryingAttackReady()
 	GetWorld()->GetTimerManager().SetTimer(ParryingDelayAndGATimerHandle, [this]()
 	{
 		UGameplayStatics::SetGlobalTimeDilation(GetWorld(), 1.0f);
+		
 		if (ParryAbilityHandle.IsValid())
 		{
-			GetRPGAbilitySystemComponentFromActorInfo()->ClearAbility(ParryAbilityHandle);
-			ParryAbilityHandle = FGameplayAbilitySpecHandle(); 
+			FGameplayAbilitySpec* Spec = GetRPGAbilitySystemComponentFromActorInfo()->FindAbilitySpecFromHandle(ParryAbilityHandle);
+			if (Spec && Spec->IsActive())
+			{
+				GetWorld()->GetTimerManager().SetTimer(ParryingDelayAndGATimerHandle, [this]()
+				{
+					GetRPGAbilitySystemComponentFromActorInfo()->ClearAbility(ParryAbilityHandle);
+					ParryAbilityHandle = FGameplayAbilitySpecHandle(); 
+				}, 1.0f, false);
+			}
 		}
-	}, 1.0f, false);
+	}, 0.2f, false);
 }
 
 void URPGGA_Player_Defense::OnEndAbilityCallback()
 {
-	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
-
 	RemoveParryingAttackReady();
+	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 }

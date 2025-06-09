@@ -53,8 +53,30 @@ void AMonsterCharacter::MonsterDeath(TSoftObjectPtr<UNiagaraSystem> _DeathNiagar
 
 	UNiagaraSystem* DeathNiagara = _DeathNiagaraEffectSoftObject.LoadSynchronous();
 
-	UNiagaraFunctionLibrary::SpawnSystemAttached(DeathNiagara, GetMesh(), NAME_None,FVector::ZeroVector,  FRotator::ZeroRotator,
-		EAttachLocation::KeepWorldPosition, true, true, ENCPoolMethod::None, true);
+	UNiagaraComponent* DeathEffect = UNiagaraFunctionLibrary::SpawnSystemAttached(
+	DeathNiagara, GetMesh(), NAME_None, FVector::ZeroVector, FRotator::ZeroRotator,
+	EAttachLocation::KeepWorldPosition, true, true, ENCPoolMethod::None, true);
+
+	if (DeathEffect)
+	{
+		DeathEffect->OnSystemFinished.AddDynamic(this, &ThisClass::OnDeathEffectFinished);
+	}
+}
+
+void AMonsterCharacter::OnDeathEffectFinished(UNiagaraComponent* FinishedComponent)
+{
+	TArray<AActor*> AttachedActors;
+	GetAttachedActors(AttachedActors);
+    
+	for (AActor* AttachedActor : AttachedActors)
+	{
+		if (IsValid(AttachedActor))
+		{
+			AttachedActor->Destroy();
+		}
+	}
+	
+	Destroy();
 }
 
 UUIComponentBase* AMonsterCharacter::GetUIComponent() const

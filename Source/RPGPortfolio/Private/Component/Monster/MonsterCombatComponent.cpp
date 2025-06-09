@@ -18,10 +18,13 @@ void UMonsterCombatComponent::OnHitTargetActor(AActor* _HitActor, float _WeaponB
 
 	bool bIsFacing = false;
 
-	URPGAbilitySystemComponent* ASC = CastChecked<URPGAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(_HitActor));
-	const bool bIsPlayerDefensing = ASC->HasMatchingGameplayTag(RPGGameplayTag::Player_Status_Defense);
-	bool bIsUnDefendableAttack = false;
+	URPGAbilitySystemComponent* HitActorASC = CastChecked<URPGAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(_HitActor));
+	const bool bIsPlayerDefensing = HitActorASC->HasMatchingGameplayTag(RPGGameplayTag::Player_Status_Defense);
 
+	URPGAbilitySystemComponent* OwnerActorASC = CastChecked<URPGAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetOwningPawn()));
+	bool bIsUnDefendableAttack = OwnerActorASC->HasMatchingGameplayTag(RPGGameplayTag::Monster_Status_IsBeingUndefendableAttacked);	
+
+	UE_LOG(LogTemp, Warning, TEXT("Visible: %s"), bIsUnDefendableAttack ? TEXT("true1") : TEXT("false2"));
 	if (bIsPlayerDefensing && !bIsUnDefendableAttack)
 	{
 		bIsFacing = URPGFunc::IsValidDefense(GetOwningPawn(), _HitActor);

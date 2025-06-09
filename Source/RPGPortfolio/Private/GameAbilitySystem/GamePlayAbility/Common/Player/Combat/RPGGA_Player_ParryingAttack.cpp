@@ -10,6 +10,7 @@
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
 #include "GameAbilitySystem/GamePlayAbility/RPGGamePlayTag.h"
 #include "WorldStatic/Weapon/WeaponBase.h"
+#include "GameAbilitySystem/GameplayTask/Player/RPGAT_Player_RotateTarget.h"
 #include "EnhancedInputSubsystems.h"
 
 URPGGA_Player_ParryingAttack::URPGGA_Player_ParryingAttack()
@@ -21,6 +22,29 @@ void URPGGA_Player_ParryingAttack::ActivateAbility(const FGameplayAbilitySpecHan
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
+	bool bRotate = FindNearestEnemyBeforeAttack(1000.f); 
+
+	if (bRotate)
+	{
+		URPGAT_Player_RotateTarget* RotateTickTask = URPGAT_Player_RotateTarget::ExecuteTaskOnTick(this);
+		RotateTickTask->OnRotateTargetTaskTick.AddDynamic(this, &UPlayerCombatGameplayAbility::RotateTargetTickBeforeAttack);
+		RotateTickTask->SetTargetRotation(FindRototation);
+		RotateTickTask->OnRotationCompleted.AddDynamic(this, &URPGGA_Player_ParryingAttack::Attack);
+		RotateTickTask->ReadyForActivation();
+	}
+	else
+	{	
+		Attack();
+	}
+}
+
+void URPGGA_Player_ParryingAttack::OnEndAbilityCallback()
+{
+	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
+}
+
+void URPGGA_Player_ParryingAttack::Attack()
+{
 	UPlayerCombatComponent* CombatComponent = GetPlayerCombatComponentFromActorInfo();
 	if (CombatComponent)
 	{
@@ -46,11 +70,6 @@ void URPGGA_Player_ParryingAttack::ActivateAbility(const FGameplayAbilitySpecHan
 
 	AttackHitGE->EventReceived.AddDynamic(this, &ThisClass::ApplyEffectsSpecHandleToTargetCallback);
 	AttackHitGE->ReadyForActivation();
-}
-
-void URPGGA_Player_ParryingAttack::OnEndAbilityCallback()
-{
-	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 }
 
 void URPGGA_Player_ParryingAttack::ApplyEffectsSpecHandleToTargetCallback(FGameplayEventData PayloadData)

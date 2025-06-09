@@ -2,9 +2,12 @@
 
 
 #include "RPGFunc.h"
+
+#include "AbilitySystemBlueprintLibrary.h"
 #include "GameplayTagContainer.h"
 #include "GenericTeamAgentInterface.h"
 #include "ScalableFloat.h"
+#include "GameAbilitySystem/RPGAbilitySystemComponent.h"
 #include "GameAbilitySystem/GamePlayAbility/RPGGamePlayTag.h"
 #include "Kismet/KismetMathLibrary.h"
 
@@ -77,4 +80,14 @@ bool URPGFunc::IsValidDefense(AActor* Attacker, AActor* Defender)
 
 	return InnerProduct < -0.1f;
 	
+}
+
+bool URPGFunc::ApplyGameplayEffectSpecHandleToTargetActor(AActor* Instigator, AActor* TargetActor, const FGameplayEffectSpecHandle& SpecHandle)
+{
+	URPGAbilitySystemComponent* InstigatorASC = CastChecked<URPGAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Instigator));
+	URPGAbilitySystemComponent* TargetActorASC = CastChecked<URPGAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor));
+
+	FActiveGameplayEffectHandle ActiveGameplayEffectHandle = InstigatorASC->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data, TargetActorASC);
+
+	return ActiveGameplayEffectHandle.WasSuccessfullyApplied();
 }
