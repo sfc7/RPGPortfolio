@@ -11,6 +11,7 @@ class UMonsterCombatComponent;
 class UNiagaraSystem;
 class UMonsterUIComponent;
 class UWidgetComponent;
+class UBoxComponent;
 /**
  * 
  */
@@ -22,6 +23,11 @@ public:
 	AMonsterCharacter();
 
 	FORCEINLINE UMonsterCombatComponent* GetMonsterCombatComponent() const { return MonsterCombatComponent; }
+	
+	FORCEINLINE UBoxComponent* GetLeftHandCollisionBox() const { return LeftHandCollisionBox; }
+
+	FORCEINLINE UBoxComponent* GetRightHandCollisionBox() const { return RightHandCollisionBox; }
+
 	
 	virtual UCombatComponentBase* GetCombatComponent() const override;
 
@@ -42,10 +48,19 @@ protected:
 	UMonsterCombatComponent* MonsterCombatComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
+	UBoxComponent* LeftHandCollisionBox;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
+	UBoxComponent* RightHandCollisionBox;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
 	UMonsterUIComponent* MonsterUIComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
 	UWidgetComponent* MonsterHpWidgetComponent;
+
+	UFUNCTION()
+	virtual void OnBodyCollisionBoxBeginOverlap();
 
 private:
 	void InitEnemyStartUpData();

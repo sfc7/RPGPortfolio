@@ -16,7 +16,7 @@ class RPGPORTFOLIO_API URPGWidgetBase : public UUserWidget
 {
 	GENERATED_BODY()
 public:
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void InitMonsterCreatedWidget(AActor* OwningMonster);
 
 protected:

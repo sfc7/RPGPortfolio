@@ -11,6 +11,7 @@
 #include "Components/WidgetComponent.h"
 #include "DataAsset/DataAsset_AbilitySetBase.h"
 #include "Widget/RPGWidgetBase.h"
+#include "Components/BoxComponent.h"
 
 AMonsterCharacter::AMonsterCharacter()
 {
@@ -32,6 +33,14 @@ AMonsterCharacter::AMonsterCharacter()
 	MonsterHpWidgetComponent->SetupAttachment(GetMesh());
 		
 	CreateDefaultAttributeSet();
+
+	LeftHandCollisionBox = CreateDefaultSubobject<UBoxComponent>("LeftHandCollisionBox");
+	LeftHandCollisionBox->SetupAttachment(GetMesh());
+	LeftHandCollisionBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	RightHandCollisionBox = CreateDefaultSubobject<UBoxComponent>("RightHandCollisionBox");
+	RightHandCollisionBox->SetupAttachment(GetMesh());
+	RightHandCollisionBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 UCombatComponentBase* AMonsterCharacter::GetCombatComponent() const
@@ -51,12 +60,14 @@ void AMonsterCharacter::MonsterDeath(TSoftObjectPtr<UNiagaraSystem> _DeathNiagar
 	GetMesh()->bPauseAnims = true;
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
+	MonsterUIComponent->RemoveMonsterDrawnWidget();
+	
 	UNiagaraSystem* DeathNiagara = _DeathNiagaraEffectSoftObject.LoadSynchronous();
 
 	UNiagaraComponent* DeathEffect = UNiagaraFunctionLibrary::SpawnSystemAttached(
 	DeathNiagara, GetMesh(), NAME_None, FVector::ZeroVector, FRotator::ZeroRotator,
-	EAttachLocation::KeepWorldPosition, true, true, ENCPoolMethod::None, true);
-
+	EAttachLocation::SnapToTarget, true, true, ENCPoolMethod::None, true);
+	
 	if (DeathEffect)
 	{
 		DeathEffect->OnSystemFinished.AddDynamic(this, &ThisClass::OnDeathEffectFinished);
@@ -107,6 +118,7 @@ void AMonsterCharacter::InitEnemyStartUpData()
 		return;
 	}
 
+	UE_LOG(LogTemp,Log,TEXT("AMonsterCharacter::InitEnemyStartUpData()"));
 	UAssetManager::GetStreamableManager().RequestAsyncLoad(
 		CharacterStartUpData.ToSoftObjectPath(),
 		FStreamableDelegate::CreateLambda(
