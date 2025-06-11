@@ -69,8 +69,10 @@ void UCombatComponentBase::ToggleCurrentWeaponCollision(bool _bShouldEnable, ETo
 
 		SetWeaponCollision(CurrentWeapon, _bShouldEnable);
 	}
-
-	//TODO : Handlebody collision Boxes
+	else
+	{
+		ToggleBodyCollisionBoxCollsion(_bShouldEnable, _ToggleDamageType); // 현재는 Monster에서만 구현 
+	}
 }
 
 void UCombatComponentBase::ToggleCarriedWeaponCollision(AWeaponBase* _CarriedWeapon, bool _bShouldEnable, EToggleDamageType _ToggleDamageType)
@@ -91,6 +93,11 @@ void UCombatComponentBase::OnHitTargetActor(AActor* _HitActor, float _WeaponBase
 void UCombatComponentBase::OnWeaponPulledFromTargetActor(AActor* _InteractedActor, float _WeaponBaseDamage, EWeaponAttackType AttackType)
 {
 }
+
+void UCombatComponentBase::ToggleBodyCollisionBoxCollsion(bool _bShouldEnable, EToggleDamageType _ToggleDamageType)
+{
+}
+
 URPGAbilitySystemComponent* UCombatComponentBase::GetRPGAbilitySystemComponent() const
 {
 	APlayerCharacterBase* PlayerCharacter = Cast<APlayerCharacterBase>(GetOwner());

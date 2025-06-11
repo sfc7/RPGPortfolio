@@ -10,6 +10,7 @@
 #include "Component/Player/PlayerUIComponent.h"
 #include "Interface/UIInterface.h"
 
+
 URPGAttributeSet::URPGAttributeSet()
 {
 	InitCurrentHp(1.f),

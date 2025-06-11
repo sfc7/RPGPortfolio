@@ -43,24 +43,34 @@ protected:
 	virtual void BeginPlay() override;
 	
 	virtual void PossessedBy(AController* NewController) override;
+
+#if WITH_EDITOR
+	virtual void PostEditChangeProperty( struct FPropertyChangedEvent& PropertyChangedEvent) override;
+#endif
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
 	UMonsterCombatComponent* MonsterCombatComponent;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
-	UBoxComponent* LeftHandCollisionBox;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
-	UBoxComponent* RightHandCollisionBox;
-
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
 	UMonsterUIComponent* MonsterUIComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
 	UWidgetComponent* MonsterHpWidgetComponent;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UBoxComponent* LeftHandCollisionBox;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FName LeftHandBoneName;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UBoxComponent* RightHandCollisionBox;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FName RightHandBoneName;
+
 	UFUNCTION()
-	virtual void OnBodyCollisionBoxBeginOverlap();
+	virtual void OnBodyCollisionBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 private:
 	void InitEnemyStartUpData();

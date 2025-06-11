@@ -57,4 +57,13 @@ enum class EPlayerCharacterClass : uint8
 	None
 };
 
-
+UENUM(BlueprintType)
+enum class ERPGDecoratorComparisonOperator : uint8
+{
+	LessThan            UMETA(DisplayName = "Less Than"),
+	LessThanOrEqualTo   UMETA(DisplayName = "Less Than or Equal To"),
+	EqualTo             UMETA(DisplayName = "Equal To"),
+	GreaterThanOrEqualTo UMETA(DisplayName = "Greater Than or Equal To"),
+	GreaterThan         UMETA(DisplayName = "Greater Than"),
+	None
+};

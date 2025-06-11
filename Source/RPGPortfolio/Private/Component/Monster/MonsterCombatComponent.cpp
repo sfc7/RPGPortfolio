@@ -5,9 +5,11 @@
 #include "GameAbilitySystem/GamePlayAbility/RPGGamePlayTag.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "RPGFunc.h"
+#include "Character/MonsterCharacter.h"
+#include "Components/BoxComponent.h"
 #include "GameAbilitySystem/RPGAbilitySystemComponent.h"
 
-void UMonsterCombatComponent::OnHitTargetActor(AActor* _HitActor, float _WeaponBaseDamage, EWeaponAttackType AttackType)
+void UMonsterCombatComponent::OnHitTargetActor(AActor* _HitActor)
 {
 	if (OverlappedActors.Contains(_HitActor))
 	{
@@ -24,7 +26,7 @@ void UMonsterCombatComponent::OnHitTargetActor(AActor* _HitActor, float _WeaponB
 	URPGAbilitySystemComponent* OwnerActorASC = CastChecked<URPGAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetOwningPawn()));
 	bool bIsUnDefendableAttack = OwnerActorASC->HasMatchingGameplayTag(RPGGameplayTag::Monster_Status_IsBeingUndefendableAttacked);	
 
-	UE_LOG(LogTemp, Warning, TEXT("Visible: %s"), bIsUnDefendableAttack ? TEXT("true1") : TEXT("false2"));
+
 	if (bIsPlayerDefensing && !bIsUnDefendableAttack)
 	{
 		bIsFacing = URPGFunc::IsValidDefense(GetOwningPawn(), _HitActor);
@@ -54,5 +56,43 @@ void UMonsterCombatComponent::OnHitTargetActor(AActor* _HitActor, float _WeaponB
 
 void UMonsterCombatComponent::OnWeaponPulledFromTargetActor(AActor* _InteractedActor, float _WeaponBaseDamage, EWeaponAttackType AttackType)
 {
+	
+}
+
+void UMonsterCombatComponent::ToggleBodyCollisionBoxCollsion(bool _bShouldEnable, EToggleDamageType _ToggleDamageType)
+{
+	AMonsterCharacter* OwningMonsterCharacter = GetOwningPawn<AMonsterCharacter>();
+
+	if (OwningMonsterCharacter)
+	{
+		UBoxComponent* LeftHandCollsionBox = OwningMonsterCharacter->GetLeftHandCollisionBox();
+		UBoxComponent* RightHandCollsionBox = OwningMonsterCharacter->GetRightHandCollisionBox();
+
+		if (LeftHandCollsionBox && RightHandCollsionBox)
+		{
+			FString EnumName = UEnum::GetValueAsString(_ToggleDamageType);
+			UE_LOG(LogTemp, Warning, TEXT("ToggleDamageType: %s"), *EnumName);
+			
+			switch (_ToggleDamageType)
+			{
+			case EToggleDamageType::LeftHand:
+				if (_bShouldEnable) LeftHandCollsionBox->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+				else LeftHandCollsionBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+				break;
+			case EToggleDamageType::RightHand:
+				if (_bShouldEnable) RightHandCollsionBox->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+				else RightHandCollsionBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+				break;
+			default:
+				break;
+			}
+		}
+
+		if (!_bShouldEnable)
+		{
+			OverlappedActors.Empty();
+		}
+	}
+
 	
 }

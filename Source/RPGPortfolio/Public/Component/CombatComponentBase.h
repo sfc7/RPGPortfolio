@@ -74,6 +74,8 @@ public:
 
 
 protected:
+	virtual void ToggleBodyCollisionBoxCollsion(bool _bShouldEnable, EToggleDamageType _ToggleDamageType);
+	
 	TArray<AActor*> OverlappedActors;
 
 	UFUNCTION(BlueprintPure, Category = "GA")

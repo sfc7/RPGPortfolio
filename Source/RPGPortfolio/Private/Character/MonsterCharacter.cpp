@@ -12,6 +12,7 @@
 #include "DataAsset/DataAsset_AbilitySetBase.h"
 #include "Widget/RPGWidgetBase.h"
 #include "Components/BoxComponent.h"
+#include "RPGFunc.h"
 
 AMonsterCharacter::AMonsterCharacter()
 {
@@ -37,10 +38,12 @@ AMonsterCharacter::AMonsterCharacter()
 	LeftHandCollisionBox = CreateDefaultSubobject<UBoxComponent>("LeftHandCollisionBox");
 	LeftHandCollisionBox->SetupAttachment(GetMesh());
 	LeftHandCollisionBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	LeftHandCollisionBox->OnComponentBeginOverlap.AddUniqueDynamic(this, &ThisClass::OnBodyCollisionBoxBeginOverlap);
 
 	RightHandCollisionBox = CreateDefaultSubobject<UBoxComponent>("RightHandCollisionBox");
 	RightHandCollisionBox->SetupAttachment(GetMesh());
 	RightHandCollisionBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	RightHandCollisionBox->OnComponentBeginOverlap.AddUniqueDynamic(this, &ThisClass::OnBodyCollisionBoxBeginOverlap);
 }
 
 UCombatComponentBase* AMonsterCharacter::GetCombatComponent() const
@@ -54,6 +57,23 @@ void AMonsterCharacter::PossessedBy(AController* NewController)
 
 	InitEnemyStartUpData();
 }
+
+#if WITH_EDITOR
+void AMonsterCharacter::PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent)
+{
+	Super::PostEditChangeProperty(PropertyChangedEvent);
+
+	if (PropertyChangedEvent.GetMemberPropertyName() == GET_MEMBER_NAME_CHECKED(ThisClass, LeftHandBoneName))
+	{
+		LeftHandCollisionBox->AttachToComponent(GetMesh(),FAttachmentTransformRules::SnapToTargetNotIncludingScale, LeftHandBoneName);
+	}
+
+	if (PropertyChangedEvent.GetMemberPropertyName() == GET_MEMBER_NAME_CHECKED(ThisClass, RightHandBoneName))
+	{
+		RightHandCollisionBox->AttachToComponent(GetMesh(),FAttachmentTransformRules::SnapToTargetNotIncludingScale, RightHandBoneName);
+	}
+}
+#endif
 
 void AMonsterCharacter::MonsterDeath(TSoftObjectPtr<UNiagaraSystem> _DeathNiagaraEffectSoftObject)
 {
@@ -108,6 +128,18 @@ void AMonsterCharacter::BeginPlay()
 	if (HpWidget)
 	{
 		HpWidget->InitMonsterCreatedWidget(this);
+	}
+}
+
+void AMonsterCharacter::OnBodyCollisionBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (APawn* HitPawn = Cast<APawn>(OtherActor))
+	{
+		if (URPGFunc::CheckTargetTeamAgent(this, HitPawn))
+		{
+			MonsterCombatComponent->OnHitTargetActor(HitPawn);
+			
+		}
 	}
 }
 
