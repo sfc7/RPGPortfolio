@@ -22,6 +22,21 @@ struct FPlayerAbilitySet
 };
 
 USTRUCT(BlueprintType)
+struct FPlayerAbilitySkillSet : public FPlayerAbilitySet
+{
+	GENERATED_BODY()
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TSoftObjectPtr<UMaterialInterface> AbilityIcon;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FGameplayTag InputTag;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FGameplayTag SkillCooldown;
+};
+
+USTRUCT(BlueprintType)
 struct FPlayerWeaponData
 {
 	GENERATED_BODY()
@@ -46,6 +61,7 @@ enum class EWeaponAttackType : uint8
 	Light,
 	Heavy,
 	Parrying,
+	Skill,
 	None
 };
 

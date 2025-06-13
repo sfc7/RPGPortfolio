@@ -85,9 +85,11 @@ void URPGGA_Player_ParryingAttack::ApplyEffectsSpecHandleToTargetCallback(FGamep
 		ASC->ExecuteGameplayCue(RPGGameplayTag::GameplayCue_Player_Fighter_Sound_AttackHit_Parrying, EffectContext);
 	}
 	
-	FActiveGameplayEffectHandle ActiveGameplayEffectHandle = ApplyEffectsSpecHandleToTarget(LocalTargetActor, SpecHandle);
-	if (ActiveGameplayEffectHandle.WasSuccessfullyApplied())
+	FActiveGameplayEffectHandle HitReactGameplayEffectHandle = ApplyEffectsSpecHandleToTarget(LocalTargetActor, SpecHandle);
+	if (HitReactGameplayEffectHandle.WasSuccessfullyApplied())
 	{
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(LocalTargetActor, RPGGameplayTag::Character_Event_HitReact, PayloadData);
 	}
+	BP_ApplyGameplayEffectToOwner(GainMpEffectClass,GetAbilityLevel());
+	
 }

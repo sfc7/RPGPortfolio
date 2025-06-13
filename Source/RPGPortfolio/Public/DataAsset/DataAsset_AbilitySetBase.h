@@ -30,7 +30,7 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "GA")
 	TArray<TSubclassOf<UGameplayEffect>> InitGameplayEffects;
- 
-	void GrantAbilities(const TArray< TSubclassOf <URPGGameplayAbility> >& _ToBeGrantedAbilities,URPGAbilitySystemComponent* _ASC,int32 ApplyLevel = 1);
+	
+	void GrantAbilities(const TArray< TSubclassOf <URPGGameplayAbility>>& _ToBeGrantedAbilities,URPGAbilitySystemComponent* _ASC,int32 ApplyLevel = 1);
 };
 

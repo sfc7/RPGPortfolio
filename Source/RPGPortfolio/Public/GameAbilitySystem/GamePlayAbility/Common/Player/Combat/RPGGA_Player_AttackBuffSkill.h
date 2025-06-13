@@ -22,6 +22,12 @@ protected:
 	UFUNCTION()
 	void OnEndAbilityCallback();
 
+	UFUNCTION()
+	void ApplyFXGameplayCue(FGameplayEventData PayloadData);
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (Categories=GameplayCue))
+	FGameplayTag BuffFXGameplayCue;
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	UAnimMontage* BuffCastingMontage;
 };

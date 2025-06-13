@@ -25,6 +25,7 @@ URPGAttributeSet::URPGAttributeSet()
 
 void URPGAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data)
 {
+	UE_LOG(LogTemp,Log,TEXT("PostGameplayEffectExecute"));
 	if (!UIInterface.IsValid())
 	{
 		UIInterface = TWeakInterfacePtr<IUIInterface>(Data.Target.GetAvatarActor());
@@ -45,12 +46,21 @@ void URPGAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectMod
 		UIComponent->OnCurrentHpChanged.Broadcast(GetCurrentHp()/GetMaxHp());
 	}
 
-	if (Data.EvaluatedData.Attribute == GetCurrentMpAttribute())
+	if (Data.EvaluatedData.Attribute == GetCurrentMpAttribute())	
 	{
 		float NewCurrentMp = FMath::Clamp(GetCurrentMp(), 0.f, GetMaxMp());
 
 		SetCurrentHp(NewCurrentMp);
 
+		if (GetCurrentMp() != GetMaxMp())
+		{
+			AddGameplayTagToActor(Data.Target.GetAvatarActor(), RPGGameplayTag::Player_Status_AttributeSet_MpNotFull);
+		}
+		else
+		{
+			AddGameplayTagToActor(Data.Target.GetAvatarActor(), RPGGameplayTag::Player_Status_AttributeSet_MpFull);
+		}
+		
 		UPlayerUIComponent* PlayerUIComponent = UIInterface->GetPlayerUIComponent();
 		if (PlayerUIComponent)
 		{

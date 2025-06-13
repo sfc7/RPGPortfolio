@@ -21,5 +21,7 @@ public:
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "GA")
 	TArray<FPlayerAbilitySet> PlayerInitialAbilitySet;
-	
+
+	UPROPERTY(EditDefaultsOnly, Category = "GA")
+	TArray<FPlayerAbilitySkillSet> PlayerInitialAbilitySkillSet;
 };

@@ -13,7 +13,7 @@
 #include "GameAbilitySystem/GamePlayAbility/Common/Player/Combat/RPGGA_Player_LightAttack.h"
 #include "GameAbilitySystem/GameplayTask/Player/RPGAT_Player_RotateTarget.h"
 #include "WorldStatic/Weapon/PlayerWeapon.h"
-
+#include "GameAbilitySystem/RPGAbilitySystemComponent.h"
 
 URPGGA_Player_HeavyAttack::URPGGA_Player_HeavyAttack()
 {
@@ -100,9 +100,11 @@ void URPGGA_Player_HeavyAttack::ApplyEffectsSpecHandleToTargetCallback(FGameplay
 		ASC->ExecuteGameplayCue(RPGGameplayTag::GameplayCue_Player_Fighter_Sound_AttackHit_Melee_Heavy, EffectContext);
 	}
 	
-	FActiveGameplayEffectHandle ActiveGameplayEffectHandle = ApplyEffectsSpecHandleToTarget(LocalTargetActor, SpecHandle);
-	if (ActiveGameplayEffectHandle.WasSuccessfullyApplied())
+	FActiveGameplayEffectHandle HitReactGameplayEffectHandle = ApplyEffectsSpecHandleToTarget(LocalTargetActor, SpecHandle);
+	if (HitReactGameplayEffectHandle.WasSuccessfullyApplied())
 	{
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(LocalTargetActor, RPGGameplayTag::Character_Event_HitReact, PayloadData);
 	}
+
+	BP_ApplyGameplayEffectToOwner(GainMpEffectClass,GetAbilityLevel());
 }

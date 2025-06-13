@@ -11,6 +11,8 @@ namespace RPGGameplayTag
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_LightAttack_Keyboard, "InputTag.LightAttack.Keyboard");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_HeavyAttack_Keyboard, "InputTag.HeavyAttack.Keyboard");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_ParryingAttack_Keyboard, "InputTag.ParryingAttack.Keyboard");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_FirstSkill_Keyboard, "InputTag.FirstSkill.Keyboard");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_SecondSkill_Keyboard, "InputTag.SecondSkill.Keyboard");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_ThirdSkill_Keyboard, "InputTag.ThirdSkill.Keyboard");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_ShowDebug_Keyboard, "InputTag.ShowDebug.Keyboard");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Dodge_Keyboard, "InputTag.Dodge.Keyboard");
@@ -32,14 +34,30 @@ namespace RPGGameplayTag
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Defense, "Player.Ability.Defense");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Parry, "Player.Ability.Attack.Parry");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Skill_AttackBuff, "Player.Ability.Skill.AttackBuff");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Skill_NenShot, "Player.Ability.Skill.NenShot");
 
+	// Player - Status
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_CanHeavyAttackCombo, "Player.Status.CanHeavyAttackCombo");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Dodge, "Player.Status.Dodge");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Defense, "Player.Status.Defense");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_CanParryingAttack, "Player.Status.CanParryingAttack");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Status_ActiveAttackBuff, "Player.Status.ActiveAttackBuff");
+
+	// Player - Status - AttributeSet
+	UE_DEFINE_GAMEPLAY_TAG(Player_Status_AttributeSet_MpNotFull, "Player.Status.AttributeSet.MpNotFull");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Status_AttributeSet_MpFull, "Player.Status.AttributeSet.MpFull");
+
+	// Player - Status - Interact
+	// ex) RPGPORTFOLIO_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Status_Interact_Trade);
+
+	// Player - Status - Cooldown
+	UE_DEFINE_GAMEPLAY_TAG(Player_Status_CoolDown_NenShot, "Player.Status.CoolDown.NenShot");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Status_CoolDown_AttackBuff, "Player.Status.CoolDown.AttackBuff");
+	
 	
 	UE_DEFINE_GAMEPLAY_TAG(Player_Event_HitPause, "Player.Event.HitPause");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Event_DefenseSuccess, "Player.Event.DefenseSuccess");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Event_ActiveBuff, "Player.Event.ActiveBuff");
 	
 	//Monster
 	UE_DEFINE_GAMEPLAY_TAG(Monster_Weapon, "Monster.Weapon");
@@ -81,8 +99,8 @@ namespace RPGGameplayTag
 	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Player_Fighter_Sound_AttackHit_Melee_Heavy, "GameplayCue.Player.Fighter.Sound.AttackHit.Melee.Heavy");
 	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Player_Fighter_Sound_AttackHit_Parrying, "GameplayCue.Player.Fighter.Sound.AttackHit.Parrying");
 	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Player_Fighter_Effect_Defense, "GameplayCue.Player.Fighter.Effect.Defense");
-	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Player_Fighter_Effect_DefenseSucess, "GameplayCue.Player.ighter.Effect.DefenseSucess");
+	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Player_Fighter_Effect_DefenseSucess, "GameplayCue.Player.Fighter.Effect.DefenseSucess");
 	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Player_Fighter_Effect_DefenseParrying, "GameplayCue.Player.Fighter.Effect.DefenseParrying");
-	
+	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Player_Fighter_Effect_ApplyBuff, "GameplayCue.Player.Fighter.Effect.ApplyBuff");
 	
 }
