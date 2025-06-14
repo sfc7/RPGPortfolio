@@ -3,7 +3,7 @@
 
 #include "Component/Player/PlayerUIComponent.h"
 
-void UPlayerUIComponent::UpdateSkillIconSlot(FGameplayTag AbilityInputTag, TSoftObjectPtr<UMaterialInterface> SkillIconMaterial)
+void UPlayerUIComponent::UpdateSkillIconSlot(FGameplayTag SkillAbilityTag, TSoftObjectPtr<UMaterialInterface> SkillIconMaterial)
 {
-	OnSkillIconSlotUpdatedDelegate.Broadcast(AbilityInputTag, SkillIconMaterial);
+	OnSkillIconSlotUpdatedDelegate.Broadcast(SkillAbilityTag, SkillIconMaterial);
 }

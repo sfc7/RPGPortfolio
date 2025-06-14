@@ -11,7 +11,7 @@
 #include "Character/Player/PlayerCharacterBase.h"
 #include "Component/Player/PlayerCombatComponent.h"
 #include "Component/Player/PlayerUIComponent.h"
-#include "Component/Player/PlayerUIComponent.h"
+#include "GameAbilitySystem/GamePlayAbility/RPGGamePlayTag.h"
 
 URPGGA_Player_NenShotSkill::URPGGA_Player_NenShotSkill()
 {
@@ -23,7 +23,7 @@ void URPGGA_Player_NenShotSkill::ActivateAbility(const FGameplayAbilitySpecHandl
 
 	CommitAbility(Handle, ActorInfo, ActivationInfo);
 
-	GetPlayerCharacterFromActorInfo()->GetPlayerUIComponent()->OnSkillCooldownBeginDelegate.Broadcast()
+	
 	
 	UPlayerCombatComponent* CombatComponent = GetPlayerCombatComponentFromActorInfo();
 	if (CombatComponent)

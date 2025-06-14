@@ -8,8 +8,8 @@
 #include "PlayerUIComponent.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInitPlayerUIbyClassDelegate, EPlayerCharacterClass , PlayerCharacterClass);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSkillIconSlotUpdatedDelegate, FGameplayTag, AbilityInputTag, TSoftObjectPtr<UMaterialInterface>, SkillIconMaterial);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnSkillCooldownBeginDelegate, FGameplayTag, AbilityInputTag, float, TotalCooldownTime, float, RemaningCooldownTime);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSkillIconSlotUpdatedDelegate, FGameplayTag, SkillAbilityTag, TSoftObjectPtr<UMaterialInterface>, SkillIconMaterial);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnSkillCooldownBeginDelegate, FGameplayTag, SkillAbilityTag, float, TotalCooldownTime, float, RemaningCooldownTime);
 /**
  * 
  */
@@ -31,6 +31,6 @@ public:
 	UPROPERTY(BlueprintCallable, BlueprintAssignable)
 	FOnSkillCooldownBeginDelegate OnSkillCooldownBeginDelegate;	
 	
-	void UpdateSkillIconSlot(FGameplayTag AbilityInputTag, TSoftObjectPtr<UMaterialInterface> SkillIconMaterial);
+	void UpdateSkillIconSlot(FGameplayTag SkillAbilityTag, TSoftObjectPtr<UMaterialInterface> SkillIconMaterial);
 };
 	

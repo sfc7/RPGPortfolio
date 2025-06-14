@@ -6,11 +6,12 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "GameplayTagContainer.h"
 #include "GenericTeamAgentInterface.h"
+#include "RPGStructTypes.h"
 #include "ScalableFloat.h"
 #include "GameAbilitySystem/RPGAbilitySystemComponent.h"
 #include "GameAbilitySystem/GamePlayAbility/RPGGamePlayTag.h"
 #include "Kismet/KismetMathLibrary.h"
-
+#include "Func/RPGCustomCountDownAction.h"
 bool URPGFunc::CheckTargetTeamAgent(APawn* SourcePawn, APawn* TargetPawn)
 {
 	if (IsValid(SourcePawn) && IsValid(TargetPawn))
@@ -90,4 +91,41 @@ bool URPGFunc::ApplyGameplayEffectSpecHandleToTargetActor(AActor* Instigator, AA
 	FActiveGameplayEffectHandle ActiveGameplayEffectHandle = InstigatorASC->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data, TargetActorASC);
 
 	return ActiveGameplayEffectHandle.WasSuccessfullyApplied();
+}
+
+void URPGFunc::CountDown(const UObject* WorldContextObject, float TotalTime, float UpdateInterval, float& OutRemainingTime, ERPGCountDownActionInput CountDownInput, ERPGCountDownActionOutput& CountDownOutput, FLatentActionInfo LatentInfo)
+{
+	UWorld* World = nullptr;
+
+	if (GEngine)
+	{
+		World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull);
+	}
+
+	if (!World) return;
+
+	FLatentActionManager& LatentActionManager = World->GetLatentActionManager();
+
+	FRPGCustomCountDownAction* FoundAction = LatentActionManager.FindExistingAction<FRPGCustomCountDownAction>(LatentInfo.CallbackTarget, LatentInfo.UUID);
+
+	if (CountDownInput == ERPGCountDownActionInput::Start)
+	{
+		if (!FoundAction)
+		{
+			LatentActionManager.AddNewAction(
+				LatentInfo.CallbackTarget,
+				LatentInfo.UUID,
+				new FRPGCustomCountDownAction(TotalTime, UpdateInterval, OutRemainingTime, CountDownOutput, LatentInfo)
+				);
+		}		
+	}
+
+	if (CountDownInput == ERPGCountDownActionInput::Cancel)
+	{
+		if (FoundAction)
+		{
+			FoundAction->CancelAction();
+			
+		}
+	}
 }

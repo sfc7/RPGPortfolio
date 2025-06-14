@@ -31,6 +31,9 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "GA")
 	FGameplayEffectSpecHandle MakePlayerBaseDamageEffectSpecHandle(TSubclassOf<UGameplayEffect> _EffectClass, float _WeaponBaseDamage, FGameplayTag _CurrentAttackTypeTag);
+
+	UFUNCTION(BlueprintCallable, Category = "GA")
+	bool GetAbilityRemaningCooldownByTag(FGameplayTag CooldownTag, float& TotalCooldownTime, float& RemaningCooldownTime);
 	
 private:
 	TWeakObjectPtr<APlayerCharacterBase> PlayerCharacter;

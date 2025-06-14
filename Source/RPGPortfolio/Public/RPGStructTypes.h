@@ -30,7 +30,7 @@ struct FPlayerAbilitySkillSet : public FPlayerAbilitySet
 	TSoftObjectPtr<UMaterialInterface> AbilityIcon;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	FGameplayTag InputTag;
+	FGameplayTag SkillAbilityTag;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FGameplayTag SkillCooldown;
@@ -82,4 +82,19 @@ enum class ERPGDecoratorComparisonOperator : uint8
 	GreaterThanOrEqualTo UMETA(DisplayName = "Greater Than or Equal To"),
 	GreaterThan         UMETA(DisplayName = "Greater Than"),
 	None
+};	
+
+UENUM()
+enum class ERPGCountDownActionInput : uint8
+{
+	Start,
+	Cancel
+};
+
+UENUM()
+enum class ERPGCountDownActionOutput : uint8
+{
+	Updated,
+	Completed,
+	Cancelled
 };

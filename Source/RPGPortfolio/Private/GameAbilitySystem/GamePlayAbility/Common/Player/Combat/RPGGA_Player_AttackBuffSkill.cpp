@@ -8,6 +8,8 @@
 #include "GameAbilitySystem/GamePlayAbility/RPGGamePlayTag.h"
 #include "Character/Player/PlayerCharacterBase.h"
 #include "GameAbilitySystem/RPGAbilitySystemComponent.h"
+#include "Component/Player/PlayerUIComponent.h"
+#include "GameAbilitySystem/GamePlayAbility/RPGGamePlayTag.h"
 
 URPGGA_Player_AttackBuffSkill::URPGGA_Player_AttackBuffSkill()
 {
@@ -19,6 +21,8 @@ void URPGGA_Player_AttackBuffSkill::ActivateAbility(const FGameplayAbilitySpecHa
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
 	CommitAbility(Handle, ActorInfo, ActivationInfo);
+
+	GetPlayerCharacterFromActorInfo()->GetPlayerUIComponent()->OnSkillCooldownBeginDelegate.Broadcast(RPGGameplayTag::Player_Ability_Skill_AttackBuff, GetCooldownTimeRemaining(), GetCooldownTimeRemaining());
 	
 	UAbilityTask_PlayMontageAndWait* PlayMontageTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this,
 	TEXT("Player_AttackBuff_Skill"), BuffCastingMontage, 1.0f,  NAME_None,

@@ -41,7 +41,7 @@ void UDataAsset_PlayerAbilitySet::GiveAbilitySystemComponent(URPGAbilitySystemCo
 			UPlayerUIComponent* PlayerUIComp = AvatarActor->FindComponentByClass<UPlayerUIComponent>();
 			if (PlayerUIComp)
 			{
-				PlayerUIComp->OnSkillIconSlotUpdatedDelegate.Broadcast(AbilitySkillSet.InputTag, AbilitySkillSet.AbilityIcon);
+				PlayerUIComp->OnSkillIconSlotUpdatedDelegate.Broadcast(AbilitySkillSet.SkillAbilityTag, AbilitySkillSet.AbilityIcon);
 			}
 		}
 	}
