@@ -47,9 +47,6 @@ namespace RPGGameplayTag
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_AttributeSet_MpNotFull, "Player.Status.AttributeSet.MpNotFull");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_AttributeSet_MpFull, "Player.Status.AttributeSet.MpFull");
 
-	// Player - Status - Interact
-	// ex) RPGPORTFOLIO_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Status_Interact_Trade);
-
 	// Player - Status - Cooldown
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_CoolDown_NenShot, "Player.Status.CoolDown.NenShot");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_CoolDown_AttackBuff, "Player.Status.CoolDown.AttackBuff");
@@ -58,12 +55,14 @@ namespace RPGGameplayTag
 	UE_DEFINE_GAMEPLAY_TAG(Player_Event_HitPause, "Player.Event.HitPause");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Event_DefenseSuccess, "Player.Event.DefenseSuccess");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Event_ActiveBuff, "Player.Event.ActiveBuff");
+
 	
 	//Monster
 	UE_DEFINE_GAMEPLAY_TAG(Monster_Weapon, "Monster.Weapon");
 	
 	UE_DEFINE_GAMEPLAY_TAG(Monster_Ability_Attack_Melee, "Monster.Ability.Attack.Melee");
 	UE_DEFINE_GAMEPLAY_TAG(Monster_Ability_Attack_Ranged, "Monster.Ability.Attack.Ranged");
+	UE_DEFINE_GAMEPLAY_TAG(Monster_Ability_Attack_EarthQuake, "Monster.Ability.Attack.EarthQuake");
 
 	UE_DEFINE_GAMEPLAY_TAG(Monster_Status_Strafe, "Monster.Status.Strafe");
 	UE_DEFINE_GAMEPLAY_TAG(Monster_Status_IsBeingAttacked, "Monster.Status.IsBeingAttacked");
@@ -72,6 +71,7 @@ namespace RPGGameplayTag
 
 	
 	UE_DEFINE_GAMEPLAY_TAG(Character_Event_AttackHit_Melee, "Character.Event.AttackHit.Melee");
+	UE_DEFINE_GAMEPLAY_TAG(Character_Event_AttackHit_AreaAttack, "Character.Event.AttackHit.AreaAttack");
 	UE_DEFINE_GAMEPLAY_TAG(Character_Event_HitReact, "Character.Event.HitReact");
 	UE_DEFINE_GAMEPLAY_TAG(Character_Event_SpawnProjectile, "Character.Event.SpawnProjectile");
 

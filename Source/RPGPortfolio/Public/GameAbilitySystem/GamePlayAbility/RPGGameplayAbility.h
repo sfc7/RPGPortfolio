@@ -48,4 +48,7 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "GA")
 	bool HasMatchingGameplayTag(FGameplayTag _GameplayTag);
+
+	UFUNCTION(BlueprintCallable, Category = "GA")
+	void ApplyGameplayEffectgSpecHandleToHitResults(const FGameplayEffectSpecHandle& SpecHandle, const TArray<FHitResult>& HitResults);
 };

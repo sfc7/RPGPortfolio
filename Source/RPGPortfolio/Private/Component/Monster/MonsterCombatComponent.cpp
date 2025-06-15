@@ -71,7 +71,6 @@ void UMonsterCombatComponent::ToggleBodyCollisionBoxCollsion(bool _bShouldEnable
 		if (LeftHandCollsionBox && RightHandCollsionBox)
 		{
 			FString EnumName = UEnum::GetValueAsString(_ToggleDamageType);
-			UE_LOG(LogTemp, Warning, TEXT("ToggleDamageType: %s"), *EnumName);
 			
 			switch (_ToggleDamageType)
 			{

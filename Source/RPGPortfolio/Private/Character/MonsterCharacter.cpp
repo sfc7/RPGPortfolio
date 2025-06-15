@@ -149,8 +149,7 @@ void AMonsterCharacter::InitEnemyStartUpData()
 	{
 		return;
 	}
-
-	UE_LOG(LogTemp,Log,TEXT("AMonsterCharacter::InitEnemyStartUpData()"));
+	
 	UAssetManager::GetStreamableManager().RequestAsyncLoad(
 		CharacterStartUpData.ToSoftObjectPath(),
 		FStreamableDelegate::CreateLambda(

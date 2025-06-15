@@ -25,7 +25,6 @@ URPGAttributeSet::URPGAttributeSet()
 
 void URPGAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data)
 {
-	UE_LOG(LogTemp,Log,TEXT("PostGameplayEffectExecute"));
 	if (!UIInterface.IsValid())
 	{
 		UIInterface = TWeakInterfacePtr<IUIInterface>(Data.Target.GetAvatarActor());
@@ -42,7 +41,7 @@ void URPGAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectMod
 		float NewCurrentHp = FMath::Clamp(GetCurrentHp(), 0.f, GetMaxHp());
 
 		SetCurrentHp(NewCurrentHp);
-
+		
 		UIComponent->OnCurrentHpChanged.Broadcast(GetCurrentHp()/GetMaxHp());
 	}
 
@@ -77,7 +76,6 @@ void URPGAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectMod
 
 		SetCurrentHp(CalcCurrentHp);
 		
-
 		UIComponent->OnCurrentHpChanged.Broadcast(GetCurrentHp()/GetMaxHp());
 		
 		if (GetCurrentHp() == 0.f)

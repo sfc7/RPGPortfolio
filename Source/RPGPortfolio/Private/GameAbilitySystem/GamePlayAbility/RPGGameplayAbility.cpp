@@ -5,6 +5,8 @@
 #include "GameAbilitySystem/RPGAbilitySystemComponent.h"
 #include "Component/CombatComponentBase.h"
 #include "AbilitySystemBlueprintLibrary.h"
+#include "RPGFunc.h"
+#include "GameAbilitySystem/GamePlayAbility/RPGGamePlayTag.h"
 
 void URPGGameplayAbility::OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
 {
@@ -79,5 +81,45 @@ bool URPGGameplayAbility::HasMatchingGameplayTag(FGameplayTag _GameplayTag)
 	URPGAbilitySystemComponent* ASC = GetRPGAbilitySystemComponentFromActorInfo();
 
 	return ASC->HasMatchingGameplayTag(_GameplayTag);
-}	
+}
 
+void URPGGameplayAbility::ApplyGameplayEffectgSpecHandleToHitResults(const FGameplayEffectSpecHandle& SpecHandle, const TArray<FHitResult>& HitResults)
+{
+	if (HitResults.IsEmpty())
+	{
+		return;
+	}
+
+	APawn* Owner = Cast<APawn>(GetAvatarActorFromActorInfo());
+	
+	TSet<AActor*> UniqueActors;
+
+	for (const FHitResult& HitResult : HitResults)
+	{
+		AActor* HitActor = HitResult.GetActor();
+		if (HitActor)
+		{
+			UniqueActors.Add(HitActor);
+		}
+	}
+
+	for (AActor* HitActor : UniqueActors)
+	{
+		if (APawn* HitPawn = Cast<APawn>(HitActor))
+		{
+			if (URPGFunc::CheckTargetTeamAgent(Owner, HitPawn))
+			{
+				FActiveGameplayEffectHandle ActiveGameplayEffectHandle = ApplyEffectsSpecHandleToTarget(HitPawn, SpecHandle);
+
+				if (ActiveGameplayEffectHandle.WasSuccessfullyApplied())
+				{
+					FGameplayEventData EventData;
+					EventData.Instigator = Owner;
+					EventData.Target = HitPawn;
+
+					UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(HitPawn, RPGGameplayTag::Character_Event_HitReact, EventData);
+				}
+			}
+		}
+	}
+}

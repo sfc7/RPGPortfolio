@@ -23,7 +23,7 @@ void URPGGA_Player_NenShotSkill::ActivateAbility(const FGameplayAbilitySpecHandl
 
 	CommitAbility(Handle, ActorInfo, ActivationInfo);
 
-	
+	GetPlayerCharacterFromActorInfo()->GetPlayerUIComponent()->OnSkillCooldownBeginDelegate.Broadcast(RPGGameplayTag::Player_Ability_Skill_NenShot, GetCooldownTimeRemaining(), GetCooldownTimeRemaining());
 	
 	UPlayerCombatComponent* CombatComponent = GetPlayerCombatComponentFromActorInfo();
 	if (CombatComponent)
