@@ -33,6 +33,11 @@ UPlayerCombatComponent* UPlayerGameplayAbility::GetPlayerCombatComponentFromActo
 	return GetPlayerCharacterFromActorInfo()->GetPlayerCombatComponent();
 }
 
+UPlayerUIComponent* UPlayerGameplayAbility::GetPlayerUIComponentFromActorInfo()
+{
+	return GetPlayerCharacterFromActorInfo()->GetPlayerUIComponent();
+}
+
 // SpecHandle에 BaseDamage는 기본으로 하여 여러 gameplaytag를 같이 보내서 데미지 최종 계산
 FGameplayEffectSpecHandle UPlayerGameplayAbility::MakePlayerComboDamageEffectSpecHandle(TSubclassOf<UGameplayEffect> _EffectClass, float _WeaponBaseDamage, FGameplayTag _CurrentAttackTypeTag, int32 _UsedComboCount)
 {

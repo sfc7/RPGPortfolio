@@ -9,6 +9,7 @@
 class APlayerCharacterBase;
 class APlayerCharacterController;
 class UPlayerCombatComponent;
+class UPlayerUIComponent;
 /**
  * 
  */
@@ -25,6 +26,9 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "GA")
 	UPlayerCombatComponent* GetPlayerCombatComponentFromActorInfo();
+
+	UFUNCTION(BlueprintPure, Category = "GA")
+	UPlayerUIComponent* GetPlayerUIComponentFromActorInfo();
 
 	UFUNCTION(BlueprintPure, Category = "GA")
 	FGameplayEffectSpecHandle MakePlayerComboDamageEffectSpecHandle(TSubclassOf<UGameplayEffect> _EffectClass, float _WeaponBaseDamage, FGameplayTag _CurrentAttackTypeTag,int32 _UsedComboCount);

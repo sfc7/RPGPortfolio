@@ -36,14 +36,10 @@ true, 1.0f, false);
 		this, RPGGameplayTag::Character_Event_AttackHit_AreaAttack, nullptr, false, true
 	);
 
-	WaitGameplayEvent->EventReceived.AddDynamic(this, &ThisClass::CheckBoxTrace);
+	WaitGameplayEvent->EventReceived.AddDynamic(this, &ThisClass::CheckBoxTraceAndApplyDamgage);
 	WaitGameplayEvent->ReadyForActivation();
 
 	
-}
-
-void URPGGA_Monster_Attack_EarthQuake::OnEventReceived(FGameplayEventData PayloadData)
-{
 }
 
 void URPGGA_Monster_Attack_EarthQuake::OnEndAbilityCallback()
@@ -51,7 +47,7 @@ void URPGGA_Monster_Attack_EarthQuake::OnEndAbilityCallback()
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 }
 
-void URPGGA_Monster_Attack_EarthQuake::CheckBoxTrace(FGameplayEventData PayloadData)
+void URPGGA_Monster_Attack_EarthQuake::CheckBoxTraceAndApplyDamgage(FGameplayEventData PayloadData)
 {
 	FVector StartLocation = GetMonsterCharacterFromActorInfo()->GetActorLocation();
 	FVector EndLocation = GetMonsterCharacterFromActorInfo()->GetActorForwardVector() * 100.f;
@@ -67,8 +63,4 @@ void URPGGA_Monster_Attack_EarthQuake::CheckBoxTrace(FGameplayEventData PayloadD
 	FGameplayEffectSpecHandle SpecHandle = MakeMonsterBaseDamageEffectSpecHandle(DamageEffectClass, DamageScale);
 	
 	ApplyGameplayEffectgSpecHandleToHitResults(SpecHandle, OUTHitResults);
-}
-
-void URPGGA_Monster_Attack_EarthQuake::ApplyDamage(FGameplayEventData PayloadData)
-{
 }

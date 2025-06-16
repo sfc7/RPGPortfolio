@@ -18,18 +18,12 @@ public:
 	
 protected:
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
-
-	UFUNCTION()
-	void OnEventReceived(FGameplayEventData PayloadData);
 	
 	UFUNCTION()
 	void OnEndAbilityCallback();
 
 	UFUNCTION()
-	void CheckBoxTrace(FGameplayEventData PayloadData);
-	
-	UFUNCTION()
-	void ApplyDamage(FGameplayEventData PayloadData);
+	void CheckBoxTraceAndApplyDamgage(FGameplayEventData PayloadData);
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	TSubclassOf<UGameplayEffect> DamageEffectClass;
@@ -39,8 +33,6 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	FScalableFloat DamageScale;
-
-	AActor* LocalTargetActor;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	UAnimMontage* AttackMontage;
