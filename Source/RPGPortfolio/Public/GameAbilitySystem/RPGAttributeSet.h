@@ -55,8 +55,17 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "Stat")
 	FGameplayAttributeData Damage;
 
-	UFUNCTION(BlueprintCallable, Category = "Warrior|FunctionLibrary")
-	static void AddGameplayTagToActor(AActor* _Actor, FGameplayTag TagToAdd);
+	UFUNCTION(BlueprintCallable)
+		void AddGameplayTagToOwner(FGameplayTag AddTag);
+
+	UFUNCTION(BlueprintCallable)
+		void RemoveGameplayTagFromOwner(FGameplayTag RemoveTag);
+
+	UFUNCTION(BlueprintCallable)
+		static void AddGameplayTagToActor(AActor* TargetActor, FGameplayTag AddTag);
+
+	UFUNCTION(BlueprintCallable)
+		static void RemoveGameplayTagFromActor(AActor* TargetActor, FGameplayTag RemoveTag);
 
 private:
 	TWeakInterfacePtr<IUIInterface> UIInterface;

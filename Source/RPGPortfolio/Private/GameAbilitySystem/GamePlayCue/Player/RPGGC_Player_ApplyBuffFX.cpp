@@ -76,5 +76,6 @@ bool ARPGGC_Player_ApplyBuffFX::OnRemove_Implementation(AActor* Target, const FG
 	{
 		RightHandActiveBuffEffect->DestroyComponent();
 	}
+	
 	return true;
 }

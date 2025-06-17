@@ -12,7 +12,7 @@ APlayerCharacterBase* UPlayerGameplayAbility::GetPlayerCharacterFromActorInfo()
 {
 	if (!PlayerCharacter.IsValid())
 	{
-		PlayerCharacter = CastChecked<APlayerCharacterBase>(CurrentActorInfo->AvatarActor);
+		PlayerCharacter = Cast<APlayerCharacterBase>(CurrentActorInfo->AvatarActor);
 	}
 	
 	return PlayerCharacter.IsValid() ? PlayerCharacter.Get() : nullptr;

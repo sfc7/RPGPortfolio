@@ -9,7 +9,6 @@
 #include "Character/Player/PlayerCharacterBase.h"
 #include "GameAbilitySystem/RPGAbilitySystemComponent.h"
 #include "Component/Player/PlayerUIComponent.h"
-#include "GameAbilitySystem/GamePlayAbility/RPGGamePlayTag.h"
 
 URPGGA_Player_AttackBuffSkill::URPGGA_Player_AttackBuffSkill()
 {
@@ -37,7 +36,7 @@ true, 1.0f, false);
 	UAbilityTask_WaitGameplayEvent* GameplayEventTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
 	this,RPGGameplayTag::Player_Event_ActiveBuff,nullptr, false, true);
 
-	GameplayEventTask->EventReceived.AddDynamic(this, &URPGGA_Player_AttackBuffSkill::ApplyFXGameplayCue);
+	GameplayEventTask->EventReceived.AddDynamic(this, &URPGGA_Player_AttackBuffSkill::ApplyBuffSkill);
 	GameplayEventTask->ReadyForActivation();
 }
 
@@ -46,9 +45,28 @@ void URPGGA_Player_AttackBuffSkill::OnEndAbilityCallback()
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 }
 
-void URPGGA_Player_AttackBuffSkill::ApplyFXGameplayCue(FGameplayEventData PayloadData)
+void URPGGA_Player_AttackBuffSkill::ApplyBuffSkill(FGameplayEventData PayloadData)
 {
+	FGameplayEffectContextHandle EffectContextHandle = GetPlayerCharacterFromActorInfo()->GetRPGAbilitySystemComponent()->MakeEffectContext();
+	FGameplayEffectSpecHandle SpecHandle = GetPlayerCharacterFromActorInfo()->GetRPGAbilitySystemComponent()->MakeOutgoingSpec(BuffEffectClass, 1, EffectContextHandle);
+	if (SpecHandle.IsValid())
+	{
+		
+		FGameplayEffectSpec* Spec = SpecHandle.Data.Get();
+		Spec->SetDuration(BuffDuration.GetValue(), true);
+
+		GetPlayerCharacterFromActorInfo()->GetRPGAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*Spec);
+	}
+	
 	FGameplayCueParameters GCEffectParam;
 	GCEffectParam.TargetAttachComponent = GetOwningComponentFromActorInfo();
 	GetPlayerCharacterFromActorInfo()->GetRPGAbilitySystemComponent()->AddGameplayCue(BuffFXGameplayCue, GCEffectParam);
+
+	FTimerHandle GCRemoveTimerHandle;
+	
+	GetWorld()->GetTimerManager().SetTimer(GCRemoveTimerHandle, [this]()
+	{
+	GetPlayerCharacterFromActorInfo()->GetRPGAbilitySystemComponent()->RemoveGameplayCue(BuffFXGameplayCue);
+	}, BuffDuration.GetValue(), false);
 }
+	

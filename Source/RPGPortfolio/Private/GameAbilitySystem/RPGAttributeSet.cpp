@@ -49,15 +49,17 @@ void URPGAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectMod
 	{
 		float NewCurrentMp = FMath::Clamp(GetCurrentMp(), 0.f, GetMaxMp());
 
-		SetCurrentHp(NewCurrentMp);
+		SetCurrentMp(NewCurrentMp);
 
 		if (GetCurrentMp() != GetMaxMp())
 		{
 			AddGameplayTagToActor(Data.Target.GetAvatarActor(), RPGGameplayTag::Player_Status_AttributeSet_MpNotFull);
+			RemoveGameplayTagFromActor(Data.Target.GetAvatarActor(), RPGGameplayTag::Player_Status_AttributeSet_MpFull);
 		}
 		else
 		{
 			AddGameplayTagToActor(Data.Target.GetAvatarActor(), RPGGameplayTag::Player_Status_AttributeSet_MpFull);
+			RemoveGameplayTagFromActor(Data.Target.GetAvatarActor(), RPGGameplayTag::Player_Status_AttributeSet_MpNotFull);
 		}
 		
 		UPlayerUIComponent* PlayerUIComponent = UIInterface->GetPlayerUIComponent();
@@ -85,15 +87,47 @@ void URPGAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectMod
 	}
 }
 
-void URPGAttributeSet::AddGameplayTagToActor(AActor* _Actor, FGameplayTag TagToAdd)
+void URPGAttributeSet::AddGameplayTagToActor(AActor* TargetActor, FGameplayTag AddTag)
 {
-	check(_Actor);
+	check(TargetActor);
 
-	URPGAbilitySystemComponent* ASC = CastChecked<URPGAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(_Actor));
+	URPGAbilitySystemComponent* ASC = CastChecked<URPGAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor));
 
-	if (!ASC->HasMatchingGameplayTag(TagToAdd))
+	if (!ASC->HasMatchingGameplayTag(AddTag))
 	{
-		ASC->AddLooseGameplayTag(TagToAdd);
+		ASC->AddLooseGameplayTag(AddTag);
+	}
+}
+
+void URPGAttributeSet::RemoveGameplayTagFromActor(AActor* TargetActor, FGameplayTag RemoveTag)
+{
+	check(TargetActor);
+	
+	URPGAbilitySystemComponent* ASC = CastChecked<URPGAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor));
+
+	if (ASC->HasMatchingGameplayTag(RemoveTag))
+	{
+		ASC->RemoveLooseGameplayTag(RemoveTag);
+	}
+}
+
+void URPGAttributeSet::AddGameplayTagToOwner(FGameplayTag AddTag)
+{
+	URPGAbilitySystemComponent* ASC = CastChecked<URPGAbilitySystemComponent>(GetOwningAbilitySystemComponent());
+
+	if (!ASC->HasMatchingGameplayTag(AddTag))
+	{
+		ASC->AddLooseGameplayTag(AddTag);
+	}
+}
+
+void URPGAttributeSet::RemoveGameplayTagFromOwner(FGameplayTag RemoveTag)
+{
+	URPGAbilitySystemComponent* ASC = CastChecked<URPGAbilitySystemComponent>(GetOwningAbilitySystemComponent());
+
+	if (ASC->HasMatchingGameplayTag(RemoveTag))
+	{
+		ASC->RemoveLooseGameplayTag(RemoveTag);
 	}
 }
 

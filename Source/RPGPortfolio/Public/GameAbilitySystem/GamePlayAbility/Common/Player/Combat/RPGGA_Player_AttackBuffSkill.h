@@ -18,15 +18,21 @@ public:
 
 protected:
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
-
+	
 	UFUNCTION()
 	void OnEndAbilityCallback();
-
+	
 	UFUNCTION()
-	void ApplyFXGameplayCue(FGameplayEventData PayloadData);
+	void ApplyBuffSkill(FGameplayEventData PayloadData);
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (Categories=GameplayCue))
 	FGameplayTag BuffFXGameplayCue;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	TSubclassOf<UGameplayEffect> BuffEffectClass;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Buff")
+	FScalableFloat BuffDuration;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	UAnimMontage* BuffCastingMontage;
