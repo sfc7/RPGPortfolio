@@ -21,7 +21,7 @@ void UMonsterCombatComponent::OnHitTargetActor(AActor* _HitActor)
 	bool bIsFacing = false;
 
 	URPGAbilitySystemComponent* HitActorASC = CastChecked<URPGAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(_HitActor));
-	const bool bIsPlayerDefensing = HitActorASC->HasMatchingGameplayTag(RPGGameplayTag::Player_Status_Defense);
+	const bool bIsPlayerDefensing = HitActorASC->HasMatchingGameplayTag(RPGGameplayTag::Player_Status_ActionState_IsDefensing);
 
 	URPGAbilitySystemComponent* OwnerActorASC = CastChecked<URPGAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetOwningPawn()));
 	bool bIsUnDefendableAttack = OwnerActorASC->HasMatchingGameplayTag(RPGGameplayTag::Monster_Status_IsBeingUndefendableAttacked);	
@@ -92,6 +92,4 @@ void UMonsterCombatComponent::ToggleBodyCollisionBoxCollsion(bool _bShouldEnable
 			OverlappedActors.Empty();
 		}
 	}
-
-	
 }

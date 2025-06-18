@@ -58,7 +58,7 @@ void URPGGA_Monster_Attack_EarthQuake::CheckBoxTraceAndApplyDamgage(FGameplayEve
 
 	TArray<FHitResult> OUTHitResults;
 	UKismetSystemLibrary::BoxTraceMultiForObjects(this, StartLocation, EndLocation, FVector(500.f, 500.f, 200.f), EndRotation,
-		ObjectTypes, false, ActorsToIgnore, EDrawDebugTrace::ForDuration, OUTHitResults, true,FColor::Green, FColor::Red, 2.0f);
+		ObjectTypes, false, ActorsToIgnore, EDrawDebugTrace::None, OUTHitResults, true,FColor::Green, FColor::Red, 2.0f);
 
 	FGameplayEffectSpecHandle SpecHandle = MakeMonsterBaseDamageEffectSpecHandle(DamageEffectClass, DamageScale);
 	

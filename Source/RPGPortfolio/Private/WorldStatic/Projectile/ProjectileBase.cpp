@@ -67,7 +67,7 @@ void AProjectileBase::OnProjectileHit(UPrimitiveComponent* HitComponent, AActor*
 	URPGAbilitySystemComponent* TargetASC = Cast<URPGAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(HitTarget));
 	if (TargetASC)
 	{
-		if (TargetASC->HasMatchingGameplayTag(RPGGameplayTag::Player_Status_Defense))
+		if (TargetASC->HasMatchingGameplayTag(RPGGameplayTag::Player_Status_ActionState_IsDefensing))
 		{
 			FGameplayEventData EventData;
 			EventData.Instigator = this;

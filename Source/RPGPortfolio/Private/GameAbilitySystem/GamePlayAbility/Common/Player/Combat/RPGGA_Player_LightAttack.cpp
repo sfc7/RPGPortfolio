@@ -42,6 +42,11 @@ void URPGGA_Player_LightAttack::ActivateAbility(const FGameplayAbilitySpecHandle
 	}
 }
 
+void URPGGA_Player_LightAttack::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
+{
+	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
+}
+
 void URPGGA_Player_LightAttack::Attack()
 {
 	UPlayerCombatComponent* CombatComponent = GetPlayerCombatComponentFromActorInfo();

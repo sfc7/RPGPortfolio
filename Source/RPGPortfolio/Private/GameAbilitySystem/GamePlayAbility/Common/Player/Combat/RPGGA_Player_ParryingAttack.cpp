@@ -11,7 +11,6 @@
 #include "GameAbilitySystem/GamePlayAbility/RPGGamePlayTag.h"
 #include "WorldStatic/Weapon/WeaponBase.h"
 #include "GameAbilitySystem/GameplayTask/Player/RPGAT_Player_RotateTarget.h"
-#include "EnhancedInputSubsystems.h"
 
 URPGGA_Player_ParryingAttack::URPGGA_Player_ParryingAttack()
 {
@@ -22,10 +21,10 @@ void URPGGA_Player_ParryingAttack::ActivateAbility(const FGameplayAbilitySpecHan
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
-	bool bRotate = FindNearestEnemyBeforeAttack(1000.f); 
+	bool bRotate = FindNearestEnemyBeforeAttack(600.f); 
 
 	if (bRotate)
-	{
+	{		
 		URPGAT_Player_RotateTarget* RotateTickTask = URPGAT_Player_RotateTarget::ExecuteTaskOnTick(this);
 		RotateTickTask->OnRotateTargetTaskTick.AddDynamic(this, &UPlayerCombatGameplayAbility::RotateTargetTickBeforeAttack);
 		RotateTickTask->SetTargetRotation(FindRototation);
@@ -38,13 +37,18 @@ void URPGGA_Player_ParryingAttack::ActivateAbility(const FGameplayAbilitySpecHan
 	}
 }
 
+void URPGGA_Player_ParryingAttack::EndAbility(const FGameplayAbilitySpecHandle Handle,const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,bool bReplicateEndAbility, bool bWasCancelled)
+{
+	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
+}
+
 void URPGGA_Player_ParryingAttack::OnEndAbilityCallback()
 {
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 }
 
 void URPGGA_Player_ParryingAttack::Attack()
-{
+{	
 	UPlayerCombatComponent* CombatComponent = GetPlayerCombatComponentFromActorInfo();
 	if (CombatComponent)
 	{

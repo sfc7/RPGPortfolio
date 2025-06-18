@@ -119,20 +119,20 @@ void URPGGA_Player_Defense::RemoveParryingAttackReady()
 	GetWorld()->GetTimerManager().SetTimer(ParryingDelayAndGATimerHandle, [this]()
 	{
 		UGameplayStatics::SetGlobalTimeDilation(GetWorld(), 1.0f);
-		
-		if (ParryAbilityHandle.IsValid())
-		{
-			FGameplayAbilitySpec* Spec = GetRPGAbilitySystemComponentFromActorInfo()->FindAbilitySpecFromHandle(ParryAbilityHandle);
-			if (Spec && Spec->IsActive())
-			{
-				GetWorld()->GetTimerManager().SetTimer(ParryingDelayAndGATimerHandle, [this]()
-				{
-					GetRPGAbilitySystemComponentFromActorInfo()->ClearAbility(ParryAbilityHandle);
-					ParryAbilityHandle = FGameplayAbilitySpecHandle(); 
-				}, 1.0f, false);
-			}
-		}
 	}, 0.2f, false);
+
+	if (ParryAbilityHandle.IsValid())
+	{
+		FGameplayAbilitySpec* Spec = GetRPGAbilitySystemComponentFromActorInfo()->FindAbilitySpecFromHandle(ParryAbilityHandle);
+		if (Spec)
+		{
+			GetWorld()->GetTimerManager().SetTimer(ParryingDelayAndGATimerHandle, [this]()
+			{
+				GetRPGAbilitySystemComponentFromActorInfo()->ClearAbility(ParryAbilityHandle);
+				ParryAbilityHandle = FGameplayAbilitySpecHandle(); 
+			}, 1.0f, false);
+		}
+	}
 }
 
 void URPGGA_Player_Defense::OnEndAbilityCallback()

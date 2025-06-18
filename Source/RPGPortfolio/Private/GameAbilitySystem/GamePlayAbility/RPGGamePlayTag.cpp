@@ -38,11 +38,16 @@ namespace RPGGameplayTag
 
 	// Player - Status
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_CanHeavyAttackCombo, "Player.Status.CanHeavyAttackCombo");
-	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Dodge, "Player.Status.Dodge");
-	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Defense, "Player.Status.Defense");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_CanParryingAttack, "Player.Status.CanParryingAttack");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_ActiveAttackBuff, "Player.Status.ActiveAttackBuff");
 
+	// Player - Status - ActionState
+	UE_DEFINE_GAMEPLAY_TAG(Player_Status_ActionState_IsAttacking, "Player.Status.ActionState.IsAttacking");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Status_ActionState_IsJumping, "Player.Status.ActionState.IsJumping");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Status_ActionState_IsSkilling, "Player.Status.ActionState.IsSkilling");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Status_ActionState_IsDefensing, "Player.Status.ActionState.IsDefensing");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Status_ActionState_IsDodging, "Player.Status.ActionState.IsDodging");
+	
 	// Player - Status - AttributeSet
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_AttributeSet_MpNotFull, "Player.Status.AttributeSet.MpNotFull");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_AttributeSet_MpFull, "Player.Status.AttributeSet.MpFull");

@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameAbilitySystem/GamePlayAbility/Common/Player/Combat/PlayerCombatGameplayAbility.h"
+#include "GameAbilitySystem/GamePlayAbility/Common/Player/PlayerGameplayAbility.h"
 #include "RPGGA_Player_Dodge.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class RPGPORTFOLIO_API URPGGA_Player_Dodge : public UPlayerCombatGameplayAbility
+class RPGPORTFOLIO_API URPGGA_Player_Dodge : public UPlayerGameplayAbility
 {
 	GENERATED_BODY()
 public:
@@ -18,6 +18,8 @@ public:
 
 protected:
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
+	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
+
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	UAnimMontage* DodgeMontage;

@@ -10,6 +10,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 UPlayerCombatGameplayAbility::UPlayerCombatGameplayAbility()
 {
@@ -30,7 +31,7 @@ bool UPlayerCombatGameplayAbility::FindNearestEnemyBeforeAttack(float BoxExtent)
 		ObjectTypes,
 		false,
 		TArray<AActor*>(),
-		EDrawDebugTrace::Persistent,
+		EDrawDebugTrace::None,
 		HitResults,
 		true
 	);
@@ -69,4 +70,30 @@ void UPlayerCombatGameplayAbility::RotateTargetTickBeforeAttack(float DeltaTime)
 	const FRotator TargetRot = FMath::RInterpTo(GetPlayerCharacterFromActorInfo()->GetActorRotation(),FindRototation,DeltaTime,15.0f);
 
 	GetPlayerCharacterFromActorInfo()->SetActorRotation(FRotator(0.f,TargetRot.Yaw,0.f));
+}
+
+void UPlayerCombatGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
+{
+	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+
+	APlayerCharacterBase* OwnerCharacter = Cast<APlayerCharacterBase>(ActorInfo->AvatarActor.Get());
+	if (!OwnerCharacter)
+	{
+		return;
+	}
+
+	OwnerCharacter->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_None);
+}
+
+void UPlayerCombatGameplayAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,bool bReplicateEndAbility, bool bWasCancelled)
+{
+	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
+
+	APlayerCharacterBase* OwnerCharacter = Cast<APlayerCharacterBase>(ActorInfo->AvatarActor.Get());
+	if (!OwnerCharacter)
+	{
+		return;
+	}
+
+	OwnerCharacter->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
 }
