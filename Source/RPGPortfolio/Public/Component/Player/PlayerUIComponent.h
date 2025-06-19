@@ -29,8 +29,12 @@ public:
 	FOnSkillIconSlotUpdatedDelegate OnSkillIconSlotUpdatedDelegate;
 
 	UPROPERTY(BlueprintCallable, BlueprintAssignable)
-	FOnSkillCooldownBeginDelegate OnSkillCooldownBeginDelegate;	
+	FOnSkillCooldownBeginDelegate OnSkillCooldownBeginDelegate;
 	
 	void UpdateSkillIconSlot(FGameplayTag SkillAbilityTag, TSoftObjectPtr<UMaterialInterface> SkillIconMaterial);
+	
+private:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "GameOver", meta = (AllowPrivateAccess = "true"))
+	TSoftClassPtr<UUserWidget> GameOverUIWidgetClass;
 };
 	

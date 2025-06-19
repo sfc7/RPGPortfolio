@@ -7,6 +7,9 @@
 #include "Character/Player/PlayerCharacterBase.h"
 #include "Components/CapsuleComponent.h"
 #include "Controller/PlayerCharacterController.h"
+#include "GameMode/GameManager/DungeonProgressManager.h"
+#include "GameMode/GameManager/GeneralGameManager.h"
+#include "GameMode/GameManager/UIManager.h"
 
 URPGGA_Player_Death::URPGGA_Player_Death()
 {
@@ -42,6 +45,8 @@ void URPGGA_Player_Death::EndAbility(const FGameplayAbilitySpecHandle Handle, co
 		PC->SetInputMode(InputModeUI);
 		PC->SetShowMouseCursor(true);
 	}
+
+	GetWorld()->GetGameInstance()->GetSubsystem<UGeneralGameManager>()->GetDungeonProgressManager()->SetDungeonState(EDungeonState::GameOver);
 }
 
 void URPGGA_Player_Death::OnEndAbilityCallback()
