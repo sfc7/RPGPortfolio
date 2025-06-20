@@ -20,7 +20,10 @@ public:
 	UDungeonProgressManager* GetDungeonProgressManager() const;
 	
 	UFUNCTION(BlueprintCallable, BlueprintPure)
-	UUIManager* GetUIManager() const; 
+	UUIManager* GetUIManager() const;
+
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	ULevelManager* GetLevelManager() const; 
 	
 protected:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;

@@ -22,6 +22,7 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	TSoftClassPtr<UUserWidget> GetUIWidgetClass(const EUICategory& UICategory) const;
+
 	
 protected:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;

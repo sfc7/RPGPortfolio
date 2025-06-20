@@ -99,6 +99,11 @@ namespace RPGGameplayTag
 	UE_DEFINE_GAMEPLAY_TAG(Data_DamageType_SetByCaller_Heavy, "Data.DamageType.SetByCaller.Heavy");
 	UE_DEFINE_GAMEPLAY_TAG(Data_DamageType_SetByCaller_Parrying, "Data.DamageType.SetByCaller.Parrying");
 
+	//Level
+	UE_DEFINE_GAMEPLAY_TAG(Level_Menu_MainMap, "Level.Menu.MainMap");
+	UE_DEFINE_GAMEPLAY_TAG(Level_Game_Town, "Level.Game.Town");
+	UE_DEFINE_GAMEPLAY_TAG(Level_Game_Dungeon, "Level.Game.Dungeon");
+	
 	//GamePlayCue
 	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Player_Fighter_Sound_AttackHit_Melee_Light, "GameplayCue.Player.Fighter.Sound.AttackHit.Melee.Light");
 	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Player_Fighter_Sound_AttackHit_Melee_Heavy, "GameplayCue.Player.Fighter.Sound.AttackHit.Melee.Heavy");

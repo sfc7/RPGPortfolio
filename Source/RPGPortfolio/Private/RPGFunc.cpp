@@ -130,4 +130,16 @@ void URPGFunc::CountDown(const UObject* WorldContextObject, float TotalTime, flo
 	}
 }
 
+UGeneralGameManager* URPGFunc::GetGeneralGameManager(const UObject* WorldContextObject)
+{
+	if (GEngine)
+   {
+   		if (UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull))
+   		{
+   			return GetGeneralGameManager(World);
+   		}
+   }
+	return nullptr;
+}
+
 

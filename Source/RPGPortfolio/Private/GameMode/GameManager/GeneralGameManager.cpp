@@ -3,6 +3,7 @@
 
 #include "GameMode/GameManager/GeneralGameManager.h"
 #include "GameMode/GameManager/DungeonProgressManager.h"
+#include "GameMode/GameManager/LevelManager.h"
 #include "GameMode/GameManager/UIManager.h"
 
 void UGeneralGameManager::Initialize(FSubsystemCollectionBase& Collection)
@@ -23,4 +24,9 @@ UDungeonProgressManager* UGeneralGameManager::GetDungeonProgressManager() const
 UUIManager* UGeneralGameManager::GetUIManager() const
 {
 	return GetGameInstance()->GetSubsystem<UUIManager>();
+}
+
+ULevelManager* UGeneralGameManager::GetLevelManager() const
+{
+	return GetGameInstance()->GetSubsystem<ULevelManager>();
 }

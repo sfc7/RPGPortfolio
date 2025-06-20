@@ -7,6 +7,7 @@
 #include "RPGFunc.generated.h"
 
 struct FScalableFloat;
+class UGeneralGameManager;
 /**
  * 
  */
@@ -33,5 +34,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, meta = (Latent, WorldContext = "WorldContextObject", LatentInfo = "LatentInfo", ExpandEnumAsExecs = "CountDownInput|CountDownOutput",TotalTime = "1.0",UpdateInterval = "0.1"))
 	static void CountDown(const UObject* WorldContextObject, float TotalTime, float UpdateInterval, float& OutRemainingTime, ERPGCountDownActionInput CountDownInput,  UPARAM(DisplayName = "Output") ERPGCountDownActionOutput& CountDownOutput, FLatentActionInfo LatentInfo);
+
+	UFUNCTION(BlueprintPure, meta = (WorldContext = "WorldContextObject"))
+	static UGeneralGameManager* GetGeneralGameManager(const UObject* WorldContextObject);
 	
 };
