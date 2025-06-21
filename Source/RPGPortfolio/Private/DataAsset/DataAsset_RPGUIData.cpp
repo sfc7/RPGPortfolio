@@ -15,6 +15,10 @@ TSoftClassPtr<UUserWidget> UDataAsset_RPGUIData::GetUIWidgetClass(const EUICateg
 	{
 	case EUICategory::GameOverUI:
 		return GameOverUI.UIWidgetClass;
+	case EUICategory::VictoryUI:
+		return VictoryUI.UIWidgetClass;
+	case EUICategory::PauseMenuUI:
+		return PauseMenuUI.UIWidgetClass;
 	default:
 		return nullptr;
 	}

@@ -49,11 +49,5 @@ void UUIManager::ShowUIAsync(const EUICategory& UICategory, UWorld* World)
 
 TSoftClassPtr<UUserWidget> UUIManager::GetUIWidgetClass(const EUICategory& UICategory) const
 {
-	switch (UICategory)
-	{
-	case EUICategory::GameOverUI:
-		return RPGUIData->GetUIWidgetClass(UICategory);
-	default:
-		return nullptr;
-	}
+	return RPGUIData->GetUIWidgetClass(UICategory);
 }

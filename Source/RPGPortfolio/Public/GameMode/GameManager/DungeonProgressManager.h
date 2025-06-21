@@ -71,6 +71,8 @@ public:
 	void AsyncLoadSoftClassptrMonster();
 
 	void SpawnMonster();
+
+	void SpawnBossMonster();
 	
 protected:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
@@ -98,10 +100,18 @@ private:
 	UFUNCTION()
 	void MonsterKillCount(AActor* DestroyedActor);
 
+	UFUNCTION()
+	void BossMonsterKilled(AActor* DestroyedActor);
+
 	UPROPERTY()
 	int32 NormalMonsterCount;
 
+	UPROPERTY()
+	int32 BossMonsterCount;
+
 	bool SpawnFinish;
+
+	bool BossSpawnFinish;
 };
 
 

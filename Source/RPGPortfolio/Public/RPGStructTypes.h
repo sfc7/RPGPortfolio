@@ -98,3 +98,10 @@ enum class ERPGCountDownActionOutput : uint8
 	Completed,
 	Cancelled
 };
+
+UENUM()
+enum class ERPGInputMode : uint8
+{
+	GameMode,
+	UIMode,
+};

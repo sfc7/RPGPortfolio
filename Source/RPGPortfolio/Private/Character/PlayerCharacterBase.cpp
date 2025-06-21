@@ -14,6 +14,9 @@
 #include "GameAbilitySystem/GamePlayAbility/Common/Player/PlayerAttributeSet.h"
 #include "Component/Player/PlayerCombatComponent.h"
 #include "Component/Player/PlayerUIComponent.h"
+#include "DataAsset/DataAsset_RPGUIData.h"
+#include "GameMode/GameManager/GeneralGameManager.h"
+#include "GameMode/GameManager/UIManager.h"
 
 
 APlayerCharacterBase::APlayerCharacterBase()
@@ -93,7 +96,7 @@ void APlayerCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 			PlayerEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, RPGGameplayTag::InputTag_Look_Mouse, ETriggerEvent::Triggered, this, &ThisClass::Input_Look);
 			PlayerEnhancedInputComponent->BindAbilityInputAction(InputConfigDataAsset, this, &ThisClass::Input_AbilityInputPressed, &ThisClass::Input_AbilityInputReleased);
 			PlayerEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, RPGGameplayTag::InputTag_ShowDebug_Keyboard, ETriggerEvent::Triggered, this, &ThisClass::Input_ShowDebug);
-			
+			PlayerEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, RPGGameplayTag::InputTag_CallPauseMenu_Keyboard, ETriggerEvent::Triggered, this, &ThisClass::Input_CallPauseMenu);
 		}
 	}
 }
@@ -136,7 +139,7 @@ void APlayerCharacterBase::Input_Look(const FInputActionValue& InputActionValue)
  	
 	if (LookAxisVector.X != 0.f)
 	{
-		AddControllerYawInput(LookAxisVector.X);
+		AddControllerYawInput(LookAxisVector.X);	
 	}
  
 	if (LookAxisVector.Y != 0.f)
@@ -162,4 +165,9 @@ void APlayerCharacterBase::Input_ShowDebug()
 	{
 		PC->ConsoleCommand(TEXT("showdebug abilitysystem"), true);
 	}
+}
+
+void APlayerCharacterBase::Input_CallPauseMenu()
+{
+	GetGameInstance()->GetSubsystem<UGeneralGameManager>()->GetUIManager()->ShowUIAsync(EUICategory::PauseMenuUI, GetWorld());
 }

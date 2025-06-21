@@ -10,6 +10,8 @@ UENUM(BlueprintType)
 enum class EUICategory : uint8
 {
 	GameOverUI,
+	VictoryUI,
+	PauseMenuUI,
 	None,
 };
 
@@ -40,5 +42,11 @@ public:
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")
+		FUIData VictoryUI;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")
 		FUIData GameOverUI;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")
+		FUIData PauseMenuUI;
 };

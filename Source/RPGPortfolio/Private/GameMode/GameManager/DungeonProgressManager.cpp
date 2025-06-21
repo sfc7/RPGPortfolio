@@ -140,8 +140,71 @@ void UDungeonProgressManager::SpawnMonster()
 	SpawnFinish = true;
 }
 
-void UDungeonProgressManager::OnDungeonStateChanged(EDungeonState NewState)
+void UDungeonProgressManager::SpawnBossMonster()
 {
+	//ToDo 밑에 부분 삭제 후 보스몬스터 스폰위치 지정
+
+	TArray<AActor*> MonsterSpawnPoints;
+	
+	UGameplayStatics::GetAllActorsOfClass(this, ATargetPoint::StaticClass(), MonsterSpawnPoints);
+
+	if (MonsterSpawnPoints.IsEmpty())
+	{
+		return;
+	}
+	
+	UClass* BossMonsterClass = nullptr;
+	
+	TArray<FName> RowNames = MonsterDataTable->GetRowNames();
+	for (const FName& RowName : RowNames)
+	{
+		FMonsterInDungeonTable* RowMonsterData = MonsterDataTable->FindRow<FMonsterInDungeonTable>(RowName, TEXT(""));
+		if (RowMonsterData && RowMonsterData->MonsterType == EMonsterType::BossMonster)
+		{
+			const FMonsterInfo& RowMonsterInfo = RowMonsterData->MonsterInfo;
+			
+			if (UClass** FoundClass = AsyncLoadMonsterMap.Find(RowMonsterInfo.MonsterSoftClassPtr))
+			{
+				BossMonsterClass = *FoundClass;
+			}
+		}
+	}
+
+	if (BossMonsterClass == nullptr)
+	{
+		return;
+	}
+
+	//ToDo 밑에 부분 삭제 후 보스몬스터 스폰위치 지정
+	int32 MonsterIndex = 0;
+	for (AActor* SpawnPoint : MonsterSpawnPoints)
+	{
+		if (!SpawnPoint) continue;
+
+		FVector SpawnLocation = SpawnPoint->GetActorLocation();
+		FRotator SpawnRotation = SpawnPoint->GetActorRotation();
+
+		FVector RandomLocation;
+		UNavigationSystemV1::K2_GetRandomLocationInNavigableRadius(this,SpawnLocation,RandomLocation,200.f);
+		
+		RandomLocation += FVector(0.f, 0.f, 100.f);
+
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+		
+		AMonsterCharacter* SpawnedMonster = GetWorld()->SpawnActor<AMonsterCharacter>(
+			BossMonsterClass,
+			SpawnLocation,
+			SpawnRotation,
+			SpawnParams
+		);
+
+		SpawnedMonster->OnDestroyed.AddUniqueDynamic(this, &ThisClass::BossMonsterKilled);
+	}
+}
+
+void UDungeonProgressManager::OnDungeonStateChanged(EDungeonState NewState)
+{	
 	switch (NewState)
 	{
 	case EDungeonState::NormalMonsterPhase:
@@ -153,7 +216,8 @@ void UDungeonProgressManager::OnDungeonStateChanged(EDungeonState NewState)
 		break;
             
 	case EDungeonState::Clear:
-
+		UWidgetLayoutLibrary::RemoveAllWidgets(GetWorld());
+		GetGameInstance()->GetSubsystem<UUIManager>()->ShowUIAsync(EUICategory::VictoryUI, GetWorld());
 		break;
             
 	case EDungeonState::GameOver:
@@ -174,3 +238,9 @@ void UDungeonProgressManager::MonsterKillCount(AActor* DestroyedActor)
 		SetDungeonState(EDungeonState::BossMonsterPhase);
 	}
 }
+
+void UDungeonProgressManager::BossMonsterKilled(AActor* DestroyedActor)
+{
+	SetDungeonState(EDungeonState::Clear);
+}
+

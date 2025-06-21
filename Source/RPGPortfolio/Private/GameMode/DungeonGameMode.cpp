@@ -20,7 +20,7 @@ void ADungeonGameMode::Tick(float DeltaTime)
 
 	if (GameTime >= 5.f && !flagspawn)
 	{
-		GetGameInstance()->GetSubsystem<UGeneralGameManager>()->GetDungeonProgressManager()->SpawnMonster();
+		GetGameInstance()->GetSubsystem<UGeneralGameManager>()->GetDungeonProgressManager()->SpawnBossMonster();
 		flagspawn = true;
 	}
 }

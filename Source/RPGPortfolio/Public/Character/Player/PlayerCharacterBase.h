@@ -73,6 +73,7 @@ private:
 	void Input_AbilityInputPressed(FGameplayTag _InputTag);
 	void Input_AbilityInputReleased(FGameplayTag _InputTag);
 	void Input_ShowDebug();
+	void Input_CallPauseMenu();
 	
 
 };

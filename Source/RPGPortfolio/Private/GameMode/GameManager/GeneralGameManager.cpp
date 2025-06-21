@@ -30,3 +30,35 @@ ULevelManager* UGeneralGameManager::GetLevelManager() const
 {
 	return GetGameInstance()->GetSubsystem<ULevelManager>();
 }
+
+void UGeneralGameManager::ToggleInputMode(const UObject* WorldContextObject, ERPGInputMode InputMode)
+{
+	APlayerController* PlayerController = nullptr;
+
+	if (GEngine)
+	{
+		if (UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull))
+		{
+			PlayerController = World->GetFirstPlayerController();
+		}
+	}
+
+	if (!PlayerController) return;
+
+	FInputModeGameOnly GameOnlyMode;
+	FInputModeUIOnly UIOnlyMode;
+
+	switch (InputMode)
+	{
+	case ERPGInputMode::GameMode:
+		PlayerController->SetInputMode(GameOnlyMode);
+		PlayerController->bShowMouseCursor = false;
+		break;
+	case ERPGInputMode::UIMode:
+		PlayerController->SetInputMode(UIOnlyMode);
+		PlayerController->bShowMouseCursor = true;
+		break;
+	default:
+		break;
+	}
+}
