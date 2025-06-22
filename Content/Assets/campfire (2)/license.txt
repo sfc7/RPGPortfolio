@@ -1,0 +1,11 @@
+Model Information:
+* title:	Campfire
+* source:	https://sketchfab.com/3d-models/campfire-fb573067b02f49e193e293b6112e7712
+* author:	Tactical_Gamer (https://sketchfab.com/Tactical_Beard)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Campfire" (https://sketchfab.com/3d-models/campfire-fb573067b02f49e193e293b6112e7712) by Tactical_Gamer (https://sketchfab.com/Tactical_Beard) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
