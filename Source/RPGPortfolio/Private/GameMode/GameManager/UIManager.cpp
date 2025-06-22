@@ -15,7 +15,7 @@ void UUIManager::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
 
-	RPGUIData = LoadObject<UDataAsset_RPGUIData>(nullptr, TEXT("/Game/MyProject/Widget/Data/DA_RPGUIData.DA_RPGUIData"));
+	RPGUIData = LoadObject<UDataAsset_RPGUIData>(nullptr, TEXT("/Game/MyProject/Data/DA_RPGUIData.DA_RPGUIData"));
 }
 
 void UUIManager::Deinitialize()
@@ -50,4 +50,9 @@ void UUIManager::ShowUIAsync(const EUICategory& UICategory, UWorld* World)
 TSoftClassPtr<UUserWidget> UUIManager::GetUIWidgetClass(const EUICategory& UICategory) const
 {
 	return RPGUIData->GetUIWidgetClass(UICategory);
+}
+
+TSubclassOf<UUserWidget> UUIManager::GetLoadingScreen(const ELoadingCategory& LoadingCategory) const
+{
+	return RPGUIData->GetLoadingScreen(LoadingCategory);
 }

@@ -101,7 +101,7 @@ namespace RPGGameplayTag
 	UE_DEFINE_GAMEPLAY_TAG(Data_DamageType_SetByCaller_Parrying, "Data.DamageType.SetByCaller.Parrying");
 
 	//Level
-	UE_DEFINE_GAMEPLAY_TAG(Level_Menu_MainMap, "Level.Menu.MainMap");
+	UE_DEFINE_GAMEPLAY_TAG(Level_Menu_Title, "Level.Menu.Title");
 	UE_DEFINE_GAMEPLAY_TAG(Level_Game_Town, "Level.Game.Town");
 	UE_DEFINE_GAMEPLAY_TAG(Level_Game_Dungeon, "Level.Game.Dungeon");
 	

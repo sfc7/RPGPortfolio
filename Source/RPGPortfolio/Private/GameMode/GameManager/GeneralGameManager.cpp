@@ -5,7 +5,6 @@
 #include "GameMode/GameManager/DungeonProgressManager.h"
 #include "GameMode/GameManager/LevelManager.h"
 #include "GameMode/GameManager/UIManager.h"
-
 void UGeneralGameManager::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);

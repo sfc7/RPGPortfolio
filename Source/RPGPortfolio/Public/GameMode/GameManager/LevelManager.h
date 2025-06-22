@@ -20,6 +20,16 @@ public:
 
 	UFUNCTION(BlueprintPure)
 	TSoftObjectPtr<UWorld> GetGameLevelByTag(FGameplayTag GameplayTag) const;
+
+	UFUNCTION(BlueprintCallable)
+	void SaveRPGGame();
+
+	UFUNCTION(BlueprintCallable)
+	void LoadRPGGame();
+
+	
+	void LoadLoadingScreen(const FString& LevelName);
+	void DestinationLoadingScreen(UWorld* LoadWorld);
 	
 protected:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;

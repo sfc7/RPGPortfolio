@@ -19,6 +19,21 @@ TSoftClassPtr<UUserWidget> UDataAsset_RPGUIData::GetUIWidgetClass(const EUICateg
 		return VictoryUI.UIWidgetClass;
 	case EUICategory::PauseMenuUI:
 		return PauseMenuUI.UIWidgetClass;
+	case EUICategory::TitleMenuUI:
+		return TitleMenuUI.UIWidgetClass;
+	default:
+		return nullptr;
+	}
+}
+
+TSubclassOf<UUserWidget> UDataAsset_RPGUIData::GetLoadingScreen(const ELoadingCategory& LoadingCategory) const
+{
+	switch (LoadingCategory)
+	{
+	case ELoadingCategory::Town:
+		return LoadingScreen_Town.LoadingScreen;
+	case ELoadingCategory::Dungeon:
+		return LoadingScreen_Dungeon.LoadingScreen;
 	default:
 		return nullptr;
 	}

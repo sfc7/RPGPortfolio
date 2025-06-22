@@ -23,6 +23,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	TSoftClassPtr<UUserWidget> GetUIWidgetClass(const EUICategory& UICategory) const;
 
+	UFUNCTION(BlueprintCallable)
+	TSubclassOf<UUserWidget> GetLoadingScreen(const ELoadingCategory& LoadingCategory) const;
 	
 protected:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;

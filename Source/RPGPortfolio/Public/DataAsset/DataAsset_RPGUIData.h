@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "Engine/DataAsset.h"
 #include "DataAsset_RPGUIData.generated.h"
 
@@ -12,6 +13,15 @@ enum class EUICategory : uint8
 	GameOverUI,
 	VictoryUI,
 	PauseMenuUI,
+	TitleMenuUI,
+	None,
+};
+
+UENUM(BlueprintType)
+enum class ELoadingCategory : uint8
+{
+	Town,
+	Dungeon,
 	None,
 };
 
@@ -27,6 +37,22 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSoftClassPtr<UUserWidget> UIWidgetClass;
 };
+
+USTRUCT(BlueprintType)
+struct FLoadingScreenData
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+		ELoadingCategory LoadingMap = ELoadingCategory::None;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+		TSubclassOf<UUserWidget> LoadingScreen;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+		FGameplayTag MapTag;
+};
 /**
  * 
  */
@@ -39,6 +65,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	TSoftClassPtr<UUserWidget> GetUIWidgetClass(const EUICategory& UICategory) const;
+
+	UFUNCTION(BlueprintCallable)
+	TSubclassOf<UUserWidget> GetLoadingScreen(const ELoadingCategory& LoadingCategory) const;
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")
@@ -49,4 +78,13 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")
 		FUIData PauseMenuUI;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")
+		FUIData TitleMenuUI;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")
+		FLoadingScreenData LoadingScreen_Town;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")
+		FLoadingScreenData LoadingScreen_Dungeon;
 };
