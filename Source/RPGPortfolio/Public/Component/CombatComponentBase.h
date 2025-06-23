@@ -46,7 +46,7 @@ protected:
 	
 public:
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
-	void RegisterSpawnedWeapon(FGameplayTag _WeaponTagToRegister, AWeaponBase* _WeaponToRegister, bool bEquippedWeaponState = false);
+	virtual void RegisterSpawnedWeapon(FGameplayTag _WeaponTagToRegister, AWeaponBase* _WeaponToRegister, bool bEquippedWeaponState = false);
 
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
 	AWeaponBase* GetCharacterCarriedWeaponByTag(FGameplayTag _WeaponTagToGet) const;
@@ -69,7 +69,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ToggleCarriedWeaponCollision(AWeaponBase* _ToggleWeapon, bool _bShouldEnable, EToggleDamageType _ToggleDamageType = EToggleDamageType::CarriedWeapon);
 
-	virtual void OnHitTargetActor(AActor* _HitActor, float _WeaponBaseDamage, EWeaponAttackType AttackType);
+	virtual void OnHitTargetActor(AActor* _HitActor, float _WeaponBaseDamage, EWeaponAttackType AttackType, FName EquipSocketName = NAME_None);
 	virtual void OnWeaponPulledFromTargetActor(AActor* _InteractedActor, float _WeaponBaseDamage, EWeaponAttackType AttackType);
 
 

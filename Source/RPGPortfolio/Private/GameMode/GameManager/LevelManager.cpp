@@ -35,7 +35,7 @@ void ULevelManager::Deinitialize()
 }
 
 TSoftObjectPtr<UWorld> ULevelManager::GetGameLevelByTag(FGameplayTag GameplayTag) const
-{
+	{
 	return RPGLevelData->GetGameLevelByTag(GameplayTag);
 }
 

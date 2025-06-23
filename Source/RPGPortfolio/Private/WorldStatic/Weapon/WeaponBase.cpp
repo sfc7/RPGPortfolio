@@ -39,7 +39,7 @@ void AWeaponBase::OnCollisionBoxBeginOverlap(UPrimitiveComponent* OverlappedComp
 		{
 			if (URPGFunc::CheckTargetTeamAgent(WeaponOwner, HitPawn))
 			{
-				OnWeaponHitTarget.ExecuteIfBound(OtherActor, WeaponDefaultData.WeaponBaseDamage, CurrentAttackType);
+				OnWeaponHitBegin.ExecuteIfBound(OtherActor, WeaponDefaultData.WeaponBaseDamage, CurrentAttackType, WeaponDefaultData.EquipSocketName);
 			}
 		}
 	}
@@ -55,7 +55,7 @@ void AWeaponBase::OnCollisionBoxEndOverlap(UPrimitiveComponent* OverlappedCompon
 		{
 			if (URPGFunc::CheckTargetTeamAgent(WeaponOwner, HitPawn))
 			{
-				OnWeaponHitTarget.ExecuteIfBound(OtherActor, WeaponDefaultData.WeaponBaseDamage, CurrentAttackType);
+				OnWeaponHitEnd.ExecuteIfBound(OtherActor, WeaponDefaultData.WeaponBaseDamage, CurrentAttackType);
 			}
 		}
 	}

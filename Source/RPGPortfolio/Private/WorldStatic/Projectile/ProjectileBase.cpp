@@ -61,18 +61,15 @@ void AProjectileBase::OnProjectileHit(UPrimitiveComponent* HitComponent, AActor*
 		return;
 	}
 
-	bool bIsValidDefense = false;
-	bool bIsPlayerDefensing = false;
-
 	URPGAbilitySystemComponent* TargetASC = Cast<URPGAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(HitTarget));
 	if (TargetASC)
 	{
+		FGameplayEventData EventData;
+		EventData.Instigator = this;
+		EventData.Target = HitTarget;
+		
 		if (TargetASC->HasMatchingGameplayTag(RPGGameplayTag::Player_Status_ActionState_IsDefensing))
 		{
-			FGameplayEventData EventData;
-			EventData.Instigator = this;
-			EventData.Target = HitTarget;
-			
 			if (URPGFunc::IsValidDefense(this, HitTarget))
 			{
 				UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
@@ -81,10 +78,10 @@ void AProjectileBase::OnProjectileHit(UPrimitiveComponent* HitComponent, AActor*
 					EventData
 					);
 			}
-			else
-			{
-				HandleApplyProjectileDamage(HitTarget, EventData);
-			}
+		}
+		else
+		{
+			HandleApplyProjectileDamage(HitTarget, EventData);
 		}
 	}
 

@@ -9,7 +9,13 @@
 #include "Components/BoxComponent.h"
 #include "GameAbilitySystem/RPGAbilitySystemComponent.h"
 
-void UMonsterCombatComponent::OnHitTargetActor(AActor* _HitActor)
+
+void UMonsterCombatComponent::RegisterSpawnedWeapon(FGameplayTag _WeaponTagToRegister, AWeaponBase* _WeaponToRegister, bool bEquippedWeaponState)
+{
+	Super::RegisterSpawnedWeapon(_WeaponTagToRegister, _WeaponToRegister, bEquippedWeaponState);
+}
+
+void UMonsterCombatComponent::OnHitTargetActor(AActor* _HitActor, float _WeaponBaseDamage, EWeaponAttackType AttackType,FName EquipSocketName)
 {
 	if (OverlappedActors.Contains(_HitActor))
 	{
@@ -45,7 +51,7 @@ void UMonsterCombatComponent::OnHitTargetActor(AActor* _HitActor)
 		);
 	}
 	else
-	{		
+	{
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
 			GetOwningPawn(),
 			RPGGameplayTag::Character_Event_AttackHit_Melee,
@@ -53,6 +59,7 @@ void UMonsterCombatComponent::OnHitTargetActor(AActor* _HitActor)
 		);
 	}
 }
+
 
 void UMonsterCombatComponent::OnWeaponPulledFromTargetActor(AActor* _InteractedActor, float _WeaponBaseDamage, EWeaponAttackType AttackType)
 {
@@ -62,7 +69,7 @@ void UMonsterCombatComponent::OnWeaponPulledFromTargetActor(AActor* _InteractedA
 void UMonsterCombatComponent::ToggleBodyCollisionBoxCollsion(bool _bShouldEnable, EToggleDamageType _ToggleDamageType)
 {
 	AMonsterCharacter* OwningMonsterCharacter = GetOwningPawn<AMonsterCharacter>();
-
+	
 	if (OwningMonsterCharacter)
 	{
 		UBoxComponent* LeftHandCollsionBox = OwningMonsterCharacter->GetLeftHandCollisionBox();

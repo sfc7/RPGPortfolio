@@ -7,6 +7,7 @@
 #include "RPGGA_Player_LightAttack.generated.h"
 
 class UAnimMontage;
+class UNiagaraSystem;
 /**
  * 
  */
@@ -51,6 +52,5 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	TSubclassOf<UGameplayEffect> GainMpEffectClass;
-private:
 	
 };

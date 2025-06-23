@@ -12,8 +12,8 @@ void UCombatComponentBase::RegisterSpawnedWeapon(FGameplayTag _WeaponTagToRegist
 {
 	if (_WeaponToRegister && !CharacterWeapons.Contains(_WeaponTagToRegister)) CharacterWeapons.Emplace(_WeaponTagToRegister, _WeaponToRegister);
 
-	_WeaponToRegister->OnWeaponHitTarget.BindUObject(this, &ThisClass::OnHitTargetActor);
-	_WeaponToRegister->OnWeaponPulledFromTarget.BindUObject(this, &ThisClass::OnWeaponPulledFromTargetActor);
+	_WeaponToRegister->OnWeaponHitBegin.BindUObject(this, &ThisClass::OnHitTargetActor);
+	_WeaponToRegister->OnWeaponHitEnd.BindUObject(this, &ThisClass::OnWeaponPulledFromTargetActor);
 	
 	if (bEquippedWeaponState) CurrentEquippedWeaponTag = _WeaponTagToRegister;
 }
@@ -85,9 +85,8 @@ void UCombatComponentBase::ToggleCarriedWeaponCollision(AWeaponBase* _CarriedWea
 	//TODO : Handlebody collision Boxes
 }
 
-void UCombatComponentBase::OnHitTargetActor(AActor* _HitActor, float _WeaponBaseDamage, EWeaponAttackType AttackType)
+void UCombatComponentBase::OnHitTargetActor(AActor* _HitActor, float _WeaponBaseDamage, EWeaponAttackType AttackType,FName EquipSocketName)
 {
-
 }
 
 void UCombatComponentBase::OnWeaponPulledFromTargetActor(AActor* _InteractedActor, float _WeaponBaseDamage, EWeaponAttackType AttackType)

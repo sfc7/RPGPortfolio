@@ -79,7 +79,8 @@ void AMonsterCharacter::MonsterDeath(TSoftObjectPtr<UNiagaraSystem> _DeathNiagar
 {
 	GetMesh()->bPauseAnims = true;
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-
+	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_None);
+	
 	MonsterUIComponent->RemoveMonsterDrawnWidget();
 	
 	UNiagaraSystem* DeathNiagara = _DeathNiagaraEffectSoftObject.LoadSynchronous();
@@ -137,8 +138,7 @@ void AMonsterCharacter::OnBodyCollisionBoxBeginOverlap(UPrimitiveComponent* Over
 	{
 		if (URPGFunc::CheckTargetTeamAgent(this, HitPawn))
 		{
-			MonsterCombatComponent->OnHitTargetActor(HitPawn);
-			
+			MonsterCombatComponent->OnHitTargetActor(HitPawn, 0, EWeaponAttackType::None);
 		}
 	}
 }

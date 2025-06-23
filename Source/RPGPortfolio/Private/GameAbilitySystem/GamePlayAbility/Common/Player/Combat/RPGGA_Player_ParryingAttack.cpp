@@ -11,6 +11,8 @@
 #include "GameAbilitySystem/GamePlayAbility/RPGGamePlayTag.h"
 #include "WorldStatic/Weapon/WeaponBase.h"
 #include "GameAbilitySystem/GameplayTask/Player/RPGAT_Player_RotateTarget.h"
+#include "Character/Player/PlayerCharacterBase.h"
+#include "GameAbilitySystem/RPGAbilitySystemComponent.h"
 
 URPGGA_Player_ParryingAttack::URPGGA_Player_ParryingAttack()
 {
@@ -94,6 +96,14 @@ void URPGGA_Player_ParryingAttack::ApplyEffectsSpecHandleToTargetCallback(FGamep
 	{
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(LocalTargetActor, RPGGameplayTag::Character_Event_HitReact, PayloadData);
 	}
-	BP_ApplyGameplayEffectToOwner(GainMpEffectClass,GetAbilityLevel());
 	
+	BP_ApplyGameplayEffectToOwner(GainMpEffectClass,GetAbilityLevel());
+
+	FVector AttackDirection = (LocalTargetActor->GetActorLocation() - GetPlayerCharacterFromActorInfo()->GetActorLocation()).GetSafeNormal();
+	FVector HitLocation = PayloadData.ContextHandle.GetHitResult()->Location;
+	FGameplayCueParameters AttackHitGCParam;
+	AttackHitGCParam.Normal = AttackDirection;
+	AttackHitGCParam.TargetAttachComponent = GetOwningComponentFromActorInfo();
+	AttackHitGCParam.Location = HitLocation;	
+	GetPlayerCharacterFromActorInfo()->GetRPGAbilitySystemComponent()->ExecuteGameplayCue(RPGGameplayTag::GameplayCue_Player_Fighter_Effect_AttackHit_Parrying, AttackHitGCParam);
 }

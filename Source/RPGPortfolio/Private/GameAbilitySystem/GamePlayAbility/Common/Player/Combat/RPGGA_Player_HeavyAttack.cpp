@@ -13,6 +13,8 @@
 #include "GameAbilitySystem/GamePlayAbility/Common/Player/Combat/RPGGA_Player_LightAttack.h"
 #include "GameAbilitySystem/GameplayTask/Player/RPGAT_Player_RotateTarget.h"
 #include "WorldStatic/Weapon/PlayerWeapon.h"
+#include "GameAbilitySystem/GamePlayAbility/Common/Player/PlayerGameplayAbility.h"
+#include "Character/Player/PlayerCharacterBase.h"
 #include "GameAbilitySystem/RPGAbilitySystemComponent.h"
 
 URPGGA_Player_HeavyAttack::URPGGA_Player_HeavyAttack()
@@ -112,4 +114,12 @@ void URPGGA_Player_HeavyAttack::ApplyEffectsSpecHandleToTargetCallback(FGameplay
 	}
 
 	BP_ApplyGameplayEffectToOwner(GainMpEffectClass,GetAbilityLevel());
+
+	FVector AttackDirection = (LocalTargetActor->GetActorLocation() - GetPlayerCharacterFromActorInfo()->GetActorLocation()).GetSafeNormal();
+	FVector HitLocation = PayloadData.ContextHandle.GetHitResult()->Location;
+	FGameplayCueParameters AttackHitGCParam;
+	AttackHitGCParam.Normal = AttackDirection;
+	AttackHitGCParam.TargetAttachComponent = GetOwningComponentFromActorInfo();
+	AttackHitGCParam.Location = HitLocation;	
+	GetPlayerCharacterFromActorInfo()->GetRPGAbilitySystemComponent()->ExecuteGameplayCue(RPGGameplayTag::GameplayCue_Player_Fighter_Effect_AttackHit_Melee_Heavy, AttackHitGCParam);
 }

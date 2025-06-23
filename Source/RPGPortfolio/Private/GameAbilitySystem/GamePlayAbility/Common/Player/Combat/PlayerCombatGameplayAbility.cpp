@@ -3,6 +3,8 @@
 
 #include "GameAbilitySystem/GamePlayAbility/Common/Player/Combat/PlayerCombatGameplayAbility.h"
 
+#include "GameAbilitySystem/RPGAbilitySystemComponent.h"
+#include "AbilitySystemBlueprintLibrary.h"
 #include "Character/MonsterCharacter.h"
 #include "Character/Player/PlayerCharacterBase.h"
 #include "GameAbilitySystem/GamePlayAbility/RPGGamePlayTag.h"
@@ -41,7 +43,13 @@ bool UPlayerCombatGameplayAbility::FindNearestEnemyBeforeAttack(float BoxExtent)
 	{
 		if (AMonsterCharacter* HitMonster =  Cast<AMonsterCharacter>(HitResult.GetActor()))
 		{
-			FindEnemies.AddUnique(HitMonster);
+			URPGAbilitySystemComponent* MonsterASC = CastChecked<URPGAbilitySystemComponent>(
+			   UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(HitMonster));
+            
+			if (!MonsterASC->HasMatchingGameplayTag(RPGGameplayTag::Character_Status_Dead))
+			{
+				FindEnemies.AddUnique(HitMonster);
+			}
 		}
 	}
 

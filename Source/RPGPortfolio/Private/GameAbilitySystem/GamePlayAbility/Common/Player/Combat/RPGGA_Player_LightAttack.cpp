@@ -14,6 +14,7 @@
 #include "Component/Player/PlayerCombatComponent.h"
 #include "GameAbilitySystem/GameplayTask/Player/RPGAT_Player_RotateTarget.h"
 #include "WorldStatic/Weapon/PlayerWeapon.h"
+#include "GameAbilitySystem/RPGAbilitySystemComponent.h"
 
 URPGGA_Player_LightAttack::URPGGA_Player_LightAttack()
 {
@@ -83,7 +84,6 @@ void URPGGA_Player_LightAttack::Attack()
 
 	GameplayEventTask->EventReceived.AddDynamic(this, &ThisClass::ApplyEffectsSpecHandleToTargetCallback);
 	GameplayEventTask->ReadyForActivation();
-
 	
 	if (CurrentComboCount == LightAttackMontages.Num())
 	{
@@ -117,6 +117,7 @@ void URPGGA_Player_LightAttack::OnEndAbilityCallback()
 void URPGGA_Player_LightAttack::ApplyEffectsSpecHandleToTargetCallback(FGameplayEventData PayloadData)
 {
 	LocalTargetActor = const_cast<AActor*>(PayloadData.Target.Get());
+	
 	float WeaponDamage = PayloadData.EventMagnitude;
 	FGameplayEffectSpecHandle SpecHandle = MakePlayerComboDamageEffectSpecHandle(DamageEffectClass, WeaponDamage, RPGGameplayTag::Data_DamageType_SetByCaller_Light, UsedComboCount);
 
@@ -134,4 +135,12 @@ void URPGGA_Player_LightAttack::ApplyEffectsSpecHandleToTargetCallback(FGameplay
 	}
 
 	BP_ApplyGameplayEffectToOwner(GainMpEffectClass,GetAbilityLevel());
+
+	FVector AttackDirection = (LocalTargetActor->GetActorLocation() - GetPlayerCharacterFromActorInfo()->GetActorLocation()).GetSafeNormal();
+	FVector HitLocation = PayloadData.ContextHandle.GetHitResult()->Location;
+	FGameplayCueParameters AttackHitGCParam;
+	AttackHitGCParam.Normal = AttackDirection;
+	AttackHitGCParam.TargetAttachComponent = GetOwningComponentFromActorInfo();
+	AttackHitGCParam.Location = HitLocation;	
+	GetPlayerCharacterFromActorInfo()->GetRPGAbilitySystemComponent()->ExecuteGameplayCue(RPGGameplayTag::GameplayCue_Player_Fighter_Effect_AttackHit_Melee_Light, AttackHitGCParam);
 }

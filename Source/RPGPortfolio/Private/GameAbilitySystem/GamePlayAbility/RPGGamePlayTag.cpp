@@ -113,5 +113,8 @@ namespace RPGGameplayTag
 	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Player_Fighter_Effect_DefenseSucess, "GameplayCue.Player.Fighter.Effect.DefenseSucess");
 	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Player_Fighter_Effect_DefenseParrying, "GameplayCue.Player.Fighter.Effect.DefenseParrying");
 	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Player_Fighter_Effect_ApplyBuff, "GameplayCue.Player.Fighter.Effect.ApplyBuff");
+	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Player_Fighter_Effect_AttackHit_Melee_Light, "GameplayCue.Player.Fighter.Effect.AttackHit.Melee.Light");
+	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Player_Fighter_Effect_AttackHit_Melee_Heavy, "GameplayCue.Player.Fighter.Effect.AttackHit.Melee.Heavy");
+	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Player_Fighter_Effect_AttackHit_Parrying, "GameplayCue.Player.Fighter.Effect.AttackHit.Parrying");
 	
 }

@@ -53,6 +53,9 @@ struct FWeaponDefaultData
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	float WeaponBaseDamage;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FName EquipSocketName;
 };
 
 UENUM(BlueprintType)
