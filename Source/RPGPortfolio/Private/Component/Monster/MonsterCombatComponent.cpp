@@ -17,16 +17,28 @@ void UMonsterCombatComponent::RegisterSpawnedWeapon(FGameplayTag _WeaponTagToReg
 
 void UMonsterCombatComponent::OnHitTargetActor(AActor* _HitActor, float _WeaponBaseDamage, EWeaponAttackType AttackType,FName EquipSocketName)
 {
+	UAbilitySystemComponent* HitActorASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(_HitActor);
+
+	if (!HitActorASC)
+	{
+		return;
+	}
+	
+	if (HitActorASC->HasMatchingGameplayTag(RPGGameplayTag::Character_Status_Invincible))
+	{
+		return; 
+	}
+	
 	if (OverlappedActors.Contains(_HitActor))
 	{
 		return;
 	}
-
+	
 	OverlappedActors.AddUnique(_HitActor);
 
 	bool bIsFacing = false;
 
-	URPGAbilitySystemComponent* HitActorASC = CastChecked<URPGAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(_HitActor));
+	const bool bIsPlayerDodging = HitActorASC->HasMatchingGameplayTag(RPGGameplayTag::Player_Status_ActionState_IsDodging);
 	const bool bIsPlayerDefensing = HitActorASC->HasMatchingGameplayTag(RPGGameplayTag::Player_Status_ActionState_IsDefensing);
 
 	URPGAbilitySystemComponent* OwnerActorASC = CastChecked<URPGAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetOwningPawn()));
@@ -47,6 +59,14 @@ void UMonsterCombatComponent::OnHitTargetActor(AActor* _HitActor, float _WeaponB
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
 			_HitActor,
 			RPGGameplayTag::Player_Event_DefenseSuccess,
+			EventData
+		);
+	}
+	else if (bIsPlayerDodging)
+	{
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
+			_HitActor,
+			RPGGameplayTag::Player_Event_DodgeSuccess,
 			EventData
 		);
 	}

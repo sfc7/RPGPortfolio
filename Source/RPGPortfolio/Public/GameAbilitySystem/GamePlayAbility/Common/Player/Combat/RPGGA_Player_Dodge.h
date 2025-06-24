@@ -20,6 +20,11 @@ protected:
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
 
+	UFUNCTION()
+	void OnEndAbilityCallback();
+
+	UFUNCTION()
+	void CalcDodgeDirectionAndDistance();
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	UAnimMontage* DodgeMontage;
@@ -32,14 +37,22 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	FScalableFloat Distance;
-	
-	UFUNCTION()
-	void OnEndAbilityCallback();
 
-	UFUNCTION()
-	void CalcDodgeDirectionAndDistance();
-
-	
 	FVector DodgeDirection;
+	
+	UFUNCTION()
+	void SuccessDodgeCallback(FGameplayEventData PayloadData);
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (Categories=GameplayCue))
+	FGameplayTag DodgeEffectGamePlayCue;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (Categories=GameplayCue))
+	FGameplayTag DodgeSuccessGamePlayCue;
+
+	FTimerHandle DodgeDelayTimerHandle;
+
+	FTimerHandle FadeBackTimerHandle;
+
+
 	
 };

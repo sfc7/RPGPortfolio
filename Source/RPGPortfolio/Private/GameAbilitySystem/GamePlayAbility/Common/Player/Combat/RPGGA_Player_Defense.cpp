@@ -97,8 +97,6 @@ void URPGGA_Player_Defense::SuccessDefenseCallback(FGameplayEventData PayloadDat
 		DefenseSucessGCParam.TargetAttachComponent = GetOwningComponentFromActorInfo();
 		GetPlayerCharacterFromActorInfo()->GetRPGAbilitySystemComponent()->ExecuteGameplayCue(DefenseSuccessGamePlayCue, DefenseSucessGCParam);
 	}
-	
-
 }
 
 void URPGGA_Player_Defense::SetParryingAttackReady()

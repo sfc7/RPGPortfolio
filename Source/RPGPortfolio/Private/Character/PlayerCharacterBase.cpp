@@ -71,7 +71,7 @@ void APlayerCharacterBase::PossessedBy(AController* NewController)
 			LoadedData->GiveAbilitySystemComponent(RPGAbilitySystemComponent);
 		}
 	}
-
+	
 	if (IsValid(PlayerUIComponent))
 	{
 		PlayerUIComponent->OnInitPlayerUIbyClassDelegate.Broadcast(PlayerCharacterClass);

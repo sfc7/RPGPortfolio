@@ -37,6 +37,8 @@ void UPlayerCombatComponent::OnHitTargetActor(AActor* _HitActor, float _WeaponBa
 {
 	if (OverlappedActors.Contains(_HitActor)) return;
 
+
+	
 	OverlappedActors.AddUnique(_HitActor);
 
 	FVector SocketLocation = FVector::ZeroVector;

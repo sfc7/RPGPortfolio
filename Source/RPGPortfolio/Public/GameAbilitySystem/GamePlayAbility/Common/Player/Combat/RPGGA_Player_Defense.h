@@ -54,7 +54,8 @@ protected:
 
 	FTimerHandle ParryingDelayAndGATimerHandle;
 	FTimerHandle ParryingInputTimerHandle;
-
+	FTimerHandle FadeBackTimerHandle;
+	
 	FGameplayAbilitySpecHandle ParryAbilityHandle;
 
 	UFUNCTION()

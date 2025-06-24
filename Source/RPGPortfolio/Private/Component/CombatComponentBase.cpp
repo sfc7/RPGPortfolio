@@ -3,9 +3,11 @@
 
 #include "Component/CombatComponentBase.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
 #include "Character/Player/PlayerCharacterBase.h"
 #include "WorldStatic/Weapon/WeaponBase.h"
 #include "Components/BoxComponent.h"
+#include "GameAbilitySystem/GamePlayAbility/RPGGamePlayTag.h"
 
 
 void UCombatComponentBase::RegisterSpawnedWeapon(FGameplayTag _WeaponTagToRegister, AWeaponBase* _WeaponToRegister, bool bEquippedWeaponState)
@@ -87,6 +89,7 @@ void UCombatComponentBase::ToggleCarriedWeaponCollision(AWeaponBase* _CarriedWea
 
 void UCombatComponentBase::OnHitTargetActor(AActor* _HitActor, float _WeaponBaseDamage, EWeaponAttackType AttackType,FName EquipSocketName)
 {
+	
 }
 
 void UCombatComponentBase::OnWeaponPulledFromTargetActor(AActor* _InteractedActor, float _WeaponBaseDamage, EWeaponAttackType AttackType)

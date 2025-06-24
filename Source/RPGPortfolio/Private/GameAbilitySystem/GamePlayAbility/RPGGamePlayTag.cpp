@@ -17,6 +17,8 @@ namespace RPGGameplayTag
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_ShowDebug_Keyboard, "InputTag.ShowDebug.Keyboard");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_CallPauseMenu_Keyboard, "InputTag.CallPauseMenu.Keyboard");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Dodge_Keyboard, "InputTag.Dodge.Keyboard");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_8WaysDodge_Keyboard, "InputTag.8WaysDodge.Keyboard");
+	
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Hold, "InputTag.Hold");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Hold_Defense_Keyboard, "InputTag.Hold.Defense.Keyboard");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Toggle, "InputTag.Toggle");
@@ -59,6 +61,7 @@ namespace RPGGameplayTag
 	
 	
 	UE_DEFINE_GAMEPLAY_TAG(Player_Event_HitPause, "Player.Event.HitPause");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Event_DodgeSuccess, "Player.Event.DodgeSuccess");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Event_DefenseSuccess, "Player.Event.DefenseSuccess");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Event_ActiveBuff, "Player.Event.ActiveBuff");
 
@@ -112,6 +115,8 @@ namespace RPGGameplayTag
 	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Player_Fighter_Effect_Defense, "GameplayCue.Player.Fighter.Effect.Defense");
 	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Player_Fighter_Effect_DefenseSucess, "GameplayCue.Player.Fighter.Effect.DefenseSucess");
 	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Player_Fighter_Effect_DefenseParrying, "GameplayCue.Player.Fighter.Effect.DefenseParrying");
+	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Player_Fighter_Effect_DodgeSuccess, "GameplayCue.Player.Fighter.Effect.DodgeSuccess");
+	
 	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Player_Fighter_Effect_ApplyBuff, "GameplayCue.Player.Fighter.Effect.ApplyBuff");
 	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Player_Fighter_Effect_AttackHit_Melee_Light, "GameplayCue.Player.Fighter.Effect.AttackHit.Melee.Light");
 	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Player_Fighter_Effect_AttackHit_Melee_Heavy, "GameplayCue.Player.Fighter.Effect.AttackHit.Melee.Heavy");
