@@ -13,7 +13,8 @@
 #include "Widget/RPGWidgetBase.h"
 #include "Components/BoxComponent.h"
 #include "RPGFunc.h"
-
+#include "Kismet/GameplayStatics.h"
+#include "WorldStatic/DamageIndicator.h"
 AMonsterCharacter::AMonsterCharacter()
 {
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
@@ -119,6 +120,31 @@ UUIComponentBase* AMonsterCharacter::GetUIComponent() const
 UMonsterUIComponent* AMonsterCharacter::GetMonsterUIComponent() const
 {
 	return MonsterUIComponent;
+}
+
+void AMonsterCharacter::SpawnDamageIndicator(float Damage)
+{
+	FVector MonsterRightVector = GetActorRightVector();
+	FVector MonsterUpVector = GetActorUpVector();
+
+	FVector SocketLocation = GetMesh()->GetSocketLocation(FName(TEXT("DamageIndicatorSocket")));
+	SocketLocation += (MonsterRightVector * 20.f) + (MonsterUpVector * 20.f);
+
+	FActorSpawnParameters SpawnParams;
+
+	ADamageIndicator* SpawnDamageIndicator = GetWorld()->SpawnActorDeferred<ADamageIndicator>(
+			DamageIndicator,
+			FTransform(FRotator::ZeroRotator, SocketLocation),
+			nullptr,
+			nullptr,
+			ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn
+		);
+
+	if (SpawnDamageIndicator)
+	{
+		SpawnDamageIndicator->SetDamage(Damage);
+		UGameplayStatics::FinishSpawningActor(SpawnDamageIndicator, FTransform(FRotator::ZeroRotator, SocketLocation));
+	}
 }
 
 void AMonsterCharacter::BeginPlay()

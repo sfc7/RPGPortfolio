@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "DataAsset/DataAsset_RPGUIData.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "UIManager.generated.h"
 
@@ -25,6 +26,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	TSubclassOf<UUserWidget> GetLoadingScreen(const ELoadingCategory& LoadingCategory) const;
+
+	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject"))
+	static void ToggleInputMode(const UObject* WorldContextObject, ERPGInputMode InputMode);
 	
 protected:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;

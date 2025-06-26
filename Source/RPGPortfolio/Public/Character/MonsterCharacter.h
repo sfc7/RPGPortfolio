@@ -12,6 +12,7 @@ class UNiagaraSystem;
 class UMonsterUIComponent;
 class UWidgetComponent;
 class UBoxComponent;
+class ADamageIndicator;
 /**
  * 
  */
@@ -39,6 +40,9 @@ public:
 	virtual UUIComponentBase* GetUIComponent() const override;
 
 	virtual UMonsterUIComponent* GetMonsterUIComponent() const override;
+
+	void SpawnDamageIndicator(float Damage);
+	
 protected:
 	virtual void BeginPlay() override;
 	
@@ -56,6 +60,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
 	UWidgetComponent* MonsterHpWidgetComponent;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DamageIndicator")
+	TSubclassOf<ADamageIndicator> DamageIndicator;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UBoxComponent* LeftHandCollisionBox;

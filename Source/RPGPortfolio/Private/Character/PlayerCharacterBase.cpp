@@ -17,7 +17,7 @@
 #include "DataAsset/DataAsset_RPGUIData.h"
 #include "GameMode/GameManager/GeneralGameManager.h"
 #include "GameMode/GameManager/UIManager.h"
-
+#include "Component/Player/PlayerInventoryComponent.h"
 
 APlayerCharacterBase::APlayerCharacterBase()
 {
@@ -41,6 +41,7 @@ APlayerCharacterBase::APlayerCharacterBase()
 
 	PlayerCombatComponent = CreateDefaultSubobject<UPlayerCombatComponent>(TEXT("PlayerCombatComponent"));
 	PlayerUIComponent = CreateDefaultSubobject<UPlayerUIComponent>(TEXT("PlayerUIComponent"));
+	PlayerItemInventoryComponent = CreateDefaultSubobject<UPlayerInventoryComponent>(TEXT("PlayerItemInventoryComponent"));
 	
 	CreateDefaultAttributeSet();
 }
@@ -58,6 +59,11 @@ UUIComponentBase* APlayerCharacterBase::GetUIComponent() const
 UPlayerUIComponent* APlayerCharacterBase::GetPlayerUIComponent() const
 {
 	return PlayerUIComponent;
+}
+
+UPlayerInventoryComponent* APlayerCharacterBase::GetPlayerInventoryComponent() const
+{
+	return PlayerItemInventoryComponent;
 }
 
 void APlayerCharacterBase::PossessedBy(AController* NewController)
@@ -97,6 +103,7 @@ void APlayerCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 			PlayerEnhancedInputComponent->BindAbilityInputAction(InputConfigDataAsset, this, &ThisClass::Input_AbilityInputPressed, &ThisClass::Input_AbilityInputReleased);
 			PlayerEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, RPGGameplayTag::InputTag_ShowDebug_Keyboard, ETriggerEvent::Triggered, this, &ThisClass::Input_ShowDebug);
 			PlayerEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, RPGGameplayTag::InputTag_CallPauseMenu_Keyboard, ETriggerEvent::Triggered, this, &ThisClass::Input_CallPauseMenu);
+			PlayerEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, RPGGameplayTag::InputTag_CallInventory_Keyboard, ETriggerEvent::Triggered, this, &ThisClass::Input_CallInventory);
 		}
 	}
 }
@@ -171,3 +178,9 @@ void APlayerCharacterBase::Input_CallPauseMenu()
 {
 	GetGameInstance()->GetSubsystem<UGeneralGameManager>()->GetUIManager()->ShowUIAsync(EUICategory::PauseMenuUI, GetWorld());
 }
+
+void APlayerCharacterBase::Input_CallInventory()
+{
+	GetGameInstance()->GetSubsystem<UGeneralGameManager>()->GetUIManager()->ShowUIAsync(EUICategory::InventoryUI, GetWorld());
+}
+

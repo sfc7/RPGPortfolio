@@ -3,6 +3,8 @@
 
 #include "Component/Monster/MonsterUIComponent.h"
 
+#include "GameMode/GameManager/GeneralGameManager.h"
+#include "GameMode/GameManager/UIManager.h"
 #include "Widget/RPGWidgetBase.h"
 
 void UMonsterUIComponent::RegisterMonsterDrawnWidget(URPGWidgetBase* WidgetToRegister)
@@ -24,3 +26,4 @@ void UMonsterUIComponent::RemoveMonsterDrawnWidget()
 
 	MonsterDrawnWidgetArray.Empty();
 }
+

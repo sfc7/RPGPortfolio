@@ -21,6 +21,8 @@ TSoftClassPtr<UUserWidget> UDataAsset_RPGUIData::GetUIWidgetClass(const EUICateg
 		return PauseMenuUI.UIWidgetClass;
 	case EUICategory::TitleMenuUI:
 		return TitleMenuUI.UIWidgetClass;
+	case EUICategory::InventoryUI:
+		return InventoryUI.UIWidgetClass;
 	default:
 		return nullptr;
 	}

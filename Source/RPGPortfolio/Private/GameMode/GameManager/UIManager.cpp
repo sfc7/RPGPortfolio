@@ -2,6 +2,8 @@
 
 
 #include "GameMode/GameManager/UIManager.h"
+
+#include "RPGStructTypes.h"
 #include "Engine/AssetManager.h"
 #include "Blueprint/UserWidget.h"
 #include "DataAsset/DataAsset_RPGUIData.h"
@@ -55,4 +57,36 @@ TSoftClassPtr<UUserWidget> UUIManager::GetUIWidgetClass(const EUICategory& UICat
 TSubclassOf<UUserWidget> UUIManager::GetLoadingScreen(const ELoadingCategory& LoadingCategory) const
 {
 	return RPGUIData->GetLoadingScreen(LoadingCategory);
+}
+
+void UUIManager::ToggleInputMode(const UObject* WorldContextObject, ERPGInputMode InputMode)
+{
+	APlayerController* PlayerController = nullptr;
+
+	if (GEngine)
+	{
+		if (UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull))
+		{
+			PlayerController = World->GetFirstPlayerController();
+		}
+	}
+
+	if (!PlayerController) return;
+
+	FInputModeGameOnly GameOnlyMode;
+	FInputModeUIOnly UIOnlyMode;
+
+	switch (InputMode)
+	{
+	case ERPGInputMode::GameMode:
+		PlayerController->SetInputMode(GameOnlyMode);
+		PlayerController->bShowMouseCursor = false;
+		break;
+	case ERPGInputMode::UIMode:
+		PlayerController->SetInputMode(UIOnlyMode);
+		PlayerController->bShowMouseCursor = true;
+		break;
+	default:
+		break;
+	}
 }

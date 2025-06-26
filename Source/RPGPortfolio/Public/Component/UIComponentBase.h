@@ -18,9 +18,8 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FOnPercentChangedDelegate OnCurrentHpChanged;
 
-protected:
+
 #pragma region GetOwningPawn(), GetOwningController()
-protected:
 	template<class T>
 	T* GetOwningPawn() const
 	{
@@ -39,6 +38,5 @@ protected:
 	}
 #pragma endregion
 	
-
 		
 };

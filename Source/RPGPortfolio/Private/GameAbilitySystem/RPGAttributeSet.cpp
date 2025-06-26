@@ -4,11 +4,14 @@
 #include "GameAbilitySystem/RPGAttributeSet.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "GameplayEffectExtension.h"
+#include "Character/MonsterCharacter.h"
 #include "Component/UIComponentBase.h"
+#include "Component/Monster/MonsterUIComponent.h"
 #include "GameAbilitySystem/RPGAbilitySystemComponent.h"
 #include "GameAbilitySystem/GamePlayAbility/RPGGamePlayTag.h"
 #include "Component/Player/PlayerUIComponent.h"
 #include "Interface/UIInterface.h"
+#include "WorldStatic/DamageIndicator.h"
 
 
 URPGAttributeSet::URPGAttributeSet()
@@ -83,6 +86,13 @@ void URPGAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectMod
 		if (GetCurrentHp() == 0.f)
 		{
 			AddGameplayTagToActor(Data.Target.GetAvatarActor(),RPGGameplayTag::Character_Status_Dead);
+		}
+
+		UMonsterUIComponent* MonsterUIComponent = UIInterface->GetMonsterUIComponent();
+		if (MonsterUIComponent)
+		{
+			AMonsterCharacter* Monster = MonsterUIComponent->GetOwningPawn<AMonsterCharacter>();
+			Monster->SpawnDamageIndicator(CalcDamage);
 		}
 	}
 }

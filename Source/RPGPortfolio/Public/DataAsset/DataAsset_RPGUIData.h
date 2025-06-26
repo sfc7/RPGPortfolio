@@ -14,6 +14,7 @@ enum class EUICategory : uint8
 	VictoryUI,
 	PauseMenuUI,
 	TitleMenuUI,
+	InventoryUI,
 	None,
 };
 
@@ -83,8 +84,11 @@ protected:
 		FUIData TitleMenuUI;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")
+		FUIData InventoryUI;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "LoadingScreenData")
 		FLoadingScreenData LoadingScreen_Town;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "LoadingScreenData")
 		FLoadingScreenData LoadingScreen_Dungeon;
 };

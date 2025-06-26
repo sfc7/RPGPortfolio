@@ -6,6 +6,8 @@
 #include "RPGStructTypes.generated.h"
 
 class URPGGameplayAbility;
+class UDataAsset_RPGItemData;        
+class UPlayerInventoryComponent;    
 
 USTRUCT(BlueprintType)
 struct FPlayerAbilitySet
@@ -107,4 +109,25 @@ enum class ERPGInputMode : uint8
 {
 	GameMode,
 	UIMode,
+};
+
+USTRUCT(BlueprintType)
+struct FInventorySlot
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FName ItemID;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 Quantity;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 SlotIndex;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSoftObjectPtr<UDataAsset_RPGItemData> ItemDataAsset;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<UPlayerInventoryComponent> InventoryRef;
 };

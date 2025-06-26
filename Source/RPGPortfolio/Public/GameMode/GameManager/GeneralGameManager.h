@@ -26,9 +26,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	ULevelManager* GetLevelManager() const; 
-
-	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject"))
-	static void ToggleInputMode(const UObject* WorldContextObject, ERPGInputMode InputMode);
 	
 protected:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;

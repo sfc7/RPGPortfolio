@@ -8,6 +8,7 @@
 #include "GameplayTagContainer.h"
 #include "PlayerCharacterBase.generated.h"
 
+class UPlayerInventoryComponent;
 class UCameraComponent;
 class USpringArmComponent;
 class UDataAsset_InputConfig;
@@ -36,6 +37,8 @@ public:
 	virtual UUIComponentBase* GetUIComponent() const override;
 
 	virtual UPlayerUIComponent* GetPlayerUIComponent() const override;
+
+	virtual UPlayerInventoryComponent* GetPlayerInventoryComponent() const;
 	
 protected:
 	virtual void PossessedBy(AController* NewController) override;
@@ -67,13 +70,17 @@ private:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", meta = (AllowPrivateAccess = "true"))
 		UPlayerUIComponent* PlayerUIComponent;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", meta = (AllowPrivateAccess = "true"))
+	UPlayerInventoryComponent* PlayerItemInventoryComponent;
 
+	
 	void Input_Move(const FInputActionValue& InputActionValue);
 	void Input_Look(const FInputActionValue& InputActionValue);
 	void Input_AbilityInputPressed(FGameplayTag _InputTag);
 	void Input_AbilityInputReleased(FGameplayTag _InputTag);
 	void Input_ShowDebug();
 	void Input_CallPauseMenu();
-	
+	void Input_CallInventory();
 
 };
