@@ -47,3 +47,46 @@ FInventorySlot UItemManager::MakeItemToAdd(TSoftObjectPtr<UDataAsset_RPGItemData
 	return MakeInventorySlot;
 }
 
+void UItemManager::SetSlotIndex(FInventorySlot InventorySlottoSet, int32 Index)
+{
+	InventorySlottoSet.SlotIndex = Index;
+}
+
+bool UItemManager::IsStackableAndIsEqualAndHaveSpace(FInventorySlot& TargetSlot, FInventorySlot& SlotToStack)
+{
+	bool IsEmpty = IsInventorySlotEmpty(TargetSlot);
+	
+	if (IsEmpty)
+	{
+		 return false;
+	}
+	else
+	{
+		UDataAsset_RPGItemData* TargetSlotItem = TargetSlot.ItemDataAsset.LoadSynchronous();
+		bool TargetIsStackalbe = TargetSlotItem->IsStackable();
+		if (TargetIsStackalbe)
+		{
+			if (TargetSlot.ItemID == SlotToStack.ItemID)
+			{
+				if (TargetSlotItem->StackSize > TargetSlot.Quantity)
+				{
+					return true;
+				}
+			}
+		}		
+	}
+
+	return false;
+}
+
+void UItemManager::OnInventorySlotDrop(UPlayerInventoryComponent* FromContainerInventoryComponent, UPlayerInventoryComponent* ToInventoryComponent, int32 FromIndex, int32 ToIndex) const
+{
+	FromContainerInventoryComponent->TransferItem(ToInventoryComponent, FromIndex, ToIndex);
+}
+
+int32 UItemManager::GetStaciSize(FInventorySlot TargetSlot)
+{
+	UDataAsset_RPGItemData* TargetSlotItem = TargetSlot.ItemDataAsset.LoadSynchronous();
+
+	return TargetSlotItem->StackSize;
+}

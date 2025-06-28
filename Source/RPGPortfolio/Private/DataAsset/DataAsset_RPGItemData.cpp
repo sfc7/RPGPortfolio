@@ -9,11 +9,5 @@ UDataAsset_RPGItemData::UDataAsset_RPGItemData(const FObjectInitializer& ObjectI
 
 bool UDataAsset_RPGItemData::IsStackable()
 {
-	return StackSize > 0.f;
-}
-
-void UDataAsset_RPGItemData::IsItemStackable(bool& IsStackableCheck, int32& StackSizeCheck) 
-{
-	IsStackableCheck = IsStackable();
-	StackSize = StackSizeCheck;
+	return StackSize > 1;
 }

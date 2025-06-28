@@ -7,17 +7,18 @@
 #include "Kismet/KismetArrayLibrary.h"
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "DataAsset/DataAsset_RPGItemData.h"
 #include "GameMode/GameManager/UIManager.h"
 
 UPlayerInventoryComponent::UPlayerInventoryComponent()
 {
 }
 
-
 void UPlayerInventoryComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
+	ItemManager = GetWorld()->GetGameInstance()->GetSubsystem<UItemManager>();
 	SetupSlots(SlotAmounts);
 }
 
@@ -34,18 +35,205 @@ void UPlayerInventoryComponent::SetupSlots(int32 SlotAmountstoSetup)
 
 bool UPlayerInventoryComponent::AddItem(FInventorySlot ItemToAdd)
 {
-	FInventorySlot FindInventorySlot;
-	if (FindEmptySlot((FindInventorySlot)))
+	FInventorySlot CurrentItemToAdd= ItemToAdd;
+	UDataAsset_RPGItemData* CurrentItemData = CurrentItemToAdd.ItemDataAsset.LoadSynchronous();
+	bool IsStackable = CurrentItemData->IsStackable();
+	int32 CurrentItemStackSize = CurrentItemData->StackSize;
+
+	if (IsStackable)
 	{
-		SetItem(FindInventorySlot, ItemToAdd);
+		for (FInventorySlot TargetSlot : ItemSlots)
+		{
+			bool IsStackableAndIsEqualAndHaveSpace = ItemManager->IsStackableAndIsEqualAndHaveSpace(TargetSlot, CurrentItemToAdd);
+			if (IsStackableAndIsEqualAndHaveSpace)
+			{
+				int32 TotalQuantity = TargetSlot.Quantity + CurrentItemToAdd.Quantity;
+
+				if (TotalQuantity > CurrentItemStackSize)
+				{
+					SetQuantityAtSlot(TargetSlot, CurrentItemStackSize);
+					CurrentItemToAdd.Quantity = TotalQuantity -	CurrentItemStackSize;
+				}
+				else
+				{
+					SetQuantityAtSlot(TargetSlot, TotalQuantity);
+					return true;
+				}
+			}
+		}
+
+		FInventorySlot FindInventorySlot;
+		while (FindEmptySlot((FindInventorySlot)))
+		{
+			if (CurrentItemToAdd.Quantity <= CurrentItemStackSize)
+			{
+				SetItem(FindInventorySlot, CurrentItemToAdd);
+				return true;
+			}
+			else
+			{
+				FInventorySlot TempItemToAdd = CurrentItemToAdd;
+				TempItemToAdd.Quantity = CurrentItemStackSize;
+				SetItem(FindInventorySlot, TempItemToAdd);
+
+				int32 RemainQuantity = CurrentItemToAdd.Quantity - CurrentItemStackSize;
+				CurrentItemToAdd.Quantity = RemainQuantity;
+			}
+		}
+	}
+	else
+	{
+		FInventorySlot FindInventorySlot;
+		if (FindEmptySlot((FindInventorySlot)))
+		{
+			SetItem(FindInventorySlot, ItemToAdd);
+			return true;
+		}
+	}
+
+	UE_LOG(LogTemp, Log, TEXT("Inventory Is Full"));
+	return false;
+}
+
+bool UPlayerInventoryComponent::AddItemToIndex(FInventorySlot ItemToAdd, int32 ToIndex, bool& OutAreAllItemAdded)
+{
+	if (IsValidSlotIndex(ToIndex))
+	{
+		if (ItemManager->IsInventorySlotEmpty(ItemSlots[ToIndex]))
+		{
+			SetItem(ItemSlots[ToIndex], ItemToAdd);
+						
+			OutAreAllItemAdded = true;
+			return true;
+		}
+		else
+		{
+			StackItemOnTransfer(ItemSlots[ToIndex], ItemToAdd, OUT OutAreAllItemAdded);
+			
+			return true;
+		}
+	}
+	else
+	{
+		OutAreAllItemAdded = false;
+		return false;
+	}
+}
+
+bool UPlayerInventoryComponent::RemoveItemToIndex(int32 ToIndex)
+{
+	if (IsValidSlotIndex(ToIndex))
+	{
+		FInventorySlot EmptyInventorySlot;
+		EmptyInventorySlot.ItemID = FName(TEXT("None"));
+		EmptyInventorySlot.Quantity = 0;
+		
+		SetItem(ItemSlots[ToIndex], EmptyInventorySlot);
+
 		return true;
 	}
 	else
 	{
-		UE_LOG(LogTemp,Log, TEXT("Is Inventory Full"));
 		return false;
 	}
-	
+}
+
+FInventorySlot UPlayerInventoryComponent::SetQuantityAtSlot(FInventorySlot& TargetSlot, int32 QuantityToSet)
+{
+	ItemSlots[TargetSlot.SlotIndex].Quantity = QuantityToSet;
+
+	OnInventorySlotChangedDelegate.Broadcast(ItemSlots[TargetSlot.SlotIndex]);
+
+	return ItemSlots[TargetSlot.SlotIndex];
+}
+
+bool UPlayerInventoryComponent::TransferItem(UPlayerInventoryComponent* ToInventoryComponent, int32 FromIndex, int32 ToIndex)
+{
+	if (this == ToInventoryComponent && FromIndex == ToIndex)
+	{
+		return false;
+	}
+	else
+	{
+		if (IsValid(ToInventoryComponent) && IsValidSlotIndex(FromIndex) && (IsValidSlotIndex(ToIndex) || ToIndex == -1)) // -1 : 다른 인벤토리로 옮길경우
+		{
+			if (ToIndex == -1)
+			{
+				UE_LOG(LogTemp, Error, TEXT("Inventory Item Index is invalid"));
+			}
+			else
+			{
+				bool AreAllItemsAdded;
+				bool SuccessAdd = ToInventoryComponent->AddItemToIndex(ItemSlots[FromIndex], ToIndex, AreAllItemsAdded);
+				if (SuccessAdd)
+				{
+					if (AreAllItemsAdded)
+					{
+						bool RemoveSuccess = RemoveItemToIndex(FromIndex);
+
+						return RemoveSuccess;
+					}
+					else
+					{
+						return true;	
+					}
+				}
+				else
+				{
+					return false;
+				}
+			}
+		}
+
+		return false;
+	}
+}
+
+bool UPlayerInventoryComponent::IsValidSlotIndex(int32 FindIndex)
+{
+	return ItemSlots.IsValidIndex(FindIndex) ? true : false;
+}
+
+bool UPlayerInventoryComponent::StackItemOnTransfer(FInventorySlot TargetSlot, FInventorySlot FromSlot, bool& OutAreAllItemAdded)
+{
+	bool IsStackableAndIsEqualAndHaveSpace = ItemManager->IsStackableAndIsEqualAndHaveSpace(TargetSlot, FromSlot);
+	int32 ItemStackSize = ItemManager->GetStaciSize(TargetSlot);
+
+	if (IsStackableAndIsEqualAndHaveSpace)
+	{
+		int32 TotalQuantity = TargetSlot.Quantity + FromSlot.Quantity;
+		
+		if (TotalQuantity > ItemStackSize)
+		{
+			SetQuantityAtSlot(TargetSlot, ItemStackSize);
+			SetQuantityAtSlot(FromSlot, TotalQuantity -	ItemStackSize);
+			
+			OutAreAllItemAdded = false;
+			return false;
+		}
+		else
+		{
+			SetQuantityAtSlot(TargetSlot, TotalQuantity);
+			
+			OutAreAllItemAdded = true;
+			return true;
+		}   
+		}
+		else
+	{
+		SwapIndex(TargetSlot, FromSlot);
+		OutAreAllItemAdded = false;
+	}
+
+	OutAreAllItemAdded = false;
+	return false;
+}
+
+void UPlayerInventoryComponent::SwapIndex(FInventorySlot TargetSlot, FInventorySlot FromSlot)
+{
+	SetItem(TargetSlot, FromSlot);
+
+	FromSlot.InventoryRef->SetItem(FromSlot, TargetSlot);
 }
 
 void UPlayerInventoryComponent::SetItem(FInventorySlot TargetSlot, FInventorySlot ItemToSet)
@@ -57,18 +245,15 @@ void UPlayerInventoryComponent::SetItem(FInventorySlot TargetSlot, FInventorySlo
 		ItemSlots[TargetIndex] = ItemToSet;
 		ItemSlots[TargetIndex].SlotIndex = TargetIndex;
 		ItemSlots[TargetIndex].InventoryRef = this;
-
-		OnInventorySlotChangedDelegate.Broadcast(ItemToSet);
+	
+		OnInventorySlotChangedDelegate.Broadcast(ItemSlots[TargetIndex]);
 	}
 }
 
 bool UPlayerInventoryComponent::FindEmptySlot(FInventorySlot& OutEmptySlot)
 {
-	UE_LOG(LogTemp, Warning, TEXT("FindEmptySlot - this pointer: %p"), this);
-	
 	for (FInventorySlot& ItemSlot : ItemSlots)
 	{
-		UE_LOG(LogTemp,Log, TEXT("FindEmptySlot"));
 		bool IsEmpty = GetWorld()->GetGameInstance()->GetSubsystem<UItemManager>()->IsInventorySlotEmpty(ItemSlot);
 		if (IsEmpty)
 		{
@@ -79,23 +264,3 @@ bool UPlayerInventoryComponent::FindEmptySlot(FInventorySlot& OutEmptySlot)
 
 	return false;
 }
-
-
-
-// void UPlayerInventoryComponent::SetCurrentInventoryWidget()
-// {
-// 	if (IsValid(InventoryWidget))
-// 	{
-// 		InventoryWidget->RemoveFromParent();
-// 		InventoryWidget = nullptr;
-// 	}
-//
-// 	TSoftClassPtr<UUserWidget> InventorySoftWidget = GetWorld()->GetGameInstance()->GetSubsystem<UUIManager>()->GetUIWidgetClass(EUICategory::InventoryUI);
-// 	UClass* WidgetClass = InventorySoftWidget.LoadSynchronous();
-// 	InventoryWidget = CreateWidget<UUserWidget>(GetWorld()->GetFirstPlayerController(), WidgetClass);
-//
-// 	if (InventoryWidget)
-// 	{
-// 		InventoryWidget->AddToViewport();
-// 	}
-// }

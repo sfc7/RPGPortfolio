@@ -6,6 +6,7 @@
 #include "RPGStructTypes.h"
 #include "Engine/AssetManager.h"
 #include "Blueprint/UserWidget.h"
+#include "Component/Player/PlayerInventoryComponent.h"
 #include "DataAsset/DataAsset_RPGUIData.h"
 #include "Engine/StreamableManager.h"
 
@@ -59,6 +60,11 @@ TSubclassOf<UUserWidget> UUIManager::GetLoadingScreen(const ELoadingCategory& Lo
 	return RPGUIData->GetLoadingScreen(LoadingCategory);
 }
 
+TSubclassOf<UUserWidget> UUIManager::GetInventoryUIWidgetClass(const EInventoryUICategory& InventoryUICategory) const
+{
+	return RPGUIData->GetInventoryUIWidgetClass(InventoryUICategory);
+}
+
 void UUIManager::ToggleInputMode(const UObject* WorldContextObject, ERPGInputMode InputMode)
 {
 	APlayerController* PlayerController = nullptr;
@@ -89,4 +95,9 @@ void UUIManager::ToggleInputMode(const UObject* WorldContextObject, ERPGInputMod
 	default:
 		break;
 	}
+}
+
+UUserWidget* UUIManager::GetWidget() const
+{
+	return nullptr;
 }

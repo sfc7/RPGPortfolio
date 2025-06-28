@@ -5,9 +5,12 @@
 #include "CoreMinimal.h"
 #include "DataAsset/DataAsset_RPGUIData.h"
 #include "Subsystems/GameInstanceSubsystem.h"
+#include "RPGStructTypes.h"
 #include "UIManager.generated.h"
 
 class UDataAsset_RPGUIData;
+class UPlayerInventoryComponent;
+
 /**
  * 
  */
@@ -27,8 +30,15 @@ public:
 	UFUNCTION(BlueprintCallable)
 	TSubclassOf<UUserWidget> GetLoadingScreen(const ELoadingCategory& LoadingCategory) const;
 
+	UFUNCTION(BlueprintCallable)
+	TSubclassOf<UUserWidget> GetInventoryUIWidgetClass(const EInventoryUICategory& InventoryUICategory) const;
+	
 	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject"))
 	static void ToggleInputMode(const UObject* WorldContextObject, ERPGInputMode InputMode);
+	
+	UFUNCTION(BlueprintCallable)
+	UUserWidget* GetWidget() const;
+
 	
 protected:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;

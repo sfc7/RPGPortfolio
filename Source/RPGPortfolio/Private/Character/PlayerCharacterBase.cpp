@@ -42,6 +42,8 @@ APlayerCharacterBase::APlayerCharacterBase()
 	PlayerCombatComponent = CreateDefaultSubobject<UPlayerCombatComponent>(TEXT("PlayerCombatComponent"));
 	PlayerUIComponent = CreateDefaultSubobject<UPlayerUIComponent>(TEXT("PlayerUIComponent"));
 	PlayerItemInventoryComponent = CreateDefaultSubobject<UPlayerInventoryComponent>(TEXT("PlayerItemInventoryComponent"));
+	PlayerPotionHotbar = CreateDefaultSubobject<UPlayerInventoryComponent>(TEXT("PlayerPotionHotbar"));
+
 	
 	CreateDefaultAttributeSet();
 }
@@ -64,6 +66,11 @@ UPlayerUIComponent* APlayerCharacterBase::GetPlayerUIComponent() const
 UPlayerInventoryComponent* APlayerCharacterBase::GetPlayerInventoryComponent() const
 {
 	return PlayerItemInventoryComponent;
+}
+
+UPlayerInventoryComponent* APlayerCharacterBase::GetPlayerPotionHotBar() const
+{
+	return PlayerPotionHotbar;
 }
 
 void APlayerCharacterBase::PossessedBy(AController* NewController)

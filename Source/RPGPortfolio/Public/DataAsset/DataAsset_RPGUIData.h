@@ -26,6 +26,13 @@ enum class ELoadingCategory : uint8
 	None,
 };
 
+UENUM(BlueprintType)
+enum class EInventoryUICategory : uint8
+{
+	ItemSlot,
+	None,
+};
+
 USTRUCT(BlueprintType)
 struct FUIData
 {
@@ -54,6 +61,19 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 		FGameplayTag MapTag;
 };
+
+USTRUCT(BlueprintType)
+struct FInventoryUI
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	EInventoryUICategory InventoryUIType = EInventoryUICategory::None;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TSubclassOf<UUserWidget> InventoryUIWidgetClass;
+};
 /**
  * 
  */
@@ -69,26 +89,32 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	TSubclassOf<UUserWidget> GetLoadingScreen(const ELoadingCategory& LoadingCategory) const;
+
+	UFUNCTION(BlueprintCallable)
+	TSubclassOf<UUserWidget> GetInventoryUIWidgetClass(const EInventoryUICategory& InventoryUICategory) const;
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")
-		FUIData VictoryUI;
+	FUIData VictoryUI;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")
-		FUIData GameOverUI;
+	FUIData GameOverUI;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")
-		FUIData PauseMenuUI;
+	FUIData PauseMenuUI;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")
-		FUIData TitleMenuUI;
+	FUIData TitleMenuUI;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")
-		FUIData InventoryUI;
+	FUIData InventoryUI;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "LoadingScreenData")
-		FLoadingScreenData LoadingScreen_Town;
+	FLoadingScreenData LoadingScreen_Town;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "LoadingScreenData")
-		FLoadingScreenData LoadingScreen_Dungeon;
+	FLoadingScreenData LoadingScreen_Dungeon;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "InventoryUI")
+	FInventoryUI ItemSlotUI;
 };

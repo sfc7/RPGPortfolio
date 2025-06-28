@@ -8,6 +8,7 @@
 #include "PlayerInventoryComponent.generated.h"
 
 
+class UItemManager;
 class UPlayerInventoryComponent;
 class UDataAsset_RPGItemData;
 
@@ -28,6 +29,12 @@ public:
 	bool AddItem(FInventorySlot ItemToAdd);
 
 	UFUNCTION(BlueprintCallable)
+	bool AddItemToIndex(FInventorySlot ItemToAdd, int32 ToIndex, bool& OutAreAllItemAdded);
+
+	UFUNCTION(BlueprintCallable)
+	bool RemoveItemToIndex(int32 ToIndex);
+
+	UFUNCTION(BlueprintCallable)
 	void SetItem(FInventorySlot TargetSlot, FInventorySlot ItemToSet);
 
 	UFUNCTION(BlueprintCallable)
@@ -41,8 +48,24 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Size")
 	TArray<FInventorySlot> ItemSlots;
 
-	// UFUNCTION(Blueprintable)
-	// void SetCurrentInventoryWidget();
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UItemManager* ItemManager;
+	
+	UFUNCTION(BlueprintPure)
+	FInventorySlot SetQuantityAtSlot(FInventorySlot& TargetSlot, int32 QuantityToSet);
+
+	UFUNCTION(BlueprintCallable)
+	bool TransferItem(UPlayerInventoryComponent* ToInventoryComponent, int32 FromIndex, int32 ToIndex);
+
+	UFUNCTION(BlueprintPure)
+	bool IsValidSlotIndex(int32 FindIndex);
+
+	UFUNCTION(BlueprintCallable)
+	bool StackItemOnTransfer(FInventorySlot TargetSlot, FInventorySlot FromSlot, bool& OutAreAllItemAdded);
+
+	UFUNCTION(BlueprintCallable)
+	void SwapIndex(FInventorySlot TargetSlot, FInventorySlot FromSlot);
+
 	
 protected:
 	virtual void BeginPlay() override;

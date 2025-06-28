@@ -40,3 +40,14 @@ TSubclassOf<UUserWidget> UDataAsset_RPGUIData::GetLoadingScreen(const ELoadingCa
 		return nullptr;
 	}
 }
+
+TSubclassOf<UUserWidget> UDataAsset_RPGUIData::GetInventoryUIWidgetClass(const EInventoryUICategory& InventoryUICategory) const
+{
+	switch (InventoryUICategory)
+	{
+	case EInventoryUICategory::ItemSlot:
+		return ItemSlotUI.InventoryUIWidgetClass;
+	default:
+		return nullptr;
+	}
+}

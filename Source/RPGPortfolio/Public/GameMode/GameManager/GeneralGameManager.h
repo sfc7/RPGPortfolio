@@ -18,13 +18,13 @@ class RPGPORTFOLIO_API UGeneralGameManager : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
 public:
-	UFUNCTION(BlueprintCallable, BlueprintPure)
+	UFUNCTION(BlueprintPure)
 	UDungeonProgressManager* GetDungeonProgressManager() const;
 	
-	UFUNCTION(BlueprintCallable, BlueprintPure)
+	UFUNCTION(BlueprintPure)
 	UUIManager* GetUIManager() const;
 
-	UFUNCTION(BlueprintCallable, BlueprintPure)
+	UFUNCTION(BlueprintPure)
 	ULevelManager* GetLevelManager() const; 
 	
 protected:

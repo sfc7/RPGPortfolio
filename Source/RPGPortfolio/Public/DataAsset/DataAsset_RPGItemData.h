@@ -24,9 +24,6 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	UDataAsset_RPGItemData* GetItemAsset() { return this; }
-	
-	UFUNCTION(BlueprintCallable)
-	void IsItemStackable(bool& IsStackable, int32& StackSize);
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
 	FName ItemID;

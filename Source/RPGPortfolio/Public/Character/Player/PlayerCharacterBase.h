@@ -39,6 +39,8 @@ public:
 	virtual UPlayerUIComponent* GetPlayerUIComponent() const override;
 
 	virtual UPlayerInventoryComponent* GetPlayerInventoryComponent() const;
+
+	virtual UPlayerInventoryComponent* GetPlayerPotionHotBar() const;
 	
 protected:
 	virtual void PossessedBy(AController* NewController) override;
@@ -73,6 +75,9 @@ private:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", meta = (AllowPrivateAccess = "true"))
 	UPlayerInventoryComponent* PlayerItemInventoryComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", meta = (AllowPrivateAccess = "true"))
+	UPlayerInventoryComponent* PlayerPotionHotbar;
 
 	
 	void Input_Move(const FInputActionValue& InputActionValue);

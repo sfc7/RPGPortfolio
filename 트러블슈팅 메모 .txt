@@ -11,7 +11,9 @@ fighter none이라는 무기를 만들고 왼,오,손,발에 장착
 2. ga가 사라지면 montage도 중단되는 문제등
 imc 입력과 ga 분리?
 
-
+3. 인벤토리를 만들면서 경우의 수가 너무 많아 구조를 짜기가 힘들다
+bool로 된 OUT 매개변수를통해 상태를 제어하는 방식의 인벤토리를 설계
+OutAreAllItemAdded
 
 
 3. gameplayability의 문법
