@@ -17,15 +17,20 @@ namespace RPGGameplayTag
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_ShowDebug_Keyboard, "InputTag.ShowDebug.Keyboard");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_CallPauseMenu_Keyboard, "InputTag.CallPauseMenu.Keyboard");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_CallInventory_Keyboard, "InputTag.CallInventory.Keyboard");
-	
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Dodge_Keyboard, "InputTag.Dodge.Keyboard");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_8WaysDodge_Keyboard, "InputTag.8WaysDodge.Keyboard");
-	
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_Interact_Keyboard, "InputTag.Interact.Keyboard");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_UseHotBarItem_1_Keyboard, "InputTag.UseHotBarItem.1.Keyboard");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_UseHotBarItem_2_Keyboard, "InputTag.UseHotBarItem.2.Keyboard");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_UseHotBarItem_3_Keyboard, "InputTag.UseHotBarItem.3.Keyboard");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Hold, "InputTag.Hold");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Hold_Defense_Keyboard, "InputTag.Hold.Defense.Keyboard");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Toggle, "InputTag.Toggle");
 
-	
+
+	RPGPORTFOLIO_API UE_DECLARE_GAMEPLAY_TAG_EXTERN();
+	RPGPORTFOLIO_API UE_DECLARE_GAMEPLAY_TAG_EXTERN();
+	RPGPORTFOLIO_API UE_DECLARE_GAMEPLAY_TAG_EXTERN();
 	//Player
 	UE_DEFINE_GAMEPLAY_TAG(Player_Weapon_Fighter_Hand_l, "Player.Weapon.Fighter.Hand.l");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Weapon_Fighter_Hand_r, "Player.Weapon.Fighter.Hand.r");
@@ -40,18 +45,22 @@ namespace RPGGameplayTag
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Parry, "Player.Ability.Attack.Parry");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Skill_AttackBuff, "Player.Ability.Skill.AttackBuff");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Skill_NenShot, "Player.Ability.Skill.NenShot");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Interact, "Player.Ability.Interact");
 
 	// Player - Status
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_CanHeavyAttackCombo, "Player.Status.CanHeavyAttackCombo");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_CanParryingAttack, "Player.Status.CanParryingAttack");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Status_CanInteract, "Player.Status.CanInteract");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_ActiveAttackBuff, "Player.Status.ActiveAttackBuff");
 
+	
 	// Player - Status - ActionState
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_ActionState_IsAttacking, "Player.Status.ActionState.IsAttacking");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_ActionState_IsJumping, "Player.Status.ActionState.IsJumping");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_ActionState_IsSkilling, "Player.Status.ActionState.IsSkilling");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_ActionState_IsDefensing, "Player.Status.ActionState.IsDefensing");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_ActionState_IsDodging, "Player.Status.ActionState.IsDodging");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Status_ActionState_IsInteracting, "Player.Status.ActionState.IsInteracting");
 	
 	// Player - Status - AttributeSet
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_AttributeSet_MpNotFull, "Player.Status.AttributeSet.MpNotFull");

@@ -89,14 +89,14 @@ enum class ERPGDecoratorComparisonOperator : uint8
 	None
 };	
 
-UENUM()
+UENUM(BlueprintType)
 enum class ERPGCountDownActionInput : uint8
 {
 	Start,
 	Cancel
 };
 
-UENUM()
+UENUM(BlueprintType)
 enum class ERPGCountDownActionOutput : uint8
 {
 	Updated,
@@ -104,7 +104,7 @@ enum class ERPGCountDownActionOutput : uint8
 	Cancelled
 };
 
-UENUM()
+UENUM(BlueprintType)
 enum class ERPGInputMode : uint8
 {
 	GameMode,
@@ -130,4 +130,34 @@ struct FInventorySlot
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<UPlayerInventoryComponent> InventoryRef;
+};
+
+UENUM(BlueprintType)
+enum class EInteractType : uint8
+{
+	NPC,
+	None,
+};
+
+UENUM(BlueprintType)
+enum class ENPCType : uint8
+{
+	Conversational,
+	Storage,
+};
+
+USTRUCT(BlueprintType)
+struct FInteractionData {
+	GENERATED_USTRUCT_BODY()
+
+	FInteractionData() : 
+		CurrentInteractable(nullptr), 
+		LastInteractionCheckTime(0.0f) 
+	{};
+
+	UPROPERTY()
+	AActor* CurrentInteractable;
+
+	UPROPERTY()
+	float LastInteractionCheckTime;
 };

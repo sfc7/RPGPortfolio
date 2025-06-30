@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "AbilitySystemInterface.h"
 #include "Interface/UIInterface.h"
+#include "Interface/UInteractionInterface.h"
 #include "RPGCharacterBase.generated.h"
 
 class URPGAttributeSet;
@@ -15,7 +16,7 @@ class UCombatComponentBase;
 class UMotionWarpingComponent;
 
 UCLASS()
-class RPGPORTFOLIO_API ARPGCharacterBase : public ACharacter, public IAbilitySystemInterface, public IUIInterface
+class RPGPORTFOLIO_API ARPGCharacterBase : public ACharacter, public IAbilitySystemInterface, public IUIInterface, public IUInteractionInterface
 {
 	GENERATED_BODY()
 
@@ -35,7 +36,15 @@ public:
 
 	virtual UUIComponentBase* GetUIComponent() const override;
 
-	virtual UMotionWarpingComponent* GetMotionWarpingComponent() const {return MotionWarpingComponent;};
+	virtual UMotionWarpingComponent* GetMotionWarpingComponent() const {return MotionWarpingComponent;}
+
+	UFUNCTION(BlueprintCallable)
+	void SetInteractTargetActor(AActor* TargetActor);
+
+	UFUNCTION(BlueprintCallable)
+	AActor* GetInteractTargetActor() const {return InteractTargetActor;}
+	
+
 	
 protected:
 	virtual void PossessedBy(AController* NewController) override;
@@ -51,6 +60,7 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "CharacterData")
 	TSoftObjectPtr<UDataAsset_AbilitySetBase> CharacterStartUpData;
-	
-	
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	AActor* InteractTargetActor;
 };

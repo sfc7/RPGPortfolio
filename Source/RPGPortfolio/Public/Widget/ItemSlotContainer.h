@@ -48,6 +48,12 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void UpdateSlotWidgetData(FInventorySlot UpdateSlot);
 
+protected:
+	virtual void NativeOnInitialized() override;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<UUserWidget> ItemSlotWidgetClass;
+	
 private:
 	UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = true))
 	UPlayerInventoryComponent* InventoryRef;

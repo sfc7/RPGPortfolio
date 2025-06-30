@@ -4,9 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "Character/RPGCharacterBase.h"
+#include "RPGStructTypes.h"
 #include "RPGNPCCharacterBase.generated.h"
 
 class APlayerCharacterBase;
+class UBoxComponent;
+class UWidgetComponent;
 /**
  * 
  */
@@ -17,8 +20,33 @@ class RPGPORTFOLIO_API ARPGNPCCharacterBase : public ARPGCharacterBase
 public:
 	ARPGNPCCharacterBase();
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	APlayerCharacterBase* AccessPlayerCharacter;
 
-	UFUNCTION()
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UBoxComponent* InteractCollisionBox;
+	
+	UFUNCTION(BlueprintCallable)
 	void SetAccessPlayerCharacter(APlayerCharacterBase* PlayerCharacter) { AccessPlayerCharacter = PlayerCharacter; }
+
+	UFUNCTION(BlueprintCallable)
+	APlayerCharacterBase* GetAccessPlayerCharacter() { return AccessPlayerCharacter; }
+	
+	UFUNCTION()
+	ENPCType GetNPCType() const { return NPCType;}
+
+	UFUNCTION()
+	virtual void OnCollisionBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) override;
+
+	UFUNCTION()
+	virtual void OnCollisionBoxEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+	
+protected:
+	virtual void BeginPlay() override;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	ENPCType NPCType;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
+	UWidgetComponent* InteractWidgetComponent;
 };

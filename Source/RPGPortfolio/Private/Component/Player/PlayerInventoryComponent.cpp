@@ -7,7 +7,7 @@
 #include "Kismet/KismetArrayLibrary.h"
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "DataAsset/DataAsset_RPGItemData.h"
+#include "DataAsset/Item/DataAsset_RPGItemData.h"
 #include "GameMode/GameManager/UIManager.h"
 
 UPlayerInventoryComponent::UPlayerInventoryComponent()
@@ -155,7 +155,7 @@ bool UPlayerInventoryComponent::TransferItem(UPlayerInventoryComponent* ToInvent
 	}
 	else
 	{
-		if (IsValid(ToInventoryComponent) && IsValidSlotIndex(FromIndex) && (IsValidSlotIndex(ToIndex) || ToIndex == -1)) // -1 : 다른 인벤토리로 옮길경우
+		if (IsValid(ToInventoryComponent) && IsValidSlotIndex(FromIndex) && (ToInventoryComponent->IsValidSlotIndex(ToIndex) || ToIndex == -1)) // -1 : 다른 인벤토리로 옮길경우
 		{
 			if (ToIndex == -1)
 			{

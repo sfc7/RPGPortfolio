@@ -7,6 +7,15 @@
 #include "RPGStructTypes.h" 
 #include "PlayerInventoryComponent.generated.h"
 
+UENUM(BlueprintType)
+enum class EInventoryType : uint8
+{
+	PlayerInventory,
+	Storage,
+	Potion,
+	Equipment,
+	None
+};
 
 class UItemManager;
 class UPlayerInventoryComponent;
@@ -48,7 +57,7 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Size")
 	TArray<FInventorySlot> ItemSlots;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UPROPERTY(BlueprintReadWrite)
 	UItemManager* ItemManager;
 	
 	UFUNCTION(BlueprintPure)
@@ -70,5 +79,8 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	EInventoryType InventoryType = EInventoryType::None;
+	
 	UUserWidget* InventoryWidget;
 };

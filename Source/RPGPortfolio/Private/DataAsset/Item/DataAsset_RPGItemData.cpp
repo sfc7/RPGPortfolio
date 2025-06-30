@@ -1,7 +1,7 @@
 // LJS
 
 
-#include "DataAsset/DataAsset_RPGItemData.h"
+#include "DataAsset/Item/DataAsset_RPGItemData.h"
 
 UDataAsset_RPGItemData::UDataAsset_RPGItemData(const FObjectInitializer& ObjectInitializer)
 {

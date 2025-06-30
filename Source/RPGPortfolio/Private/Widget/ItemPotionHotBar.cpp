@@ -3,6 +3,11 @@
 
 #include "Widget/ItemPotionHotBar.h"
 
-UItemPotionHotBar::UItemPotionHotBar(const FObjectInitializer& ObjectInitializer)
+#include "DataAsset/DataAsset_RPGUIData.h"
+#include "GameMode/GameManager/UIManager.h"
+
+
+void UItemPotionHotBar::NativeOnInitialized()
 {
+	Super::NativeOnInitialized();
 }

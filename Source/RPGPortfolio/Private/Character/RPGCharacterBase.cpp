@@ -42,6 +42,11 @@ UUIComponentBase* ARPGCharacterBase::GetUIComponent() const
 	return nullptr;
 }
 
+void ARPGCharacterBase::SetInteractTargetActor(AActor* TargetActor)
+{
+	InteractTargetActor = TargetActor;
+}
+
 void ARPGCharacterBase::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);

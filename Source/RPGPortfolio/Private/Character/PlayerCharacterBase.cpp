@@ -5,6 +5,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "Character/NPC/RPGNPCCharacterBase.h"
 #include "Component/Player/PlayerEnhancedInputComponent.h"
 #include "DataAsset/DataAsset_InputConfig.h"
 #include "DataAsset/DataAsset_AbilitySetBase.h"
@@ -18,9 +19,14 @@
 #include "GameMode/GameManager/GeneralGameManager.h"
 #include "GameMode/GameManager/UIManager.h"
 #include "Component/Player/PlayerInventoryComponent.h"
+#include "Components/CapsuleComponent.h"
+#include "GameMode/GameManager/InteractManager.h"
 
 APlayerCharacterBase::APlayerCharacterBase()
 {
+	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bStartWithTickEnabled = true;
+	
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
@@ -44,8 +50,20 @@ APlayerCharacterBase::APlayerCharacterBase()
 	PlayerItemInventoryComponent = CreateDefaultSubobject<UPlayerInventoryComponent>(TEXT("PlayerItemInventoryComponent"));
 	PlayerPotionHotbar = CreateDefaultSubobject<UPlayerInventoryComponent>(TEXT("PlayerPotionHotbar"));
 
+	GetCapsuleComponent()->OnComponentBeginOverlap.AddUniqueDynamic(this, &APlayerCharacterBase::OnCollisionBoxBeginOverlap);
+	GetCapsuleComponent()->OnComponentEndOverlap.AddUniqueDynamic(this, &APlayerCharacterBase::OnCollisionBoxEndOverlap);
 	
 	CreateDefaultAttributeSet();
+}
+
+void APlayerCharacterBase::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	if (InteractManager->CheckIneractionFrequency(InteractionTargetData))
+	{
+		PerformInteractionCheck();
+	}
 }
 
 UCombatComponentBase* APlayerCharacterBase::GetCombatComponent() const
@@ -56,6 +74,11 @@ UCombatComponentBase* APlayerCharacterBase::GetCombatComponent() const
 UUIComponentBase* APlayerCharacterBase::GetUIComponent() const
 {
 	return PlayerUIComponent;
+}
+
+UCameraComponent* APlayerCharacterBase::GetCameraComponent() const
+{
+	return CameraComponent;
 }
 
 UPlayerUIComponent* APlayerCharacterBase::GetPlayerUIComponent() const
@@ -71,6 +94,34 @@ UPlayerInventoryComponent* APlayerCharacterBase::GetPlayerInventoryComponent() c
 UPlayerInventoryComponent* APlayerCharacterBase::GetPlayerPotionHotBar() const
 {
 	return PlayerPotionHotbar;
+}
+
+void APlayerCharacterBase::OnCollisionBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	Super::OnCollisionBoxBeginOverlap(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult);
+
+	if (Cast<IUInteractionInterface>(OtherActor))
+	{
+		if (ARPGNPCCharacterBase* TargetNPC = Cast<ARPGNPCCharacterBase>(OtherActor))
+		{
+			InteractManager->ApplyCanInteractGamePlayTag(this);
+			InteractManager->SetInteractTarget(TargetNPC, this, EInteractType::NPC);
+		}
+	}
+}
+
+void APlayerCharacterBase::OnCollisionBoxEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	Super::OnCollisionBoxEndOverlap(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex);
+
+	if (Cast<IUInteractionInterface>(OtherActor))
+	{
+		if (ARPGNPCCharacterBase* TargetNPC = Cast<ARPGNPCCharacterBase>(OtherActor))
+		{
+			InteractManager->RemoveCanInteractGamePlayTag(this);
+			InteractManager->RemoveInteractTarget(TargetNPC, this, EInteractType::NPC);
+		}
+	}
 }
 
 void APlayerCharacterBase::PossessedBy(AController* NewController)
@@ -89,9 +140,11 @@ void APlayerCharacterBase::PossessedBy(AController* NewController)
 	{
 		PlayerUIComponent->OnInitPlayerUIbyClassDelegate.Broadcast(PlayerCharacterClass);
 	}
+
+	InteractManager = GetGameInstance()->GetSubsystem<UInteractManager>();
 }
 
-void APlayerCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)	
+auto APlayerCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) -> void
 {
 	ULocalPlayer* LocalPlayer = GetController<APlayerController>()->GetLocalPlayer();
 	
@@ -123,6 +176,13 @@ void APlayerCharacterBase::CreateDefaultAttributeSet()
 void APlayerCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
+}
+
+void APlayerCharacterBase::PerformInteractionCheck()
+{
+	InteractionTargetData.LastInteractionCheckTime = GetWorld()->GetTimeSeconds();
+
+	InteractManager->InteractTrace(this);
 }
 
 void APlayerCharacterBase::Input_Move(const FInputActionValue& InputActionValue)
@@ -189,5 +249,10 @@ void APlayerCharacterBase::Input_CallPauseMenu()
 void APlayerCharacterBase::Input_CallInventory()
 {
 	GetGameInstance()->GetSubsystem<UGeneralGameManager>()->GetUIManager()->ShowUIAsync(EUICategory::InventoryUI, GetWorld());
+}
+
+void APlayerCharacterBase::Input_Interact()
+{
+	GetGameInstance()->GetSubsystem<UGeneralGameManager>()->GetInteractManager()->InteractTrace(this);
 }
 

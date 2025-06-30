@@ -30,6 +30,14 @@ UENUM(BlueprintType)
 enum class EInventoryUICategory : uint8
 {
 	ItemSlot,
+	PotionSlot,
+	None,
+};
+
+UENUM(BlueprintType)
+enum class EInteractUICategory : uint8
+{
+	Storage,
 	None,
 };
 
@@ -74,6 +82,19 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<UUserWidget> InventoryUIWidgetClass;
 };
+
+USTRUCT(BlueprintType)
+struct FInteractUI
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	EInteractUICategory InteractUIType = EInteractUICategory::None;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TSubclassOf<UUserWidget> InteractUIWidgetClass;
+};
 /**
  * 
  */
@@ -92,6 +113,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	TSubclassOf<UUserWidget> GetInventoryUIWidgetClass(const EInventoryUICategory& InventoryUICategory) const;
+
+	UFUNCTION(BlueprintCallable)
+	TSubclassOf<UUserWidget> GetInteractUIWidgetClass(const EInteractUICategory& InteractUICategory) const;
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")
@@ -108,7 +132,7 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")
 	FUIData InventoryUI;
-
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "LoadingScreenData")
 	FLoadingScreenData LoadingScreen_Town;
 
@@ -117,4 +141,13 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "InventoryUI")
 	FInventoryUI ItemSlotUI;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "InventoryUI")
+	FInventoryUI PotionSlotUI;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "InteractUI")
+	FInteractUI StorageUI;
+
+
+	
 };

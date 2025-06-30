@@ -12,10 +12,13 @@ UItemSlotContainer::UItemSlotContainer(const FObjectInitializer& ObjectInitializ
 {
 }
 
+void UItemSlotContainer::NativeOnInitialized()
+{
+	Super::NativeOnInitialized();
+}
+
 void UItemSlotContainer::ResizeSlot()
 {
-	TSubclassOf<UUserWidget> ItemSlotWidgetClass = GetGameInstance()->GetSubsystem<UUIManager>()->GetInventoryUIWidgetClass(EInventoryUICategory::ItemSlot);
-	
 	for (int32 Index = 0; Index < TotalSlots; Index++)
 	{
 		UItemSlotMaster* PlayerUI = CreateWidget<UItemSlotMaster>(GetWorld()->GetFirstPlayerController(), ItemSlotWidgetClass);

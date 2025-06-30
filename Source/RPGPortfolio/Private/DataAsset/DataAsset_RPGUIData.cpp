@@ -47,7 +47,21 @@ TSubclassOf<UUserWidget> UDataAsset_RPGUIData::GetInventoryUIWidgetClass(const E
 	{
 	case EInventoryUICategory::ItemSlot:
 		return ItemSlotUI.InventoryUIWidgetClass;
+	case EInventoryUICategory::PotionSlot:
+		return PotionSlotUI.InventoryUIWidgetClass;
 	default:
 		return nullptr;
 	}
 }
+
+TSubclassOf<UUserWidget> UDataAsset_RPGUIData::GetInteractUIWidgetClass(const EInteractUICategory& InteractUICategory) const
+{
+	switch (InteractUICategory)
+	{
+	case EInteractUICategory::Storage:
+		return StorageUI.InteractUIWidgetClass;
+	default:
+		return nullptr;
+	}
+}
+

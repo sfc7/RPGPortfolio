@@ -65,6 +65,11 @@ TSubclassOf<UUserWidget> UUIManager::GetInventoryUIWidgetClass(const EInventoryU
 	return RPGUIData->GetInventoryUIWidgetClass(InventoryUICategory);
 }
 
+TSubclassOf<UUserWidget> UUIManager::GetInteractWidgetClass(const EInteractUICategory& InteractUICategory) const
+{
+	return RPGUIData->GetInteractUIWidgetClass(InteractUICategory);
+}
+
 void UUIManager::ToggleInputMode(const UObject* WorldContextObject, ERPGInputMode InputMode)
 {
 	APlayerController* PlayerController = nullptr;
@@ -95,9 +100,4 @@ void UUIManager::ToggleInputMode(const UObject* WorldContextObject, ERPGInputMod
 	default:
 		break;
 	}
-}
-
-UUserWidget* UUIManager::GetWidget() const
-{
-	return nullptr;
 }

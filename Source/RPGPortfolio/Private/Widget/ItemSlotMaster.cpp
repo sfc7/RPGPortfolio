@@ -10,7 +10,7 @@
 #include "Components/TextBlock.h"
 #include "Components/Border.h"
 #include "Components/SizeBox.h"
-#include "DataAsset/DataAsset_RPGItemData.h"
+#include "DataAsset/Item/DataAsset_RPGItemData.h"
 
 
 UItemSlotMaster::UItemSlotMaster(const FObjectInitializer& ObjectInitializer)

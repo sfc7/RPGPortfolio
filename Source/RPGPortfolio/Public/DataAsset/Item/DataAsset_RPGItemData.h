@@ -6,6 +6,14 @@
 #include "Engine/DataAsset.h"
 #include "DataAsset_RPGItemData.generated.h"
 
+UENUM(BlueprintType)
+enum class EItemType : uint8
+{
+	Material,
+	Potion,
+	Equipment,
+	None
+};
 /**
  * 
  */
@@ -30,6 +38,9 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
 	TSoftObjectPtr<UTexture2D> ItemIcon;
+
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	EItemType ItemType = EItemType::None;
 	
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
 	FText ItemName;
@@ -39,6 +50,9 @@ public:
 	
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
 	int32 StackSize;
+
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	int32 GoldValue;
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
 	float Weight;

@@ -4,7 +4,7 @@
 #include "GameMode/GameManager/ItemManager.h"
 
 #include "Component/Player/PlayerInventoryComponent.h"
-#include "DataAsset/DataAsset_RPGItemData.h"
+#include "DataAsset/Item/DataAsset_RPGItemData.h"
 
 UItemManager::UItemManager()
 {

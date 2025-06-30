@@ -24,7 +24,7 @@ void URPGGA_Player_RegenMp::ActivateAbility(const FGameplayAbilitySpecHandle Han
 		GetPlayerCharacterFromActorInfo()->GetRPGAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*Spec);
 	}
 
-	
+	EndAbility(Handle, ActorInfo, ActivationInfo, true, false);
 }
 
 void URPGGA_Player_RegenMp::OnEndAbilityCallback()

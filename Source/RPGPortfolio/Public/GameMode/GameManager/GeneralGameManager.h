@@ -10,6 +10,8 @@
 class ULevelManager;
 class UUIManager;
 class UDungeonProgressManager;
+class UItemManager;
+class UInteractManager;
 /**
  * 
  */
@@ -25,7 +27,13 @@ public:
 	UUIManager* GetUIManager() const;
 
 	UFUNCTION(BlueprintPure)
-	ULevelManager* GetLevelManager() const; 
+	ULevelManager* GetLevelManager() const;
+
+	UFUNCTION(BlueprintPure)
+	UItemManager* GetItemManager() const;
+
+	UFUNCTION(BlueprintPure)
+	UInteractManager* GetInteractManager() const;
 	
 protected:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;

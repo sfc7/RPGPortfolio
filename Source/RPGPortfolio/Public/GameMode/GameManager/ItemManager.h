@@ -39,6 +39,8 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	int32 GetStaciSize(FInventorySlot TargetSlot);
+
+	
 protected:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;

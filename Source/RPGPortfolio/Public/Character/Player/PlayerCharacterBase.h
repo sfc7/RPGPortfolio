@@ -16,6 +16,8 @@ struct FInputActionValue;
 class UPlayerCombatComponent;
 class UPlayerUIComponent;
 class UInputMappingContext;
+struct FInteractionData;
+class UInteractManager;
 
 /**
  * 
@@ -36,12 +38,19 @@ public:
 
 	virtual UUIComponentBase* GetUIComponent() const override;
 
+	virtual UCameraComponent* GetCameraComponent() const;
+
 	virtual UPlayerUIComponent* GetPlayerUIComponent() const override;
 
 	virtual UPlayerInventoryComponent* GetPlayerInventoryComponent() const;
 
 	virtual UPlayerInventoryComponent* GetPlayerPotionHotBar() const;
-	
+
+	UFUNCTION()
+	virtual void OnCollisionBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION()
+	virtual void OnCollisionBoxEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 protected:
 	virtual void PossessedBy(AController* NewController) override;
 	
@@ -50,6 +59,8 @@ protected:
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
 	virtual void CreateDefaultAttributeSet() override;
+
+	virtual void Tick(float DeltaSeconds) override;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Class", meta = (AllowPrivateAccess = "true"))
 	EPlayerCharacterClass PlayerCharacterClass;
@@ -79,6 +90,12 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", meta = (AllowPrivateAccess = "true"))
 	UPlayerInventoryComponent* PlayerPotionHotbar;
 
+	FInteractionData InteractionTargetData;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	UInteractManager* InteractManager;
+
+	void PerformInteractionCheck();
 	
 	void Input_Move(const FInputActionValue& InputActionValue);
 	void Input_Look(const FInputActionValue& InputActionValue);
@@ -87,5 +104,6 @@ private:
 	void Input_ShowDebug();
 	void Input_CallPauseMenu();
 	void Input_CallInventory();
+	void Input_Interact();
 
 };

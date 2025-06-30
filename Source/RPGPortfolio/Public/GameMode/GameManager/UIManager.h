@@ -32,12 +32,12 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	TSubclassOf<UUserWidget> GetInventoryUIWidgetClass(const EInventoryUICategory& InventoryUICategory) const;
+
+	UFUNCTION(BlueprintCallable)
+	TSubclassOf<UUserWidget> GetInteractWidgetClass(const EInteractUICategory& InteractUICategory) const;
 	
 	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject"))
 	static void ToggleInputMode(const UObject* WorldContextObject, ERPGInputMode InputMode);
-	
-	UFUNCTION(BlueprintCallable)
-	UUserWidget* GetWidget() const;
 
 	
 protected:
