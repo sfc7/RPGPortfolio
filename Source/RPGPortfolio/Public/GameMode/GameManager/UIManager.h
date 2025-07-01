@@ -35,6 +35,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	TSubclassOf<UUserWidget> GetInteractWidgetClass(const EInteractUICategory& InteractUICategory) const;
+
+	UFUNCTION(BlueprintCallable)
+	TSubclassOf<UUserWidget> GetQuestWidgetClass(const EQuestUICategory& QuestUICategory) const;
 	
 	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject"))
 	static void ToggleInputMode(const UObject* WorldContextObject, ERPGInputMode InputMode);

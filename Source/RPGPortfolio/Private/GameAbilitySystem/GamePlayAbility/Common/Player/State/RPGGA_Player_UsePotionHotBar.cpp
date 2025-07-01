@@ -120,15 +120,12 @@ void URPGGA_Player_UsePotionHotBar::ApplyHealEffect(int32 HealAmount)
 	}
 
 	FGameplayEffectContextHandle EffectContext = GetRPGAbilitySystemComponentFromActorInfo()->MakeEffectContext();
-    
+
 	FGameplayEffectSpecHandle SpecHandle = GetRPGAbilitySystemComponentFromActorInfo()->MakeOutgoingSpec(
 		PotionHealEffectClass, 
-		1.0f, 
+		HealAmount, 
 		EffectContext
 	);
-
-	// SetByCaller로 힐량 설정
-	SpecHandle.Data->SetSetByCallerMagnitude(FGameplayTag::RequestGameplayTag(FName("Data.HealAmount")), HealAmount);
 
 	GetRPGAbilitySystemComponentFromActorInfo()->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data);
 }

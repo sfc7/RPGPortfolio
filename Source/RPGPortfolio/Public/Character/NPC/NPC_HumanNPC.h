@@ -6,6 +6,7 @@
 #include "Character/NPC/RPGNPCCharacterBase.h"
 #include "NPC_HumanNPC.generated.h"
 
+class AQuestNPCComponent; 
 /**
  * 
  */

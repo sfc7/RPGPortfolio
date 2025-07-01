@@ -23,6 +23,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	TSubclassOf<UGameplayEffect> PotionHealEffectClass;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (Categories=GameplayCue))
+	FGameplayTag PotionUseFXGameplayCue;
 	
 	UFUNCTION()
 	void ApplyHealEffect(int32 HealAmount);

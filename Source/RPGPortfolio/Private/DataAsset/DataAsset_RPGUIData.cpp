@@ -65,3 +65,14 @@ TSubclassOf<UUserWidget> UDataAsset_RPGUIData::GetInteractUIWidgetClass(const EI
 	}
 }
 
+TSubclassOf<UUserWidget> UDataAsset_RPGUIData::GetQuestUIWidgetClass(const EQuestUICategory& QuestUICategory) const
+{
+	switch (QuestUICategory)
+	{
+	case EQuestUICategory::NPC:
+		return NPCQuestUI.InteractUIWidgetClass;
+	default:
+		return nullptr;
+	}
+}
+

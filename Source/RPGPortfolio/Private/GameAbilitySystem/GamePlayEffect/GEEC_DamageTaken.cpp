@@ -54,7 +54,6 @@ void UGEEC_DamageTaken::Execute_Implementation(const FGameplayEffectCustomExecut
 		if (TagMagnitude.Key.MatchesTagExact(RPGGameplayTag::Data_Value_SetByCaller_BaseDamage))
 		{
 			BaseDamage = TagMagnitude.Value;
-			// UE_LOG(LogTemp,Log,TEXT("BaseDamage : %f"), BaseDamage);
 		}
 
 		if (TagMagnitude.Key.MatchesTagExact(RPGGameplayTag::Data_DamageType_SetByCaller_Light))

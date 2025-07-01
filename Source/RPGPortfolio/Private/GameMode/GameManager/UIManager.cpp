@@ -70,6 +70,11 @@ TSubclassOf<UUserWidget> UUIManager::GetInteractWidgetClass(const EInteractUICat
 	return RPGUIData->GetInteractUIWidgetClass(InteractUICategory);
 }
 
+TSubclassOf<UUserWidget> UUIManager::GetQuestWidgetClass(const EQuestUICategory& QuestUICategory) const
+{
+	return RPGUIData->GetQuestUIWidgetClass(QuestUICategory);
+}
+
 void UUIManager::ToggleInputMode(const UObject* WorldContextObject, ERPGInputMode InputMode)
 {
 	APlayerController* PlayerController = nullptr;

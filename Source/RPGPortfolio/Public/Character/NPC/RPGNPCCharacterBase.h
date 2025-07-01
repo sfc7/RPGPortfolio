@@ -10,6 +10,7 @@
 class APlayerCharacterBase;
 class UBoxComponent;
 class UWidgetComponent;
+class UQuestNPCComponent;
 /**
  * 
  */
@@ -36,6 +37,9 @@ public:
 	ENPCType GetNPCType() const { return NPCType;}
 
 	UFUNCTION()
+	UQuestNPCComponent* GetQuestNPCComponent() const { return QuestNPCComponent;}
+
+	UFUNCTION()
 	virtual void OnCollisionBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) override;
 
 	UFUNCTION()
@@ -49,4 +53,8 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
 	UWidgetComponent* InteractWidgetComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
+	UQuestNPCComponent* QuestNPCComponent;
+	
 };

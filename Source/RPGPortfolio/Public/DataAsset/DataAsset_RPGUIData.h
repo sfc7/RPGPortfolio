@@ -41,6 +41,13 @@ enum class EInteractUICategory : uint8
 	None,
 };
 
+UENUM(BlueprintType)
+enum class EQuestUICategory : uint8
+{
+	NPC,
+	None
+};
+
 USTRUCT(BlueprintType)
 struct FUIData
 {
@@ -95,6 +102,19 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<UUserWidget> InteractUIWidgetClass;
 };
+
+USTRUCT(BlueprintType)
+struct FQuestUI
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	EQuestUICategory QuestUIType = EQuestUICategory::NPC;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TSubclassOf<UUserWidget> InteractUIWidgetClass;
+};
 /**
  * 
  */
@@ -116,6 +136,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	TSubclassOf<UUserWidget> GetInteractUIWidgetClass(const EInteractUICategory& InteractUICategory) const;
+
+	UFUNCTION(BlueprintCallable)
+	TSubclassOf<UUserWidget> GetQuestUIWidgetClass(const EQuestUICategory& QuestUICategory) const;
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")
@@ -147,6 +170,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "InteractUI")
 	FInteractUI StorageUI;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "QuestUI")
+	FQuestUI NPCQuestUI;
 
 
 	

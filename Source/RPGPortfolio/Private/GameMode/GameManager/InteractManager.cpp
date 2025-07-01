@@ -13,6 +13,8 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "Interface/UInteractionInterface.h"
 #include "AbilitySystemComponent.h"
+#include "Character/NPC/NPC_HumanNPC.h"
+#include "Component/Player/QuestNPCComponent.h"
 
 UInteractManager::UInteractManager()
 {
@@ -36,6 +38,10 @@ void UInteractManager::StartInteract(AActor* TargetActor, APlayerCharacterBase* 
 					} 
 					StorageWidget->AddToViewport();
 				}
+			}
+			else if (NPC->GetNPCType() == ENPCType::Conversational)
+			{
+				FString aa = NPC->GetQuestNPCComponent()->InteractWith();
 			}
 		}
 	}

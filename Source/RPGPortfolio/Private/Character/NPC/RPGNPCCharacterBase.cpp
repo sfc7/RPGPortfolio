@@ -7,6 +7,7 @@
 #include "Components/WidgetComponent.h"
 #include "Widget/RPGWidgetBase.h"
 #include "Character/Player/PlayerCharacterBase.h"
+#include "Component/Player/QuestNPCComponent.h"
 
 ARPGNPCCharacterBase::ARPGNPCCharacterBase()
 {
@@ -19,6 +20,9 @@ ARPGNPCCharacterBase::ARPGNPCCharacterBase()
 	InteractWidgetComponent = CreateDefaultSubobject<UWidgetComponent>("InteractWidgetComponent");
 	InteractWidgetComponent->SetupAttachment(GetMesh());
 	InteractWidgetComponent->SetVisibility(false);
+
+	QuestNPCComponent = CreateDefaultSubobject<UQuestNPCComponent>("QuestNPCComponent");
+	
 }
 
 void ARPGNPCCharacterBase::OnCollisionBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
