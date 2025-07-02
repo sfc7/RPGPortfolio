@@ -9,10 +9,10 @@ void UQuestManager::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
 
-	QuestData = LoadObject<UDataTable>(nullptr, TEXT("/Game/MyProject/Data/Quest/DT_QuestTable.DT_QuestTable"));
+	QuestDataTable = LoadObject<UDataTable>(nullptr, TEXT("/Game/MyProject/Data/Quest/DT_QuestTable.DT_QuestTable"));
 }
 
-void UQuestManager::AddNewQuest(FName QuestID)
+ARPGQuestSystemActor* UQuestManager::AddNewQuest(FName QuestID)
 {
 	CurrentActiveQuests.AddUnique(QuestID);
 
@@ -25,11 +25,12 @@ void UQuestManager::AddNewQuest(FName QuestID)
 
 	if (QuestActor)
 	{
-		QuestActor->SetQuestID(FName("YourQuestID"));
+		QuestActor->SetQuestID(QuestID);
 		QuestActor->FinishSpawning(FTransform(FVector::ZeroVector));
 	}
 
 	CurrentQuests.Add(QuestActor);
+	return QuestActor;
 }
 
 void UQuestManager::CompleteQuest()
@@ -47,5 +48,45 @@ void UQuestManager::TrackQuest()
 {
 }
 
+UDataTable* UQuestManager::GetQuestDataTable()
+{
+	return QuestDataTable;
+}
 
+FQuest UQuestManager::GetQuestFromDataTable(FName QuestID)
+{
+	if (QuestDataTable)
+	{
+		if (FQuest* QuestData = QuestDataTable->FindRow<FQuest>(QuestID, TEXT("GetQuest")))
+		{
+			return *QuestData;  // 값 복사해서 반환
+		}
+	}
 	
+	return FQuest();  
+}
+
+TArray<ARPGQuestSystemActor*> UQuestManager::GetCurrentQuests()
+{
+	return CurrentQuests;
+}
+
+TArray<FName> UQuestManager::GetCurrentActiveQuests()
+{
+	return CurrentActiveQuests;
+}
+
+TArray<FName> UQuestManager::GetCompletedQuests()
+{
+	return CompletedQuests;
+}
+
+void UQuestManager::SetCurrentActiveQuests(TArray<FName> CurrentActiveQuestsToSet)
+{
+	CurrentActiveQuests = CurrentActiveQuestsToSet;
+}
+
+void UQuestManager::SetCompleteActiveQuests(TArray<FName> CompletedQuestsToSet)
+{
+	CompletedQuests = CompletedQuestsToSet;
+}

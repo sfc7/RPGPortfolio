@@ -163,7 +163,8 @@ auto APlayerCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 			PlayerEnhancedInputComponent->BindAbilityInputAction(InputConfigDataAsset, this, &ThisClass::Input_AbilityInputPressed, &ThisClass::Input_AbilityInputReleased);
 			PlayerEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, RPGGameplayTag::InputTag_ShowDebug_Keyboard, ETriggerEvent::Triggered, this, &ThisClass::Input_ShowDebug);
 			PlayerEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, RPGGameplayTag::InputTag_CallPauseMenu_Keyboard, ETriggerEvent::Triggered, this, &ThisClass::Input_CallPauseMenu);
-			PlayerEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, RPGGameplayTag::InputTag_CallInventory_Keyboard, ETriggerEvent::Triggered, this, &ThisClass::Input_CallInventory);
+			PlayerEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, RPGGameplayTag::InputTag_CallInventory_Keyboard, ETriggerEvent::Triggered, this, &ThisClass::Input_CallInventoryUI);
+			PlayerEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, RPGGameplayTag::InputTag_CallQuestUI_Keyboard, ETriggerEvent::Triggered, this, &ThisClass::Input_CallQuestUI);
 		}
 	}
 }
@@ -174,7 +175,7 @@ void APlayerCharacterBase::CreateDefaultAttributeSet()
 }
 
 void APlayerCharacterBase::BeginPlay()
-{
+{	
 	Super::BeginPlay();
 }
 
@@ -246,9 +247,14 @@ void APlayerCharacterBase::Input_CallPauseMenu()
 	GetGameInstance()->GetSubsystem<UGeneralGameManager>()->GetUIManager()->ShowUIAsync(EUICategory::PauseMenuUI, GetWorld());
 }
 
-void APlayerCharacterBase::Input_CallInventory()
+void APlayerCharacterBase::Input_CallInventoryUI()
 {
 	GetGameInstance()->GetSubsystem<UGeneralGameManager>()->GetUIManager()->ShowUIAsync(EUICategory::InventoryUI, GetWorld());
+}
+
+void APlayerCharacterBase::Input_CallQuestUI()
+{
+	GetGameInstance()->GetSubsystem<UGeneralGameManager>()->GetUIManager()->ShowUIAsync(EUICategory::QuestUI, GetWorld());
 }
 
 void APlayerCharacterBase::Input_Interact()

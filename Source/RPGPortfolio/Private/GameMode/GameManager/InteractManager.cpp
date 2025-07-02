@@ -22,6 +22,7 @@ UInteractManager::UInteractManager()
 
 void UInteractManager::StartInteract(AActor* TargetActor, APlayerCharacterBase* Player, EInteractType InteractType)
 {
+	UE_LOG(LogTemp, Warning, TEXT("StartInteract"));
 	if (InteractType == EInteractType::NPC)
 	{
 		if (ARPGNPCCharacterBase* NPC = Cast<ARPGNPCCharacterBase>(TargetActor))
@@ -41,7 +42,14 @@ void UInteractManager::StartInteract(AActor* TargetActor, APlayerCharacterBase* 
 			}
 			else if (NPC->GetNPCType() == ENPCType::Conversational)
 			{
-				FString aa = NPC->GetQuestNPCComponent()->InteractWith();
+				if (ANPC_HumanNPC* HumanNPC = Cast<ANPC_HumanNPC>(NPC))
+				{
+					FString ObjectiveName = HumanNPC->GetObjectiveName();
+					
+					Player->OnInteractQuest.Broadcast(ObjectiveName);
+					NPC->GetQuestNPCComponent()->InteractWith();
+				}
+			
 			}
 		}
 	}

@@ -28,7 +28,7 @@ protected:
 	void LookAt();
 	
 private:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess=true))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess=true), Category = "Quest")
 	FDataTableRowHandle QuestData;
 
 };

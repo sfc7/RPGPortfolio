@@ -81,6 +81,19 @@ struct FQuest : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FStageDetail> QuestStages;
 };
+
+USTRUCT(BlueprintType)
+struct FQuestSaveData
+{
+	GENERATED_BODY()
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TMap<FString, int32> QuestProgress;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	int32 CurrentStage;
+	
+};
 /**
  * 
  */
@@ -90,7 +103,7 @@ class RPGPORTFOLIO_API UQuestManager : public UGameInstanceSubsystem
 	GENERATED_BODY()
 public:
 	UFUNCTION(BlueprintCallable)
-	void AddNewQuest(FName QuestID);
+	ARPGQuestSystemActor* AddNewQuest(FName QuestID);
 
 	UFUNCTION(BlueprintCallable)
 	void CompleteQuest();
@@ -100,6 +113,27 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void TrackQuest();
+
+	UFUNCTION(BlueprintCallable)
+	UDataTable* GetQuestDataTable();
+
+	UFUNCTION(BlueprintCallable)
+	FQuest GetQuestFromDataTable(FName QuestID);
+
+	UFUNCTION(BlueprintCallable)
+	TArray<ARPGQuestSystemActor*> GetCurrentQuests();
+
+	UFUNCTION(BlueprintCallable)
+	TArray<FName> GetCurrentActiveQuests();
+
+	UFUNCTION(BlueprintCallable)
+	TArray<FName> GetCompletedQuests();
+
+	UFUNCTION(BlueprintCallable)
+	void SetCurrentActiveQuests(TArray<FName> CurrentActiveQuestsToSet);
+
+	UFUNCTION(BlueprintCallable)
+	void SetCompleteActiveQuests(TArray<FName> CompletedQuestsToSet);
 
 protected:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
@@ -117,6 +151,6 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TArray<ARPGQuestSystemActor*> CurrentQuests;
 
-	UPROPERTY()
-	UDataTable* QuestData;
+	UPROPERTY(BlueprintReadOnly,  meta = (AllowPrivateAccess = "true"))
+	UDataTable* QuestDataTable;
 };

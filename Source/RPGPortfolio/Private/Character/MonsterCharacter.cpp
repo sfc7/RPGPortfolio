@@ -13,7 +13,9 @@
 #include "Widget/RPGWidgetBase.h"
 #include "Components/BoxComponent.h"
 #include "RPGFunc.h"
+#include "Character/Player/PlayerCharacterBase.h"
 #include "Kismet/GameplayStatics.h"
+#include "Quest/RPGQuestSystemActor.h"
 #include "WorldStatic/DamageIndicator.h"
 AMonsterCharacter::AMonsterCharacter()
 {
@@ -93,6 +95,11 @@ void AMonsterCharacter::MonsterDeath(TSoftObjectPtr<UNiagaraSystem> _DeathNiagar
 	if (DeathEffect)
 	{
 		DeathEffect->OnSystemFinished.AddDynamic(this, &ThisClass::OnDeathEffectFinished);
+	}
+
+	if (APlayerCharacterBase* Player = Cast<APlayerCharacterBase>(GetWorld()->GetFirstPlayerController()->GetPawn()))
+	{
+		Player->OnInteractQuest.Broadcast(ObjectiveName);
 	}
 }
 

@@ -19,6 +19,7 @@ class UInputMappingContext;
 struct FInteractionData;
 class UInteractManager;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInteractQuest, FString, ObjectiveID);
 /**
  * 
  */
@@ -46,11 +47,14 @@ public:
 
 	virtual UPlayerInventoryComponent* GetPlayerPotionHotBar() const;
 
+	FOnInteractQuest OnInteractQuest;
+	
 	UFUNCTION()
 	virtual void OnCollisionBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 	UFUNCTION()
 	virtual void OnCollisionBoxEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+	
 protected:
 	virtual void PossessedBy(AController* NewController) override;
 	
@@ -103,7 +107,8 @@ private:
 	void Input_AbilityInputReleased(FGameplayTag _InputTag);
 	void Input_ShowDebug();
 	void Input_CallPauseMenu();
-	void Input_CallInventory();
+	void Input_CallInventoryUI();
+	void Input_CallQuestUI();
 	void Input_Interact();
 
 };

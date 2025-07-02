@@ -47,6 +47,11 @@ void ARPGCharacterBase::SetInteractTargetActor(AActor* TargetActor)
 	InteractTargetActor = TargetActor;
 }
 
+FString ARPGCharacterBase::GetObjectiveName()
+{
+	return ObjectiveName;
+}
+
 void ARPGCharacterBase::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);

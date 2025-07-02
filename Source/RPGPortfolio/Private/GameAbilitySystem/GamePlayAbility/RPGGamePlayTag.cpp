@@ -17,6 +17,7 @@ namespace RPGGameplayTag
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_ShowDebug_Keyboard, "InputTag.ShowDebug.Keyboard");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_CallPauseMenu_Keyboard, "InputTag.CallPauseMenu.Keyboard");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_CallInventory_Keyboard, "InputTag.CallInventory.Keyboard");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_CallQuestUI_Keyboard, "InputTag.CallQuestUI.Keyboard");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Dodge_Keyboard, "InputTag.Dodge.Keyboard");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_8WaysDodge_Keyboard, "InputTag.8WaysDodge.Keyboard");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Interact_Keyboard, "InputTag.Interact.Keyboard");

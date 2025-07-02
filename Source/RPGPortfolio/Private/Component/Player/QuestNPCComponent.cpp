@@ -35,7 +35,6 @@ void UQuestNPCComponent::DisplayQuest()
 		QuestDataRow = QuestData.GetRow<FQuest>(TEXT("GetQuestData"));
 	}
     
-	// QuestDataRow Null Check 추가
 	if (QuestDataRow)
 	{
 		QuestWidget->SetQuest(*QuestDataRow);
@@ -44,8 +43,6 @@ void UQuestNPCComponent::DisplayQuest()
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("QuestDataRow is null! Check DataTable and RowName."));
-		// 위젯 정리
 		QuestWidget->RemoveFromParent();
 	}
 }

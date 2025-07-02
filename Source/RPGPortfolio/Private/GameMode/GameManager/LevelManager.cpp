@@ -45,6 +45,13 @@ void ULevelManager::SaveRPGGame()
 
 	if (URPGSaveGame* RpgSaveGame = Cast<URPGSaveGame>(SaveGame))
 	{
+		TArray<ARPGQuestSystemActor*> CurrentQuests = GetGameInstance()->GetSubsystem<UQuestManager>()->GetCurrentQuests();
+		for (ARPGQuestSystemActor* CurrentQuest : CurrentQuests)
+		{
+			RpgSaveGame->SaveQuestDetails(CurrentQuest);
+		}
+		RpgSaveGame->SaveQuestLog();
+		
 		bool bSaveSuccess = UGameplayStatics::SaveGameToSlot(RpgSaveGame, TEXT("PlayerCharacterSlot"), 1);
 	}
 }
@@ -57,8 +64,12 @@ void ULevelManager::LoadRPGGame()
         
 		if (URPGSaveGame* RpgSaveGame = Cast<URPGSaveGame>(LoadedGame))
 		{
-			
+			RpgSaveGame->LoadQuests();
 		}
+	}
+	else
+	{
+		SaveRPGGame();
 	}
 }
 

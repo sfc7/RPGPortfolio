@@ -44,8 +44,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 	AActor* GetInteractTargetActor() const {return InteractTargetActor;}
 	
+	UFUNCTION(BlueprintCallable)
+	FString GetObjectiveName();
 
-	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString ObjectiveName;
 protected:
 	virtual void PossessedBy(AController* NewController) override;
 

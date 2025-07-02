@@ -9,8 +9,12 @@ void URPGGameInstance::Init()
 {
 	Super::Init();
 
+	
+	
 	FCoreUObjectDelegates::PreLoadMap.AddUObject(this,&ThisClass::OnPreLoadMap);
 	FCoreUObjectDelegates::PostLoadMapWithWorld.AddUObject(this,&ThisClass::OnDestinationWorldLoaded);
+
+	
 }
 
 void URPGGameInstance::OnPreLoadMap(const FString& MapName)

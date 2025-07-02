@@ -18,11 +18,35 @@ public:
 	ARPGQuestSystemActor();
 
 	UFUNCTION(BlueprintCallable)
+	FName GetQuestID() const { return QuestID;}
+
+	UFUNCTION(BlueprintCallable)
+	int32 GetCurrentStage() { return CurrentStage; }
+	
+	UFUNCTION(BlueprintCallable)
 	void SetQuestID(FName QuestIDtoSet);
+
+	UFUNCTION(BlueprintCallable)
+	void SetCurrentStage(int32 QuestStageToSet);
+
+	UFUNCTION(BlueprintCallable)
+	void OnObjectiveIDHeard(FString ObjectiveID);
+
+	UFUNCTION(BlueprintCallable)
+	void GetQuestDetails();
+
+	UFUNCTION(BlueprintPure)
+	FObjectiveDetail GetObjectiveDataByID(FString ObjectiveID);
+
+	UFUNCTION(BlueprintCallable)
+	TMap<FString, int32> GetCurrentObjectiveProgress() { return CurrentObjectiveProgress; }
+
+	UFUNCTION(BlueprintCallable)
+	void SetCurrentObjectiveProgress(TMap<FString, int32> ObjectiveProgressToSet); 
 	
 protected:
 	virtual void BeginPlay() override;
-
+	
 	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -31,14 +55,15 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FQuest QuestDetails;
 
+	//
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 CurrentStage;
+	int32 CurrentStage = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FStageDetail CurrentStageDetails;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TMap<FString, int32> CurrentObjectiveDetails;
+	TMap<FString, int32> CurrentObjectiveProgress;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool IsComplete;

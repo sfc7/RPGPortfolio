@@ -51,6 +51,8 @@ class RPGPORTFOLIO_API IUInteractionInterface
 public:
 	FInteractableData InteractableData;
 
+	FString ObjectiveName;
+	
 	UFUNCTION()
 	virtual void OnCollisionBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
