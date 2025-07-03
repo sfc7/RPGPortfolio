@@ -19,6 +19,9 @@ public:
 	void DisplayQuest();
 
 	UFUNCTION(BlueprintCallable)
+	void DisplayRewards();
+
+	UFUNCTION(BlueprintCallable)
 	FString InteractWith();
 
 protected:
@@ -31,4 +34,6 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess=true), Category = "Quest")
 	FDataTableRowHandle QuestData;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess=true), Category = "Quest")
+	FString OwnerObjectiveID;
 };

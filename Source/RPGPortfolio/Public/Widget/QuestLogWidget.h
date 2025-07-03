@@ -44,6 +44,9 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite, Category = "QuestUI", meta = (BindWidget))
 	UTextBlock* QuestDescription;
+
+	UPROPERTY(BlueprintReadWrite, Category = "QuestUI", meta = (BindWidget))
+	UTextBlock* QuestGold;
 	
 	UPROPERTY(BlueprintReadWrite, Category = "QuestUI", meta = (BindWidget))
 	UScrollBox* QuestScrollBox;

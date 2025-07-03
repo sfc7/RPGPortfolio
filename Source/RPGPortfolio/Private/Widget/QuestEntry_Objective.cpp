@@ -30,18 +30,17 @@ void UQuestEntry_Objective::SetObjectiveData(FObjectiveDetail ObjectiveDataToSet
 		CurrentQuestActor = CurrentQuestActorToSet;
 	
 		FText ObjectiveDescription = ObjectiveData.ObjectiveDescription;
-		int32 Quantity = ObjectiveData.Quantity;
-		int32 Current = 0;
+		int32 CurrentQuantity = ObjectiveData.Quantity;
 		TMap<FString, int32> CurrentObjectiveProgress = CurrentQuestActor->GetCurrentObjectiveProgress();
 	
 		if (CurrentObjectiveProgress.Find(ObjectiveData.ObjectiveID))
 		{
-			Current = *CurrentObjectiveProgress.Find(ObjectiveData.ObjectiveID);
-			if (Current >= ObjectiveData.Quantity)
+			CurrentQuantity = *CurrentObjectiveProgress.Find(ObjectiveData.ObjectiveID);
+			if (CurrentQuantity >= ObjectiveData.Quantity)
 			{
 				IsCompleteCheckBox->SetCheckedState(ECheckBoxState::Checked);
 			}
-			else
+			else 
 			{
 				IsCompleteCheckBox->SetCheckedState(ECheckBoxState::Unchecked);
 			}
@@ -49,7 +48,7 @@ void UQuestEntry_Objective::SetObjectiveData(FObjectiveDetail ObjectiveDataToSet
 		
 		Description->SetText(FText::FromString(
 		ObjectiveData.ObjectiveDescription.ToString() + 
-		FString::Printf(TEXT(" (%d/%d)"), Current, ObjectiveData.Quantity)
+		FString::Printf(TEXT(" (%d/%d)"), CurrentQuantity, ObjectiveData.Quantity)
 		));
 
 

@@ -83,4 +83,7 @@ protected:
 	EInventoryType InventoryType = EInventoryType::None;
 	
 	UUserWidget* InventoryWidget;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, SaveGame)
+	int32 PlayerGold = 1000;
 };

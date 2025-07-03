@@ -12,7 +12,7 @@
 #include "DataAsset/DataAsset_RPGUIData.h"
 #include "GameMode/GameManager/GeneralGameManager.h"
 #include "GameMode/GameManager/UIManager.h"
-
+#include "Quest/RPGQuestSystemActor.h"
 ULevelManager::ULevelManager()
 {
 	
@@ -24,9 +24,6 @@ void ULevelManager::Initialize(FSubsystemCollectionBase& Collection)
     
 	RPGLevelData = LoadObject<UDataAsset_RPGLevelData>(nullptr, 
 		TEXT("/Game/MyProject/Data/DA_RPGLevelData.DA_RPGLevelData"));
-
-	// FCoreUObjectDelegates::PreLoadMap.AddUObject(this, &ThisClass::LoadLoadingScreen);
-	// FCoreUObjectDelegates::PostLoadMapWithWorld.AddUObject(this, &ThisClass::DestinationLoadingScreen);
 }
 
 void ULevelManager::Deinitialize()
@@ -35,7 +32,7 @@ void ULevelManager::Deinitialize()
 }
 
 TSoftObjectPtr<UWorld> ULevelManager::GetGameLevelByTag(FGameplayTag GameplayTag) const
-	{
+{
 	return RPGLevelData->GetGameLevelByTag(GameplayTag);
 }
 
@@ -50,9 +47,14 @@ void ULevelManager::SaveRPGGame()
 		{
 			RpgSaveGame->SaveQuestDetails(CurrentQuest);
 		}
-		RpgSaveGame->SaveQuestLog();
+		UQuestManager* QuestManager = GetGameInstance()->GetSubsystem<UQuestManager>();
+		if (QuestManager)
+		{
+			RpgSaveGame->SetCurrentActiveQuests(QuestManager->GetCurrentActiveQuests());
+			RpgSaveGame->SetCompletedQuests(QuestManager->GetCompletedQuests());
+		}
 		
-		bool bSaveSuccess = UGameplayStatics::SaveGameToSlot(RpgSaveGame, TEXT("PlayerCharacterSlot"), 1);
+		bool bSaveSuccess = UGameplayStatics::SaveGameToSlot(RpgSaveGame, TEXT("RPGSaveSlot"), 1);
 	}
 }
 
@@ -64,12 +66,30 @@ void ULevelManager::LoadRPGGame()
         
 		if (URPGSaveGame* RpgSaveGame = Cast<URPGSaveGame>(LoadedGame))
 		{
-			RpgSaveGame->LoadQuests();
+			UQuestManager* QuestManager = GetGameInstance()->GetSubsystem<UQuestManager>();
+
+			QuestManager->ClearAllQuests();
+			
+			TArray<FName> SavedActiveQuests = RpgSaveGame->GetCurrentActiveQuests();
+			for (FName CurrentActiveQuest : SavedActiveQuests)
+			{
+				ARPGQuestSystemActor* AddQuest = QuestManager->AddNewQuest(CurrentActiveQuest);
+				if (AddQuest)
+				{
+					TMap<FName, FQuestSaveData> QuestProgress = RpgSaveGame->GetQuestProgress();
+					FQuestSaveData* FindQuestSaveData = QuestProgress.Find(CurrentActiveQuest);
+					
+					if (FindQuestSaveData)
+					{
+						AddQuest->SetCurrentStage(FindQuestSaveData->CurrentStage);
+						AddQuest->SetCurrentObjectiveProgress(FindQuestSaveData->QuestProgress);
+					}
+				}
+			}
+            
+			QuestManager->SetCurrentActiveQuests(SavedActiveQuests);
+			QuestManager->SetCompleteActiveQuests(RpgSaveGame->GetCompletedQuests());
 		}
-	}
-	else
-	{
-		SaveRPGGame();
 	}
 }
 

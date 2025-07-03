@@ -25,7 +25,7 @@ void UQuestWidget::NativePreConstruct()
 	QuestDescription->SetText(	QuestDetails.QuestDescription);
 	if (StageDescription)
 	{
-		if (QuestDetails.QuestStages.Num() > 0)
+		if (QuestDetails.QuestStages.IsValidIndex(0))
 		{
 			StageDescription->SetText(QuestDetails.QuestStages[0].StageDescription);
 		}
@@ -34,6 +34,8 @@ void UQuestWidget::NativePreConstruct()
 			StageDescription->SetText(FText::FromString("No Stage Available"));
 		}
 	}
+	
+	QuestGold->SetText(FText::AsNumber(QuestDetails.QuestStages[0].GoldReward));
 }
 
 void UQuestWidget::SetQuest(FQuest QuestDetailsToSet)
@@ -49,8 +51,6 @@ void UQuestWidget::SetQuestID(FName QuestIDToSet)
 void UQuestWidget::OnAcceptButtonClicked()
 {
 	GetWorld()->GetGameInstance()->GetSubsystem<UQuestManager>()->AddNewQuest(QuestID);
-
-	UGameplayStatics::SetGamePaused(GetWorld(), false);
 	GetWorld()->GetGameInstance()->GetSubsystem<UUIManager>()->ToggleInputMode(GetWorld(), ERPGInputMode::GameMode);
 	RemoveFromParent();
 }

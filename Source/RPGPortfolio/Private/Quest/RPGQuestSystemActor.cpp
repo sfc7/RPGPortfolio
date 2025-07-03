@@ -5,9 +5,22 @@
 
 #include "Character/Player/PlayerCharacterBase.h"
 
+void ARPGQuestSystemActor::BeginPlay()
+{
+	Super::BeginPlay();
+
+	GetQuestDetails();
+
+	if (APlayerCharacterBase* Player = Cast<APlayerCharacterBase>(GetWorld()->GetFirstPlayerController()->GetPawn()))
+	{
+		Player->OnInteractQuest.AddDynamic(this, &ARPGQuestSystemActor::OnObjectiveIDHeard);
+	}
+
+	IsComplete = AreObjectivesComplete();
+}
+
 ARPGQuestSystemActor::ARPGQuestSystemActor()
 {
-	PrimaryActorTick.bCanEverTick = true;
 }
 
 void ARPGQuestSystemActor::SetQuestID(FName QuestIDtoSet)
@@ -27,15 +40,10 @@ void ARPGQuestSystemActor::OnObjectiveIDHeard(FString ObjectiveID)
 		int32 Index = *CurrentObjectiveProgress.Find(ObjectiveID);
 		FObjectiveDetail CurrentObjectiveDetail = GetObjectiveDataByID(ObjectiveID);
 		int AddIndex = FMath::Clamp(Index+1, 0, CurrentObjectiveDetail.Quantity);
-
+		
 		
 		CurrentObjectiveProgress.Add(ObjectiveID, AddIndex);
-
-		return;
-	}
-	else
-	{
-		return;
+		IsObjectiveComplete(ObjectiveID);
 	}
 }
 
@@ -72,22 +80,33 @@ void ARPGQuestSystemActor::SetCurrentObjectiveProgress(TMap<FString, int32> Obje
 	CurrentObjectiveProgress = ObjectiveProgressToSet;
 }
 
-void ARPGQuestSystemActor::BeginPlay()
+void ARPGQuestSystemActor::IsObjectiveComplete(FString ObjectiveID)
 {
-	Super::BeginPlay();
-
-	GetQuestDetails();
-
-	if (APlayerCharacterBase* Player = Cast<APlayerCharacterBase>(GetWorld()->GetFirstPlayerController()->GetPawn()))
+	FObjectiveDetail ObjectiveDetail = GetObjectiveDataByID(ObjectiveID);
+	if (*CurrentObjectiveProgress.Find(ObjectiveID) >= ObjectiveDetail.Quantity)
 	{
-		Player->OnInteractQuest.AddDynamic(this, &ARPGQuestSystemActor::OnObjectiveIDHeard);
+		IsComplete = AreObjectivesComplete();
 	}
+	
 }
 
-// Called every frame
-void ARPGQuestSystemActor::Tick(float DeltaTime)
+bool ARPGQuestSystemActor::AreObjectivesComplete()
 {
-	Super::Tick(DeltaTime);
+	for (FObjectiveDetail ObjectiveDetail : CurrentStageDetails.Objectives)
+	{
+		if (*CurrentObjectiveProgress.Find(ObjectiveDetail.ObjectiveID) >= GetObjectiveDataByID(ObjectiveDetail.ObjectiveID).Quantity)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 
+	return true;
 }
+
+
+
 

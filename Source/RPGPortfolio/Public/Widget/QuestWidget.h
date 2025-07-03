@@ -34,7 +34,7 @@ protected:
 	virtual void NativePreConstruct() override;
 
 	UFUNCTION()
-	void OnAcceptButtonClicked();
+	virtual void OnAcceptButtonClicked();
 	
 	UPROPERTY(BlueprintReadWrite, Category = "QuestUI", meta = (BindWidget))
 	UTextBlock* QuestName;
@@ -54,6 +54,9 @@ protected:
 	UPROPERTY(BlueprintReadWrite, Category = "Quest", meta = (BindWidget))
 	FQuest QuestDetails;
 
+	UPROPERTY(BlueprintReadWrite, Category = "QuestUI", meta = (BindWidget))
+	UTextBlock* QuestGold;
+	
 	UPROPERTY(BlueprintReadWrite, Category = "Quest", meta = (BindWidget))
 	FName QuestID;
 };

@@ -22,13 +22,13 @@ void UQuestLogWidget::NativeOnInitialized()
 	for (ARPGQuestSystemActor* CurrentQuest : CurrentQuests)
 	{
 		FName CurrentQuestID = CurrentQuest->GetQuestID();
+		if (!GetWorld()->GetGameInstance()->GetSubsystem<UQuestManager>()->QueryActiveQuest(CurrentQuestID)) continue;
 		
 		FQuest QuestDetail =GetWorld()->GetGameInstance()->GetSubsystem<UQuestManager>()->GetQuestFromDataTable(CurrentQuestID);
 		UUserWidget* Widget = CreateWidget(GetWorld(), Quest_LogEntryWidgetClass);
 		URPGQuestLog_QuestEntry* QuestEntryWidget = Cast<URPGQuestLog_QuestEntry>(Widget);
 		if (QuestEntryWidget)
 		{
-			
 			QuestEntryWidget->SetQuestID(CurrentQuestID);
 			QuestEntryWidget->SetQuestActor(CurrentQuest);
 			QuestScrollBox->AddChild(QuestEntryWidget);
@@ -59,6 +59,7 @@ void UQuestLogWidget::DisplayQuestToRightDetail(FName QuestIDToSet, ARPGQuestSys
 		QuestName->SetText(QuestDetail.QuestName);
 		QuestDescription->SetText(QuestDetail.QuestDescription);
 		StageDescription->SetText(QuestDetail.QuestStages[0].StageDescription);
+		QuestGold->SetText(FText::AsNumber(QuestDetail.QuestStages[0].GoldReward));
 	}
 	
 	RightQuestDetailWidgetSwitcher->SetActiveWidgetIndex(1);
@@ -71,6 +72,6 @@ void UQuestLogWidget::DisplayQuestToRightDetail(FName QuestIDToSet, ARPGQuestSys
 		{
 			ObjectiveWidget->SetObjectiveData(ObjectiveDetail, CurrentQuestActor);
 			ObjectiveVerticalBox->AddChild(ObjectiveWidget);
-		}
+		} 
 	}
 }

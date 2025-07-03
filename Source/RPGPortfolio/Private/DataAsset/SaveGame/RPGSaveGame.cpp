@@ -17,23 +17,12 @@ void URPGSaveGame::SaveQuestDetails(ARPGQuestSystemActor* Quest)
 	QuestProgress.Add(Quest->GetQuestID(),SaveData);
 }
 
-void URPGSaveGame::SaveQuestLog()
+void URPGSaveGame::SetCurrentActiveQuests(TArray<FName> CurrentActiveQuestsToSet)
 {
-	CurrentActiveQuests = GetWorld()->GetGameInstance()->GetSubsystem<UQuestManager>()->GetCurrentActiveQuests();
-	CompletedQuests = GetWorld()->GetGameInstance()->GetSubsystem<UQuestManager>()->GetCompletedQuests();
-	
+	CurrentActiveQuests = CurrentActiveQuestsToSet;
 }
 
-void URPGSaveGame::LoadQuests()
+void URPGSaveGame::SetCompletedQuests(TArray<FName> CompletedQuestsToSet)
 {
-	for (FName CurrentActiveQuest : CurrentActiveQuests)
-	{
-		ARPGQuestSystemActor* AddQuest = GetWorld()->GetGameInstance()->GetSubsystem<UQuestManager>()->AddNewQuest(CurrentActiveQuest);
-		FQuestSaveData* FindQuestSaveData = QuestProgress.Find(CurrentActiveQuest);
-		AddQuest->SetCurrentStage(FindQuestSaveData->CurrentStage);
-		AddQuest->SetCurrentObjectiveProgress(FindQuestSaveData->QuestProgress);
-	}
-
-	GetWorld()->GetGameInstance()->GetSubsystem<UQuestManager>()->SetCurrentActiveQuests(CurrentActiveQuests);
-	GetWorld()->GetGameInstance()->GetSubsystem<UQuestManager>()->SetCompleteActiveQuests(CompletedQuests);
+	CompletedQuests = CompletedQuestsToSet;
 }

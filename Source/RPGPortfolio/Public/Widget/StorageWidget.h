@@ -23,6 +23,7 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	UPlayerInventoryComponent*  StorageInventoryRef;
 
+
 protected:
 	virtual void NativeConstruct() override;
 };

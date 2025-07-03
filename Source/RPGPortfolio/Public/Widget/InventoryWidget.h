@@ -7,6 +7,7 @@
 #include "InventoryWidget.generated.h"
 
 class UItemSlotContainer;
+class UTextBlock;
 /**
  * 
  */
@@ -19,6 +20,9 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UItemSlotContainer* ItemSlotContainer;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UTextBlock* PlayerGold;
 protected:
 	virtual void NativeConstruct() override;
 };

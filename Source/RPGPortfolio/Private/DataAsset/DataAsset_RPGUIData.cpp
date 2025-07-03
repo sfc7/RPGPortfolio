@@ -73,6 +73,8 @@ TSubclassOf<UUserWidget> UDataAsset_RPGUIData::GetQuestUIWidgetClass(const EQues
 	{
 	case EQuestUICategory::NPC:
 		return NPCQuestUI.InteractUIWidgetClass;
+	case EQuestUICategory::Reward:
+		return NPCQuesRewardsUI.InteractUIWidgetClass;
 	default:
 		return nullptr;
 	}

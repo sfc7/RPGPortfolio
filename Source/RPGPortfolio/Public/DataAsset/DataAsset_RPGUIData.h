@@ -46,6 +46,7 @@ UENUM(BlueprintType)
 enum class EQuestUICategory : uint8
 {
 	NPC,
+	Reward,
 	None
 };
 
@@ -111,7 +112,7 @@ struct FQuestUI
 
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	EQuestUICategory QuestUIType = EQuestUICategory::NPC;
+	EQuestUICategory QuestUIType = EQuestUICategory::None;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<UUserWidget> InteractUIWidgetClass;
@@ -178,6 +179,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "QuestUI")
 	FQuestUI NPCQuestUI;
 
-
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "QuestUI")
+	FQuestUI NPCQuesRewardsUI;
 	
 };

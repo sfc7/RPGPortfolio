@@ -14,6 +14,14 @@ void UQuestManager::Initialize(FSubsystemCollectionBase& Collection)
 
 ARPGQuestSystemActor* UQuestManager::AddNewQuest(FName QuestID)
 {
+	for (ARPGQuestSystemActor* ExistingQuest : CurrentQuests)
+	{
+		if (ExistingQuest && ExistingQuest->GetQuestID() == QuestID)
+		{
+			return ExistingQuest; 
+		}
+	}
+    
 	CurrentActiveQuests.AddUnique(QuestID);
 
 	ARPGQuestSystemActor* QuestActor = GetWorld()->SpawnActorDeferred<ARPGQuestSystemActor>(
@@ -27,14 +35,16 @@ ARPGQuestSystemActor* UQuestManager::AddNewQuest(FName QuestID)
 	{
 		QuestActor->SetQuestID(QuestID);
 		QuestActor->FinishSpawning(FTransform(FVector::ZeroVector));
+		CurrentQuests.Add(QuestActor);
 	}
 
-	CurrentQuests.Add(QuestActor);
 	return QuestActor;
 }
 
-void UQuestManager::CompleteQuest()
+void UQuestManager::CompleteQuest(FName QuestID)
 {
+	CompletedQuests.AddUnique(QuestID);
+	CurrentActiveQuests.Remove(QuestID);
 }
 
 bool UQuestManager::QueryActiveQuest(FName QuestID)
@@ -89,4 +99,38 @@ void UQuestManager::SetCurrentActiveQuests(TArray<FName> CurrentActiveQuestsToSe
 void UQuestManager::SetCompleteActiveQuests(TArray<FName> CompletedQuestsToSet)
 {
 	CompletedQuests = CompletedQuestsToSet;
+}
+
+void UQuestManager::ClearAllQuests()
+{
+	for (ARPGQuestSystemActor* QuestActor : CurrentQuests)
+	{
+		if (QuestActor && IsValid(QuestActor))
+		{
+			QuestActor->Destroy();
+		}
+	}
+    
+	CurrentQuests.Empty();
+	CurrentActiveQuests.Empty();
+}
+
+void UQuestManager::TurnInQuest(FName QuestID)
+{
+	ARPGQuestSystemActor* QuestSystemActor = GetQuestActor(QuestID);
+
+	CompleteQuest(QuestID);
+}
+
+ARPGQuestSystemActor* UQuestManager::GetQuestActor(FName QuestID)
+{
+	for (ARPGQuestSystemActor* QuestActor : CurrentQuests)
+	{
+		if (QuestActor->GetQuestID() == QuestID)
+		{
+			return QuestActor;
+		}
+	}
+
+	return nullptr;
 }

@@ -21,7 +21,10 @@ public:
 	FName GetQuestID() const { return QuestID;}
 
 	UFUNCTION(BlueprintCallable)
-	int32 GetCurrentStage() { return CurrentStage; }
+	int32 GetCurrentStage() const { return CurrentStage; }
+
+	UFUNCTION(BlueprintCallable)
+	bool GetIsComplete() const { return IsComplete; }
 	
 	UFUNCTION(BlueprintCallable)
 	void SetQuestID(FName QuestIDtoSet);
@@ -42,12 +45,16 @@ public:
 	TMap<FString, int32> GetCurrentObjectiveProgress() { return CurrentObjectiveProgress; }
 
 	UFUNCTION(BlueprintCallable)
-	void SetCurrentObjectiveProgress(TMap<FString, int32> ObjectiveProgressToSet); 
+	void SetCurrentObjectiveProgress(TMap<FString, int32> ObjectiveProgressToSet);
+
+	UFUNCTION(BlueprintCallable)
+	void IsObjectiveComplete(FString ObjectiveID);
+
+	UFUNCTION(BlueprintCallable)
+	bool AreObjectivesComplete(); 
 	
 protected:
 	virtual void BeginPlay() override;
-	
-	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FName QuestID;

@@ -106,7 +106,7 @@ public:
 	ARPGQuestSystemActor* AddNewQuest(FName QuestID);
 
 	UFUNCTION(BlueprintCallable)
-	void CompleteQuest();
+	void CompleteQuest(FName QuestID);
 
 	UFUNCTION(BlueprintPure)
 	bool QueryActiveQuest(FName QuestID);
@@ -134,6 +134,15 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SetCompleteActiveQuests(TArray<FName> CompletedQuestsToSet);
+
+	UFUNCTION(BlueprintCallable)
+	void ClearAllQuests();
+
+	UFUNCTION(BlueprintCallable)
+	void TurnInQuest(FName QuestID);
+
+	UFUNCTION(BlueprintCallable)
+	ARPGQuestSystemActor* GetQuestActor(FName QuestID); 
 
 protected:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;

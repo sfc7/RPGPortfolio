@@ -22,7 +22,6 @@ UInteractManager::UInteractManager()
 
 void UInteractManager::StartInteract(AActor* TargetActor, APlayerCharacterBase* Player, EInteractType InteractType)
 {
-	UE_LOG(LogTemp, Warning, TEXT("StartInteract"));
 	if (InteractType == EInteractType::NPC)
 	{
 		if (ARPGNPCCharacterBase* NPC = Cast<ARPGNPCCharacterBase>(TargetActor))
