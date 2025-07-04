@@ -70,13 +70,14 @@ void URPGGA_Player_UsePotionHotBar::ActivateAbility(const FGameplayAbilitySpecHa
 void URPGGA_Player_UsePotionHotBar::EndAbility(const FGameplayAbilitySpecHandle Handle,const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,bool bReplicateEndAbility, bool bWasCancelled)
 {
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
+
+	GetPlayerCharacterFromActorInfo()->GetRPGAbilitySystemComponent()->RemoveGameplayCue(PotionUseFXGameplayCue);
 }
 
 bool URPGGA_Player_UsePotionHotBar::CanActivateAbility(const FGameplayAbilitySpecHandle Handle,const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags,const FGameplayTagContainer* TargetTags, FGameplayTagContainer* OptionalRelevantTags) const
 {
 	Super::CanActivateAbility(Handle, ActorInfo, SourceTags, TargetTags, OptionalRelevantTags);
 
-	
 	int32 SlotIndex = -1;
 
 	if (ActorInfo && ActorInfo->AbilitySystemComponent.IsValid())
@@ -108,6 +109,10 @@ bool URPGGA_Player_UsePotionHotBar::CanActivateAbility(const FGameplayAbilitySpe
 	if (!ItemData || ItemData->ItemType != EItemType::Potion) return false;
 
 	if (Slot.Quantity <= 0) return false;
+
+	FGameplayCueParameters GCEffectParam;
+	GCEffectParam.TargetAttachComponent = GetOwningComponentFromActorInfo();
+	ActorInfo->AbilitySystemComponent->AddGameplayCue(PotionUseFXGameplayCue, GCEffectParam);
 	
 	return true;
 }
@@ -120,13 +125,18 @@ void URPGGA_Player_UsePotionHotBar::ApplyHealEffect(int32 HealAmount)
 	}
 
 	FGameplayEffectContextHandle EffectContext = GetRPGAbilitySystemComponentFromActorInfo()->MakeEffectContext();
-
+	
 	FGameplayEffectSpecHandle SpecHandle = GetRPGAbilitySystemComponentFromActorInfo()->MakeOutgoingSpec(
 		PotionHealEffectClass, 
-		HealAmount, 
+		1.0f, 
 		EffectContext
 	);
 
+	SpecHandle.Data.Get()->SetSetByCallerMagnitude(
+	  FGameplayTag::RequestGameplayTag(FName("Data.Value.SetByCaller.UsePotion")), 
+	  HealAmount
+	  
+  );
 	GetRPGAbilitySystemComponentFromActorInfo()->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data);
 }
 

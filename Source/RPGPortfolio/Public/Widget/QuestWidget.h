@@ -11,6 +11,7 @@
 class UButton;
 class UTextBlock;
 struct FQuest;
+class UItemSlotContainer;
 /**
  * 
  */
@@ -35,6 +36,12 @@ protected:
 
 	UFUNCTION()
 	virtual void OnAcceptButtonClicked();
+
+	UFUNCTION(BlueprintCallable)
+	void CreateRewardItemSlots();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<UUserWidget> ItemSlotMasterClass;
 	
 	UPROPERTY(BlueprintReadWrite, Category = "QuestUI", meta = (BindWidget))
 	UTextBlock* QuestName;
@@ -45,6 +52,9 @@ protected:
 	UPROPERTY(BlueprintReadWrite, Category = "QuestUI", meta = (BindWidget))
 	UTextBlock* StageDescription;
 
+	UPROPERTY(BlueprintReadWrite, Category = "QuestUI", meta = (BindWidget))
+	UItemSlotContainer* RewardItemContainer;
+	
 	UPROPERTY(BlueprintReadWrite, Category = "QuestUI", meta = (BindWidget))
 	UButton* AcceptButton;
 

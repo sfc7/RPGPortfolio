@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
+#include "DataAsset/Item/DataAsset_RPGItemData.h"
 #include "QuestManager.generated.h"
 
 class ARPGQuestSystemActor;
@@ -58,7 +59,7 @@ struct FStageDetail
 	TArray<FObjectiveDetail> Objectives;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TMap<UDataAsset_RPGItemData*, int32> ItemRewardAndQuantity;
+	TMap<TSoftObjectPtr<UDataAsset_RPGItemData>, int32> ItemRewardAndQuantity;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 GoldReward;
@@ -94,6 +95,8 @@ struct FQuestSaveData
 	int32 CurrentStage;
 	
 };
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnQuestCompleted, ARPGQuestSystemActor*, QuestActor);
 /**
  * 
  */
@@ -144,6 +147,16 @@ public:
 	UFUNCTION(BlueprintCallable)
 	ARPGQuestSystemActor* GetQuestActor(FName QuestID); 
 
+	UFUNCTION(BlueprintCallable)
+	bool GrantQuestRewards(FName QuestID, APlayerCharacterBase* Player);
+
+	UFUNCTION(BlueprintCallable)
+	bool GrantItemRewards(const TMap<TSoftObjectPtr<UDataAsset_RPGItemData>, int32>& ItemRewards, UPlayerInventoryComponent* PlayerInventory);
+    
+	UFUNCTION(BlueprintCallable)
+	void GrantGoldReward(int32 GoldAmount, UPlayerInventoryComponent* PlayerInventory);
+
+	FOnQuestCompleted OnQuestCompleted;
 protected:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	

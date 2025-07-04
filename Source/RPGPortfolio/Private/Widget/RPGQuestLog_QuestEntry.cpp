@@ -15,19 +15,25 @@ void URPGQuestLog_QuestEntry::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 
-	if (IsCompleteBox)
-	{
-		SelectButton->OnClicked.AddDynamic(this, &URPGQuestLog_QuestEntry::OnAcceptButtonClicked);
-	}
-
-
+	SelectButton->OnClicked.AddDynamic(this, &URPGQuestLog_QuestEntry::OnAcceptButtonClicked);
+	TrackCheckBox->OnCheckStateChanged.AddDynamic(this, &ThisClass::OnTrackCheckBoxClicked);
 }
 
 void URPGQuestLog_QuestEntry::NativePreConstruct()
 {
 	Super::NativePreConstruct();
+}
 
-	
+void URPGQuestLog_QuestEntry::OnTrackCheckBoxClicked(bool IsCheck)
+{
+	if (IsCheck)
+	{
+		OnQuestTracked.Broadcast(QuestActor, true);
+	}
+	else
+	{
+		OnQuestTracked.Broadcast(QuestActor, false);
+	}
 }
 
 void URPGQuestLog_QuestEntry::OnAcceptButtonClicked()

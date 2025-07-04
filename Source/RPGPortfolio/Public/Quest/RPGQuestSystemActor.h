@@ -8,6 +8,8 @@
 #include "RPGQuestSystemActor.generated.h"
 
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnObjectiveHeard);
+
 
 UCLASS()
 class RPGPORTFOLIO_API ARPGQuestSystemActor : public AActor
@@ -25,6 +27,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	bool GetIsComplete() const { return IsComplete; }
+
+	UFUNCTION(BlueprintCallable)
+	FQuest GetQuestDetailVariable() const { return QuestDetails; }
 	
 	UFUNCTION(BlueprintCallable)
 	void SetQuestID(FName QuestIDtoSet);
@@ -52,7 +57,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	bool AreObjectivesComplete(); 
-	
+
+	FOnObjectiveHeard OnObjectiveHeard;
 protected:
 	virtual void BeginPlay() override;
 

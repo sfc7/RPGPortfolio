@@ -13,6 +13,7 @@ class UScrollBox;
 class ARPGQuestSystemActor;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnQuestSelected, FName, QuestID, ARPGQuestSystemActor*, QuestActor);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnQuestTracked, ARPGQuestSystemActor*, QuestActor, bool, IsCheck);
 /**
  * 
  */
@@ -22,6 +23,8 @@ class RPGPORTFOLIO_API URPGQuestLog_QuestEntry : public URPGWidgetBase
 	GENERATED_BODY()
 public:
 	FOnQuestSelected OnQuestSelected;
+
+	FOnQuestTracked OnQuestTracked;
 
 	UFUNCTION(BlueprintCallable)
 	void SetQuestID(FName QuestIDToSet);
@@ -35,6 +38,9 @@ protected:
 	virtual void NativePreConstruct() override;
 
 	UFUNCTION()
+	void OnTrackCheckBoxClicked(bool IsCheck);
+
+	UFUNCTION()
 	void OnAcceptButtonClicked();
 
 	
@@ -42,7 +48,7 @@ protected:
 	UButton* SelectButton;
 	
 	UPROPERTY(BlueprintReadWrite, Category = "QuestUI", meta = (BindWidget))
-	UCheckBox* IsCompleteBox;
+	UCheckBox* TrackCheckBox;
 
 	UPROPERTY(BlueprintReadWrite, Category = "QuestUI", meta = (BindWidget))
 	UTextBlock* QuestName;

@@ -11,6 +11,9 @@ class UWidgetSwitcher;
 class UTextBlock;
 class UVerticalBox;
 class ARPGQuestSystemActor;
+class UItemSlotContainer;
+struct FQuest;
+class UQuestTracker;
 /**
  * 
  */
@@ -26,10 +29,19 @@ protected:
 
 	UFUNCTION()
 	void OnQuestSelected(FName QuestIDToSet, ARPGQuestSystemActor* QuestActorToSet);
+
+	UFUNCTION()
+	void OnQuestTracked(ARPGQuestSystemActor* QuestActorToSet, bool IsCheck);
 	
 	UFUNCTION()
 	void DisplayQuestToRightDetail(FName QuestIDToSet, ARPGQuestSystemActor* QuestActorToSet);
 
+	UFUNCTION(BlueprintCallable)
+	void CreateRewardItemSlots(FQuest QuestDetail);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<UUserWidget> ItemSlotMasterClass;
+	
 	UPROPERTY(BlueprintReadWrite, Category = "QuestUI", meta = (BindWidget))
 	UTextBlock* QuestName;
 	
@@ -38,6 +50,12 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<UUserWidget> LogEntry_ObjectiveWidgetClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<UUserWidget> Quest_TrackWidgetClass;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UQuestTracker* TrackWidget;
 	
 	UPROPERTY(BlueprintReadWrite, Category = "QuestUI", meta = (BindWidget))
 	UTextBlock* StageDescription;
@@ -50,7 +68,10 @@ protected:
 	
 	UPROPERTY(BlueprintReadWrite, Category = "QuestUI", meta = (BindWidget))
 	UScrollBox* QuestScrollBox;
-
+	
+	UPROPERTY(BlueprintReadWrite, Category = "QuestUI", meta = (BindWidget))
+	UItemSlotContainer* RewardItemContainer;
+	
 	UPROPERTY(BlueprintReadWrite, Category = "QuestUI", meta = (BindWidget))
 	UWidgetSwitcher* RightQuestDetailWidgetSwitcher;	
 

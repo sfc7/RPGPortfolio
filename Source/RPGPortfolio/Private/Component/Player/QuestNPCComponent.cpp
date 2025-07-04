@@ -83,7 +83,6 @@ void UQuestNPCComponent::DisplayRewards()
 }
 
 
-// Called when the game starts or when spawned
 void UQuestNPCComponent::BeginPlay()
 {
 	Super::BeginPlay();
@@ -96,57 +95,16 @@ void UQuestNPCComponent::BeginPlay()
 
 FString UQuestNPCComponent::InteractWith()
 {
-	// 퀘스트 매니저 상태 확인 로그 추가
-	UQuestManager* QuestManager = GetWorld()->GetGameInstance()->GetSubsystem<UQuestManager>();
-	
-	// 현재 활성 퀘스트 목록
-	TArray<FName> ActiveQuests = QuestManager->GetCurrentActiveQuests();
-	UE_LOG(LogTemp, Warning, TEXT("=== CURRENT ACTIVE QUESTS ==="));
-	UE_LOG(LogTemp, Warning, TEXT("Active Quests Count: %d"), ActiveQuests.Num());
-	for (int32 i = 0; i < ActiveQuests.Num(); i++)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Active Quest %d: %s"), i, *ActiveQuests[i].ToString());
-	}
-	
-	// 완료된 퀘스트 목록
+	UQuestManager* QuestManager = GetWorld()->GetGameInstance()->GetSubsystem<UQuestManager>();	
+	TArray<FName> ActiveQuests = QuestManager->GetCurrentActiveQuests();	
 	TArray<FName> CompletedQuests = QuestManager->GetCompletedQuests();
-	UE_LOG(LogTemp, Warning, TEXT("=== COMPLETED QUESTS ==="));
-	UE_LOG(LogTemp, Warning, TEXT("Completed Quests Count: %d"), CompletedQuests.Num());
-	for (int32 i = 0; i < CompletedQuests.Num(); i++)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Completed Quest %d: %s"), i, *CompletedQuests[i].ToString());
-	}
-	
-	// 현재 퀘스트 액터들
-	TArray<ARPGQuestSystemActor*> CurrentQuestActors = QuestManager->GetCurrentQuests();
-	UE_LOG(LogTemp, Warning, TEXT("=== CURRENT QUEST ACTORS ==="));
-	UE_LOG(LogTemp, Warning, TEXT("Quest Actors Count: %d"), CurrentQuestActors.Num());
-	for (int32 i = 0; i < CurrentQuestActors.Num(); i++)
-	{
-		if (CurrentQuestActors[i] && IsValid(CurrentQuestActors[i]))
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Quest Actor %d: %s (IsComplete: %s)"), 
-				i, 
-				*CurrentQuestActors[i]->GetQuestID().ToString(),
-				CurrentQuestActors[i]->GetIsComplete() ? TEXT("Yes") : TEXT("No"));
-		}
-		else
-		{
-			UE_LOG(LogTemp, Error, TEXT("Quest Actor %d: INVALID!"), i);
-		}
-	}
-	
-	UE_LOG(LogTemp, Warning, TEXT("Current Checking QuestID: %s"), *QuestData.RowName.ToString());
 	
 	if (!QuestManager->QueryActiveQuest(QuestData.RowName))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Quest %s is NOT Active - Displaying New Quest"), *QuestData.RowName.ToString());
 		DisplayQuest();
 	}
 	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Quest %s IS Active - Checking completion"), *QuestData.RowName.ToString());
-		
+	{		
 		FQuest* QuestDataRow = nullptr;
 		if (QuestData.DataTable && !QuestData.RowName.IsNone())
 		{
@@ -157,12 +115,9 @@ FString UQuestNPCComponent::InteractWith()
 				if (Quest)
 				{
 					bool IsComplete = Quest->GetIsComplete();
-					UE_LOG(LogTemp, Warning, TEXT("Quest %s IsComplete: %s"), 
-						*QuestData.RowName.ToString(), IsComplete ? TEXT("Yes") : TEXT("No"));
 					
 					if (IsComplete)
 					{
-						UE_LOG(LogTemp, Warning, TEXT("Quest %s COMPLETED - Displaying Rewards"), *QuestData.RowName.ToString());
 						DisplayRewards();
 						return OwnerObjectiveID;	
 					}

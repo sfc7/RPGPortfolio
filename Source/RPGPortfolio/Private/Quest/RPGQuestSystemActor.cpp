@@ -41,9 +41,10 @@ void ARPGQuestSystemActor::OnObjectiveIDHeard(FString ObjectiveID)
 		FObjectiveDetail CurrentObjectiveDetail = GetObjectiveDataByID(ObjectiveID);
 		int AddIndex = FMath::Clamp(Index+1, 0, CurrentObjectiveDetail.Quantity);
 		
-		
 		CurrentObjectiveProgress.Add(ObjectiveID, AddIndex);
 		IsObjectiveComplete(ObjectiveID);
+
+		OnObjectiveHeard.Broadcast();
 	}
 }
 

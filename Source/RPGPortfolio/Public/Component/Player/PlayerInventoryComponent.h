@@ -47,6 +47,9 @@ public:
 	void SetItem(FInventorySlot TargetSlot, FInventorySlot ItemToSet);
 
 	UFUNCTION(BlueprintCallable)
+	void SetGold(int32 GoldAmount);
+	
+	UFUNCTION(BlueprintCallable)
 	bool FindEmptySlot(FInventorySlot& OutEmptySlot);
 	
 	FOnInventorySlotChangedDelegate OnInventorySlotChangedDelegate;

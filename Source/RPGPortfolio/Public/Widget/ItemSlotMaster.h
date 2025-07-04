@@ -62,9 +62,6 @@ protected:
 	UPROPERTY(BlueprintReadWrite, Category = "ItemSlot", meta = (BindWidget))
 		UTextBlock* QuantityText;
 	
-	UPROPERTY(BlueprintReadWrite, Category = "ItemSlot", meta = (BindWidget))
-		UTextBlock* WeightText;
-	
 	UPROPERTY(BlueprintReadWrite)
 		UPlayerInventoryComponent* InventoryRef;
 	

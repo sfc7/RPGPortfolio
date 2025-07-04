@@ -4,6 +4,10 @@
 #include "GameMode/GameManager/QuestManager.h"
 
 #include "Quest/RPGQuestSystemActor.h"
+#include "Character/Player/PlayerCharacterBase.h"
+#include "Component/Player/PlayerInventoryComponent.h"
+#include "GameMode/GameManager/ItemManager.h"
+#include "DataAsset/Item/DataAsset_RPGItemData.h"
 
 void UQuestManager::Initialize(FSubsystemCollectionBase& Collection)
 {
@@ -45,6 +49,8 @@ void UQuestManager::CompleteQuest(FName QuestID)
 {
 	CompletedQuests.AddUnique(QuestID);
 	CurrentActiveQuests.Remove(QuestID);
+
+	OnQuestCompleted.Broadcast(GetQuestActor(QuestID));
 }
 
 bool UQuestManager::QueryActiveQuest(FName QuestID)
@@ -69,7 +75,7 @@ FQuest UQuestManager::GetQuestFromDataTable(FName QuestID)
 	{
 		if (FQuest* QuestData = QuestDataTable->FindRow<FQuest>(QuestID, TEXT("GetQuest")))
 		{
-			return *QuestData;  // 값 복사해서 반환
+			return *QuestData;  
 		}
 	}
 	
@@ -133,4 +139,65 @@ ARPGQuestSystemActor* UQuestManager::GetQuestActor(FName QuestID)
 	}
 
 	return nullptr;
+}
+
+bool UQuestManager::GrantQuestRewards(FName QuestID, APlayerCharacterBase* Player)
+{
+	if (!Player || !Player->GetPlayerInventoryComponent())
+	{
+		return false;
+	}
+
+	FQuest QuestData = GetQuestFromDataTable(QuestID);
+	if (!QuestData.QuestStages.IsValidIndex(0))
+	{
+		return false;
+	}
+
+	UPlayerInventoryComponent* PlayerInventory = Player->GetPlayerInventoryComponent();
+    
+	bool bItemsGranted = GrantItemRewards(QuestData.QuestStages[0].ItemRewardAndQuantity, PlayerInventory);
+	GrantGoldReward(QuestData.QuestStages[0].GoldReward, PlayerInventory);
+    
+	return bItemsGranted;
+}
+
+bool UQuestManager::GrantItemRewards(const TMap<TSoftObjectPtr<UDataAsset_RPGItemData>, int32>& ItemRewards, UPlayerInventoryComponent* PlayerInventory)
+{
+	if (!PlayerInventory)
+	{
+		return false;
+	}
+
+	bool bAllItemsAdded = true;
+
+	for (auto& RewardPair : ItemRewards)
+	{
+		TSoftObjectPtr<UDataAsset_RPGItemData> ItemData = RewardPair.Key;
+		int32 Quantity = RewardPair.Value;
+
+		if (!ItemData || Quantity <= 0)
+		{
+			continue;
+		}
+		
+		FInventorySlot ItemToAdd = GetGameInstance()->GetSubsystem<UItemManager>()->MakeItemToAdd(ItemData, Quantity);
+        
+		if (!PlayerInventory->AddItem(ItemToAdd))
+		{
+			bAllItemsAdded = false;
+		}
+	}
+
+	return bAllItemsAdded;
+}
+
+void UQuestManager::GrantGoldReward(int32 GoldAmount, UPlayerInventoryComponent* PlayerInventory)
+{
+	if (!PlayerInventory || GoldAmount <= 0)
+	{
+		return;
+	}
+
+	PlayerInventory->SetGold(GoldAmount);
 }

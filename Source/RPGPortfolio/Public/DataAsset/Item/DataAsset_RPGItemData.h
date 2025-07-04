@@ -53,7 +53,4 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
 	int32 GoldValue;
-
-	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
-	float Weight;
 };

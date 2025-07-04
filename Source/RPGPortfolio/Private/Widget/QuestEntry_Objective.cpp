@@ -11,9 +11,6 @@
 void UQuestEntry_Objective::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
-
-	
-
 }
 
 void UQuestEntry_Objective::NativePreConstruct()
@@ -50,8 +47,5 @@ void UQuestEntry_Objective::SetObjectiveData(FObjectiveDetail ObjectiveDataToSet
 		ObjectiveData.ObjectiveDescription.ToString() + 
 		FString::Printf(TEXT(" (%d/%d)"), CurrentQuantity, ObjectiveData.Quantity)
 		));
-
-
 	}
-
 }

@@ -250,6 +250,11 @@ void UPlayerInventoryComponent::SetItem(FInventorySlot TargetSlot, FInventorySlo
 	}
 }
 
+void UPlayerInventoryComponent::SetGold(int32 GoldAmount)
+{
+	PlayerGold += GoldAmount;
+}
+
 bool UPlayerInventoryComponent::FindEmptySlot(FInventorySlot& OutEmptySlot)
 {
 	for (FInventorySlot& ItemSlot : ItemSlots)

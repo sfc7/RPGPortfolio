@@ -29,11 +29,6 @@ void UItemSlotMaster::UpdateSlotData(FInventorySlot UpdateSlotData)
 	{
 		UDataAsset_RPGItemData* ItemDataAssetObject = SlotData.ItemDataAsset.LoadSynchronous();
 		IconImage->SetBrushFromSoftTexture(ItemDataAssetObject->ItemIcon);
-		float TotalWeight = ItemDataAssetObject->Weight * SlotData.Quantity;
-		FText NumberText = FText::AsNumber(TotalWeight);
-		FText UnitText = FText::FromString(TEXT(" kg"));
-		FText CombinedText = FText::Join(FText::GetEmpty(), NumberText, UnitText);
-		WeightText->SetText(CombinedText);
 		QuantityText->SetText(FText::AsNumber(SlotData.Quantity));
 
 		bool VisibleFlag = ItemDataAssetObject->IsStackable();
