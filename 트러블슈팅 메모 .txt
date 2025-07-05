@@ -22,3 +22,8 @@ OutAreAllItemAdded
 ex) ga를 구현할때 cost로 사용하는 costgameplayeffect는 bp에디터 에서는 자동으로 작동하지만
 c++에서는 commitability를 해줘야함
 여기에 있어서 해결법은 포럼이나 엔진 내부의 함수 구현을 읽어보는 수 밖에 없었다.
+
+
+4. savegame을 통해 save load하는데 FGameplayAttribute는 직렬화를 지원하지 않음
+직렬화가 필요한 이유 설명
+해결과정 설명

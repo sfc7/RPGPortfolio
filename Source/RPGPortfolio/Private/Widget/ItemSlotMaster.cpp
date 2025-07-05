@@ -11,6 +11,7 @@
 #include "Components/Border.h"
 #include "Components/SizeBox.h"
 #include "DataAsset/Item/DataAsset_RPGItemData.h"
+#include "Widget/ItemInfomation.h"
 
 
 UItemSlotMaster::UItemSlotMaster(const FObjectInitializer& ObjectInitializer)
@@ -33,6 +34,12 @@ void UItemSlotMaster::UpdateSlotData(FInventorySlot UpdateSlotData)
 
 		bool VisibleFlag = ItemDataAssetObject->IsStackable();
 		SetWidgetVisibility(QuantityLayer, VisibleFlag);
+
+		UItemInfomation* TooltipWidget = Cast<UItemInfomation>(GetToolTip());
+		if (TooltipWidget)
+		{
+			TooltipWidget->UpdateSlotData(SlotData);
+		}	
 	}
 }
 

@@ -29,7 +29,7 @@ void UItemSlotContainer::ResizeSlot()
 
 		int32 Row = Index / SlotsPerRow;
 		int32 LastColumn = Index % SlotsPerRow;
-
+		
 		UUniformGridSlot* CreateUniformGridSlot = GridForSlots->AddChildToUniformGrid(PlayerUI, Row , LastColumn);
 		CreateUniformGridSlot->SetHorizontalAlignment(HAlign_Center);
 		CreateUniformGridSlot->SetVerticalAlignment(VAlign_Center);

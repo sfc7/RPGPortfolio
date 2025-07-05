@@ -23,6 +23,9 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UTextBlock* PlayerGold;
+
+	UFUNCTION()
+	void OnPlayerGoldChanged(int32 NewGoldAmount);
 protected:
 	virtual void NativeConstruct() override;
 };

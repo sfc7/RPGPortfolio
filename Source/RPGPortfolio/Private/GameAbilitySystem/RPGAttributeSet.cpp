@@ -121,6 +121,92 @@ void URPGAttributeSet::RemoveGameplayTagFromActor(AActor* TargetActor, FGameplay
 	}
 }
 
+TMap<FGameplayAttribute, float> URPGAttributeSet::SaveAllAttributes()
+{
+	TMap<FGameplayAttribute, float> LocalMap;
+
+	TArray<FGameplayAttribute> LocalAttributeArray;
+	GetOwningAbilitySystemComponent()->GetAllAttributes(LocalAttributeArray);
+
+	if (!LocalAttributeArray.IsEmpty())
+	{
+		for (FGameplayAttribute Attribute : LocalAttributeArray)
+		{
+			bool bFoundAttribute = false;
+			float AttributeValue = 	GetOwningAbilitySystemComponent()->GetGameplayAttributeValue(Attribute, bFoundAttribute);
+
+			if (bFoundAttribute)
+			{
+				LocalMap.Add(Attribute, AttributeValue);				
+			}
+		}
+	}
+
+	return LocalMap;
+}
+
+void URPGAttributeSet::LoadAllAttributes(TMap<FGameplayAttribute, float> AttributeMap)
+{
+	for (auto& Attribute : AttributeMap)
+	{
+		GetOwningAbilitySystemComponent()->ApplyModToAttribute(Attribute.Key, EGameplayModOp::Override, Attribute.Value);
+	}
+}
+
+TArray<FAttributeSaveData> URPGAttributeSet::SaveAllAttributesToSaveData()
+{
+	TArray<FAttributeSaveData> SaveDataArray;
+    
+	TArray<FGameplayAttribute> LocalAttributeArray;
+	GetOwningAbilitySystemComponent()->GetAllAttributes(LocalAttributeArray);
+    
+	for (FGameplayAttribute Attribute : LocalAttributeArray)
+	{
+		bool bFoundAttribute = false;
+		float AttributeValue = GetOwningAbilitySystemComponent()->GetGameplayAttributeValue(Attribute, bFoundAttribute);
+        
+		if (bFoundAttribute)
+		{
+			FAttributeSaveData SaveData;
+			SaveData.AttributeName = Attribute.GetName();
+			SaveData.Value = AttributeValue;
+			SaveDataArray.Add(SaveData);
+		}
+	}
+    
+	return SaveDataArray;
+}
+
+void URPGAttributeSet::LoadAllAttributesFromSaveData(TArray<FAttributeSaveData> AttributeSaveData)
+{
+	TMap<FGameplayAttribute, float> AttributeMap = SaveAllAttributes(); 
+    
+	for (const FAttributeSaveData& SaveData : AttributeSaveData)
+	{
+		for (auto& Pair : AttributeMap)
+		{
+			if (Pair.Key.GetName() == SaveData.AttributeName)
+			{
+				GetOwningAbilitySystemComponent()->ApplyModToAttribute(Pair.Key, EGameplayModOp::Override, SaveData.Value);
+				break;
+			}
+		}
+	}
+	
+	UUIComponentBase* UIComponent = UIInterface->GetUIComponent();
+
+	if (UIComponent)
+	{
+		UIComponent->OnCurrentHpChanged.Broadcast(GetCurrentHp()/GetMaxHp());
+	}
+	
+	UPlayerUIComponent* PlayerUIComponent = UIInterface->GetPlayerUIComponent();
+	if (PlayerUIComponent)
+	{
+		PlayerUIComponent->OnCurrentMpChanged.Broadcast(GetCurrentMp()/GetMaxMp());
+	}
+}
+
 void URPGAttributeSet::AddGameplayTagToOwner(FGameplayTag AddTag)
 {
 	URPGAbilitySystemComponent* ASC = CastChecked<URPGAbilitySystemComponent>(GetOwningAbilitySystemComponent());

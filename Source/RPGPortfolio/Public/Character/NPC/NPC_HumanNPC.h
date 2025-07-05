@@ -16,4 +16,15 @@ class RPGPORTFOLIO_API ANPC_HumanNPC : public ARPGNPCCharacterBase
 	GENERATED_BODY()
 public:
 	ANPC_HumanNPC();
+
+	UFUNCTION(BlueprintCallable)
+	UUserWidget* GetStoreWidget();
+
+	virtual UPlayerInventoryComponent* GetNPCInventoryComponent() const { return StoreInventory; }
+	
+private:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", meta = (AllowPrivateAccess = "true"))
+	UPlayerInventoryComponent* StoreInventory;
+
+	
 };

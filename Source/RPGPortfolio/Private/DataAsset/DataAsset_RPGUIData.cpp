@@ -62,6 +62,8 @@ TSubclassOf<UUserWidget> UDataAsset_RPGUIData::GetInteractUIWidgetClass(const EI
 	{
 	case EInteractUICategory::Storage:
 		return StorageUI.InteractUIWidgetClass;
+	case EInteractUICategory::Store:
+		return StoreUI.InteractUIWidgetClass;
 	default:
 		return nullptr;
 	}

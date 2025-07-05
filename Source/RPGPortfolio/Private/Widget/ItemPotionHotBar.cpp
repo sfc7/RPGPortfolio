@@ -3,11 +3,34 @@
 
 #include "Widget/ItemPotionHotBar.h"
 
+#include "Character/Player/PlayerCharacter_Fighter.h"
 #include "DataAsset/DataAsset_RPGUIData.h"
 #include "GameMode/GameManager/UIManager.h"
-
+#include "Widget/ItemSlotContainer.h"
+#include "Component/Player/PlayerInventoryComponent.h"
 
 void UItemPotionHotBar::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
+
+	APlayerCharacter_Fighter* PC = Cast<APlayerCharacter_Fighter>(GetOwningPlayerPawn());
+	if (PC)
+	{
+		UPlayerInventoryComponent* PotionInventory = PC->GetPlayerPotionHotBar();
+		ItemSlotContainer->SetInventoryRef(PotionInventory);
+		
+		if (PotionInventory)
+		{
+			PotionInventory->OnPotionBarSlotChangedDelegate.AddDynamic(this, &UItemPotionHotBar::OnPotionBarChanged);
+		}
+	}
+}
+
+void UItemPotionHotBar::OnPotionBarChanged()
+{
+	// 포션 바 UI 강제 갱신
+	if (ItemSlotContainer)
+	{
+		ItemSlotContainer->RefreshSlots();
+	}
 }

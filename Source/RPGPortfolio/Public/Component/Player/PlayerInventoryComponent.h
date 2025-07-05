@@ -22,6 +22,8 @@ class UPlayerInventoryComponent;
 class UDataAsset_RPGItemData;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInventorySlotChangedDelegate, FInventorySlot, Slot);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGoldChangedDelegate, int32, GoldAmount);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPotionBarSlotChangedDelegate);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class RPGPORTFOLIO_API UPlayerInventoryComponent : public UActorComponent
@@ -31,6 +33,9 @@ class RPGPORTFOLIO_API UPlayerInventoryComponent : public UActorComponent
 public:	
 	UPlayerInventoryComponent();
 
+	UFUNCTION(BlueprintPure)
+	int32 GetPlayerGold() const { return PlayerGold; }
+	
 	UFUNCTION(BlueprintCallable)
 	void SetupSlots(int32 SlotAmountstoSetup);
 
@@ -53,7 +58,9 @@ public:
 	bool FindEmptySlot(FInventorySlot& OutEmptySlot);
 	
 	FOnInventorySlotChangedDelegate OnInventorySlotChangedDelegate;
-
+	FOnGoldChangedDelegate OnGoldChangedDelegate;
+	FOnPotionBarSlotChangedDelegate OnPotionBarSlotChangedDelegate;
+	
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Size")
 	int32 SlotAmounts;
 
@@ -88,5 +95,5 @@ protected:
 	UUserWidget* InventoryWidget;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, SaveGame)
-	int32 PlayerGold = 1000;
+	int32 PlayerGold = 0;
 };

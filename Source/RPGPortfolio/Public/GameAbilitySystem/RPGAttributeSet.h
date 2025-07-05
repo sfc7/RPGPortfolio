@@ -7,6 +7,18 @@
 #include "AbilitySystemComponent.h"
 #include "RPGAttributeSet.generated.h"
 
+USTRUCT(BlueprintType)
+struct FAttributeSaveData
+{
+	GENERATED_BODY()
+
+	UPROPERTY()
+	FString AttributeName;
+
+	UPROPERTY()
+	float Value;
+};
+
 class IUIInterface;
 
 #define ATTRIBUTE_ACCESSORS(ClassName, PropertyName) \
@@ -66,6 +78,18 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		static void RemoveGameplayTagFromActor(AActor* TargetActor, FGameplayTag RemoveTag);
+
+	UFUNCTION(BlueprintCallable)
+		TMap<FGameplayAttribute, float> SaveAllAttributes();
+
+	UFUNCTION(BlueprintCallable)
+		void LoadAllAttributes(TMap<FGameplayAttribute, float> AttributeMap);
+
+	UFUNCTION(BlueprintCallable)
+	TArray<FAttributeSaveData> SaveAllAttributesToSaveData();
+
+	UFUNCTION(BlueprintCallable)
+	void LoadAllAttributesFromSaveData(TArray<FAttributeSaveData> AttributeSaveData);
 
 private:
 	TWeakInterfacePtr<IUIInterface> UIInterface;

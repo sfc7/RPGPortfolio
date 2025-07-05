@@ -65,7 +65,6 @@ void UQuestLogWidget::OnQuestTracked(ARPGQuestSystemActor* QuestActorToSet, bool
 		}
 		else
 		{
-			UE_LOG(LogTemp, Display, TEXT("Quest Tracked1"));
 			UUserWidget* Widget = CreateWidget<UUserWidget>(GetWorld(), Quest_TrackWidgetClass);
 			TrackWidget = Cast<UQuestTracker>(Widget);
 			TrackWidget->SetQuestActor(QuestActorToSet);
@@ -78,8 +77,11 @@ void UQuestLogWidget::OnQuestTracked(ARPGQuestSystemActor* QuestActorToSet, bool
 	}
 	else
 	{
-		TrackWidget->RemoveFromParent();
-		TrackWidget = nullptr;
+		if (IsValid(TrackWidget))
+		{
+			TrackWidget->RemoveFromParent();
+			TrackWidget = nullptr;
+		}
 	}
 }
 

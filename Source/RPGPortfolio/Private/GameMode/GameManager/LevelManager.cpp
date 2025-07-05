@@ -9,6 +9,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "MoviePlayer.h"
 #include "Blueprint/UserWidget.h"
+#include "Character/Player/PlayerCharacterBase.h"
+#include "Component/Player/PlayerInventoryComponent.h"
 #include "DataAsset/DataAsset_RPGUIData.h"
 #include "GameMode/GameManager/GeneralGameManager.h"
 #include "GameMode/GameManager/UIManager.h"
@@ -53,8 +55,12 @@ void ULevelManager::SaveRPGGame()
 			RpgSaveGame->SetCurrentActiveQuests(QuestManager->GetCurrentActiveQuests());
 			RpgSaveGame->SetCompletedQuests(QuestManager->GetCompletedQuests());
 		}
-		
-		bool bSaveSuccess = UGameplayStatics::SaveGameToSlot(RpgSaveGame, TEXT("RPGSaveSlot"), 1);
+
+		SavePlayerInventoryData(RpgSaveGame);
+		SavePlayerGold(RpgSaveGame);
+
+		SavePlayerAttribute(RpgSaveGame);
+		UGameplayStatics::SaveGameToSlot(RpgSaveGame, TEXT("RPGSaveSlot"), 1);
 	}
 }
 
@@ -89,7 +95,105 @@ void ULevelManager::LoadRPGGame()
             
 			QuestManager->SetCurrentActiveQuests(SavedActiveQuests);
 			QuestManager->SetCompleteActiveQuests(RpgSaveGame->GetCompletedQuests());
+
+			LoadPlayerInventoryData(RpgSaveGame);
+			LoadPlayerGold(RpgSaveGame);
+
+			LoadPlayerAttribute(RpgSaveGame);
 		}
+	}
+}
+
+void ULevelManager::SavePlayerInventoryData(URPGSaveGame* SaveGame)
+{
+	if (!SaveGame) return;
+
+	APlayerCharacterBase* Player =  Cast<APlayerCharacterBase>(GetWorld()->GetFirstPlayerController()->GetPawn());
+	if (!Player)
+	{
+		return;
+	}
+
+	if (Player->GetPlayerInventoryComponent())
+	{
+		SaveGame->SetPlayerInventorySlots(Player->GetPlayerInventoryComponent()->ItemSlots);
+	}
+
+	if (Player->GetPlayerPotionHotBar())
+	{
+		SaveGame->SetPlayerPotionSlots(Player->GetPlayerPotionHotBar()->ItemSlots);
+	}
+}
+
+void ULevelManager::LoadPlayerInventoryData(URPGSaveGame* SaveGame)
+{
+	if (!SaveGame) return;
+	
+	APlayerCharacterBase* Player =  Cast<APlayerCharacterBase>(GetWorld()->GetFirstPlayerController()->GetPawn());
+	if (Player && Player->GetPlayerInventoryComponent())
+	{
+		TArray<FInventorySlot> LoadedItemSlots = SaveGame->GetPlayerInventorySlots();
+		Player->GetPlayerInventoryComponent()->ItemSlots = LoadedItemSlots;
+		
+		for (int32 i = 0; i < LoadedItemSlots.Num(); ++i)
+		{
+			Player->GetPlayerInventoryComponent()->ItemSlots[i].SlotIndex = i;
+			Player->GetPlayerInventoryComponent()->ItemSlots[i].InventoryRef = Player->GetPlayerInventoryComponent();
+		}
+	}
+
+	if (Player->GetPlayerPotionHotBar())
+	{
+		TArray<FInventorySlot> LoadedPotionSlots = SaveGame->GetPlayerPotionSlots();
+		Player->GetPlayerPotionHotBar()->ItemSlots = LoadedPotionSlots;
+		
+		for (int32 i = 0; i < LoadedPotionSlots.Num(); ++i)
+		{
+			Player->GetPlayerPotionHotBar()->ItemSlots[i].SlotIndex = i;
+			Player->GetPlayerPotionHotBar()->ItemSlots[i].InventoryRef = Player->GetPlayerPotionHotBar();
+		}
+		
+		Player->GetPlayerPotionHotBar()->OnPotionBarSlotChangedDelegate.Broadcast();
+	}
+}
+
+void ULevelManager::SavePlayerGold(URPGSaveGame* SaveGame)
+{
+	APlayerCharacterBase* Player =  Cast<APlayerCharacterBase>(GetWorld()->GetFirstPlayerController()->GetPawn());
+	if (Player && Player->GetPlayerInventoryComponent())
+	{
+		SaveGame->SetPlayerGold(Player->GetPlayerInventoryComponent()->GetPlayerGold());
+	}
+}
+
+void ULevelManager::LoadPlayerGold(URPGSaveGame* SaveGame)
+{
+	APlayerCharacterBase* Player =  Cast<APlayerCharacterBase>(GetWorld()->GetFirstPlayerController()->GetPawn());
+	if (Player && Player->GetPlayerInventoryComponent())
+	{
+		int32 LoadedPlayerGold = SaveGame->GetPlayerGold();
+		Player->GetPlayerInventoryComponent()->SetGold(LoadedPlayerGold);
+	}
+}
+
+void ULevelManager::SavePlayerAttribute(URPGSaveGame* SaveGame)
+{
+	APlayerCharacterBase* Player =  Cast<APlayerCharacterBase>(GetWorld()->GetFirstPlayerController()->GetPawn());
+	if (Player)
+	{
+		TArray<FAttributeSaveData> AttributeData = Player->GetRPGAttributeSet()->SaveAllAttributesToSaveData();
+		SaveGame->SetSavedAttributes(AttributeData);
+	}
+}
+
+void ULevelManager::LoadPlayerAttribute(URPGSaveGame* SaveGame)
+{
+	APlayerCharacterBase* Player =  Cast<APlayerCharacterBase>(GetWorld()->GetFirstPlayerController()->GetPawn());
+
+	if (Player)
+	{
+		TArray<FAttributeSaveData> AttributeData = SaveGame->GetSavedAttributes();
+		Player->GetRPGAttributeSet()->LoadAllAttributesFromSaveData(AttributeData);
 	}
 }
 

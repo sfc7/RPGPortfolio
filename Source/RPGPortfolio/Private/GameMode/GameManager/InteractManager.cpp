@@ -48,6 +48,15 @@ void UInteractManager::StartInteract(AActor* TargetActor, APlayerCharacterBase* 
 					Player->OnInteractQuest.Broadcast(ObjectiveName);
 					NPC->GetQuestNPCComponent()->InteractWith();
 				}
+			}
+			else if (NPC->GetNPCType() == ENPCType::Store)
+			{
+				if (ANPC_HumanNPC* HumanNPC = Cast<ANPC_HumanNPC>(NPC))
+				{
+					UUserWidget* StoreWidget = HumanNPC->GetStoreWidget();
+
+					StoreWidget->AddToViewport();
+				}
 			
 			}
 		}

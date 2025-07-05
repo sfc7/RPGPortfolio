@@ -26,3 +26,18 @@ void URPGSaveGame::SetCompletedQuests(TArray<FName> CompletedQuestsToSet)
 {
 	CompletedQuests = CompletedQuestsToSet;
 }
+
+void URPGSaveGame::SetPlayerInventorySlots(TArray<FInventorySlot> PlayerInventorySlotsToSet)
+{
+	PlayerInventorySlots = PlayerInventorySlotsToSet;
+}
+
+void URPGSaveGame::SetPlayerPotionSlots(TArray<FInventorySlot> PlayerPotionSlotsToSet)
+{
+	PlayerPotionSlots = PlayerPotionSlotsToSet;
+}
+
+void URPGSaveGame::SetPlayerGold(int32 Gold)
+{
+	PlayerGold = Gold;
+}

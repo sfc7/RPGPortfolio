@@ -20,6 +20,8 @@ void URPGWidgetBase::NativeOnInitialized()
 			BP_PlayerUIComponentInitialized(PlayerUIComponent);
 		}
 	}
+
+	
 }
 
 void URPGWidgetBase::InitMonsterCreatedWidget(AActor* OwningMonster)

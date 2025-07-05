@@ -22,4 +22,7 @@ public:
 protected:
 	virtual void NativeOnInitialized() override;
 	
+	UFUNCTION()
+	void OnPotionBarChanged();
+	
 };

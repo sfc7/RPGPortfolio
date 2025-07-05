@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/SaveGame.h"
 #include "GameMode/GameManager/QuestManager.h"
+#include "RPGStructTypes.h"
+#include "GameAbilitySystem/RPGAttributeSet.h"
 #include "RPGSaveGame.generated.h"
 
 /**
@@ -24,7 +26,16 @@ public:
 	TArray<FName> GetCompletedQuests() const { return CompletedQuests; }
     
 	UFUNCTION(BlueprintPure)
-	TMap<FName, FQuestSaveData> GetQuestProgress() { return QuestProgress; }
+	TMap<FName, FQuestSaveData> GetQuestProgress() const { return QuestProgress; }
+
+	UFUNCTION(BlueprintPure)
+	TArray<FInventorySlot> GetPlayerInventorySlots() const { return PlayerInventorySlots; }
+
+	UFUNCTION(BlueprintPure)
+	TArray<FInventorySlot> GetPlayerPotionSlots() const { return PlayerPotionSlots; }
+
+	UFUNCTION(BlueprintPure)
+	int32 GetPlayerGold() const { return PlayerGold; }
 	
 	UFUNCTION(BlueprintCallable)
 	void SaveQuestDetails(ARPGQuestSystemActor* Quest);
@@ -35,7 +46,21 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetCompletedQuests(TArray<FName> CompletedQuestsToSet);
 
-private:
+	UFUNCTION(BlueprintCallable)
+	void SetPlayerInventorySlots(TArray<FInventorySlot> PlayerInventorySlotsToSet);
+
+	UFUNCTION(BlueprintCallable)
+	void SetPlayerPotionSlots(TArray<FInventorySlot> PlayerPotionSlotsToSet);
+
+	UFUNCTION(BlueprintCallable)
+	void SetPlayerGold(int32 Gold);
+
+	UFUNCTION(BlueprintPure)
+	TArray<FAttributeSaveData> GetSavedAttributes() const { return SavedAttributes; }
+
+	UFUNCTION(BlueprintCallable)
+	void SetSavedAttributes(const TArray<FAttributeSaveData>& Attributes) { SavedAttributes = Attributes; }
+	
 	UPROPERTY() 
 	TArray<FName> CurrentActiveQuests;
 
@@ -44,4 +69,16 @@ private:
 
 	UPROPERTY() 
 	TMap<FName, FQuestSaveData> QuestProgress;
+
+	UPROPERTY()
+	TArray<FInventorySlot> PlayerInventorySlots;
+
+	UPROPERTY()
+	TArray<FInventorySlot> PlayerPotionSlots;
+
+	UPROPERTY()
+	int32 PlayerGold;
+
+	UPROPERTY()
+	TArray<FAttributeSaveData> SavedAttributes;
 };

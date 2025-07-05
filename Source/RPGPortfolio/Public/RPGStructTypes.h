@@ -144,6 +144,7 @@ enum class ENPCType : uint8
 {
 	Conversational,
 	Storage,
+	Store,
 };
 
 USTRUCT(BlueprintType)

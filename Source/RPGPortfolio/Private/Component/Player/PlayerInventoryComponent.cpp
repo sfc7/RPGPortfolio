@@ -90,8 +90,7 @@ bool UPlayerInventoryComponent::AddItem(FInventorySlot ItemToAdd)
 			return true;
 		}
 	}
-
-	UE_LOG(LogTemp, Log, TEXT("Inventory Is Full"));
+	
 	return false;
 }
 
@@ -247,12 +246,19 @@ void UPlayerInventoryComponent::SetItem(FInventorySlot TargetSlot, FInventorySlo
 		ItemSlots[TargetIndex].InventoryRef = this;
 	
 		OnInventorySlotChangedDelegate.Broadcast(ItemSlots[TargetIndex]);
+		
+		if (InventoryType == EInventoryType::Potion)
+		{
+			OnPotionBarSlotChangedDelegate.Broadcast();
+		}
 	}
 }
 
 void UPlayerInventoryComponent::SetGold(int32 GoldAmount)
 {
 	PlayerGold += GoldAmount;
+
+	OnGoldChangedDelegate.Broadcast(PlayerGold);
 }
 
 bool UPlayerInventoryComponent::FindEmptySlot(FInventorySlot& OutEmptySlot)

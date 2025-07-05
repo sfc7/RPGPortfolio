@@ -39,6 +39,7 @@ UENUM(BlueprintType)
 enum class EInteractUICategory : uint8
 {
 	Storage,
+	Store,
 	None,
 };
 
@@ -175,6 +176,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "InteractUI")
 	FInteractUI StorageUI;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "InteractUI")
+	FInteractUI StoreUI;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "QuestUI")
 	FQuestUI NPCQuestUI;

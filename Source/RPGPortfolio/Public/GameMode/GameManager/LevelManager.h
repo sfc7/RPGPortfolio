@@ -8,6 +8,7 @@
 
 
 class UDataAsset_RPGLevelData;
+class URPGSaveGame;
 /**
  * 
  */
@@ -26,6 +27,24 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void LoadRPGGame();
+
+	UFUNCTION(BlueprintCallable)
+	void SavePlayerInventoryData(URPGSaveGame* SaveGame);
+
+	UFUNCTION(BlueprintCallable)
+	void LoadPlayerInventoryData(URPGSaveGame* SaveGame);
+
+	UFUNCTION(BlueprintCallable)
+	void SavePlayerGold(URPGSaveGame* SaveGame);
+
+	UFUNCTION(BlueprintCallable)
+	void LoadPlayerGold(URPGSaveGame* SaveGame);
+
+	UFUNCTION(BlueprintCallable)
+	void SavePlayerAttribute(URPGSaveGame* SaveGame);
+
+	UFUNCTION(BlueprintCallable)
+	void LoadPlayerAttribute(URPGSaveGame* SaveGame);
 
 	
 	void LoadLoadingScreen(const FString& LevelName);
