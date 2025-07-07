@@ -51,6 +51,11 @@ void UGEEC_DamageTaken::Execute_Implementation(const FGameplayEffectCustomExecut
 	
 	for (const TPair<FGameplayTag, float>& TagMagnitude : EffectSpec.SetByCallerTagMagnitudes)
 	{
+		if (TagMagnitude.Key.MatchesTagExact(RPGGameplayTag::Data_Value_SetByCaller_WeaponAttackRate))
+		{
+			SourceAttackRate = TagMagnitude.Value;
+		}
+		
 		if (TagMagnitude.Key.MatchesTagExact(RPGGameplayTag::Data_Value_SetByCaller_BaseDamage))
 		{
 			BaseDamage = TagMagnitude.Value;
@@ -69,6 +74,12 @@ void UGEEC_DamageTaken::Execute_Implementation(const FGameplayEffectCustomExecut
 		if (TagMagnitude.Key.MatchesTagExact(RPGGameplayTag::Data_DamageType_SetByCaller_Parrying))
 		{
 			BaseDamage *= 2;
+		}
+
+		if (TagMagnitude.Key.MatchesTagExact(RPGGameplayTag::Data_DamageType_SetByCaller_Skill))
+		{
+			float SkillDamageMultiplier = TagMagnitude.Value; 
+			BaseDamage *= SkillDamageMultiplier;
 		}
 	}
 	
@@ -101,6 +112,5 @@ void UGEEC_DamageTaken::Execute_Implementation(const FGameplayEffectCustomExecut
 			)
 		);
 	}
-	// UE_LOG(LogTemp,Log,TEXT("FinalDamage : %f"), FinalDamage);
 	
 }

@@ -33,21 +33,19 @@ float UPlayerCombatComponent::GetPlayerCurrentEquippedWeaponDamageAtLevel() cons
 	return GetPlayerCurrentEquippedWeapon()->WeaponDefaultData.WeaponBaseDamage;
 }
 
-void UPlayerCombatComponent::OnHitTargetActor(AActor* _HitActor, float _WeaponBaseDamage, EWeaponAttackType AttackType, FName EquipSocketName)
+void UPlayerCombatComponent::OnHitTargetActor(AActor* _HitActor, float WeaponBaseDamage, float WeaponAttackRate, EWeaponAttackType AttackType, EWeaponType WeaponType, FName SocketName)
 {
 	if (OverlappedActors.Contains(_HitActor)) return;
 
-
-	
 	OverlappedActors.AddUnique(_HitActor);
 
 	FVector SocketLocation = FVector::ZeroVector;
 	if (APlayerCharacterBase* PlayerCharacter = GetOwningPawn<APlayerCharacterBase>())
 	{
 		USkeletalMeshComponent* MeshComp = PlayerCharacter->GetMesh();
-		if (MeshComp && EquipSocketName != NAME_None)
+		if (MeshComp && SocketName != NAME_None)
 		{
-			SocketLocation = MeshComp->GetSocketLocation(EquipSocketName);
+			SocketLocation = MeshComp->GetSocketLocation(SocketName);
 		}
 	}
 	
@@ -61,7 +59,7 @@ void UPlayerCombatComponent::OnHitTargetActor(AActor* _HitActor, float _WeaponBa
 	FGameplayEventData EventData;
 	EventData.Instigator = GetOwningPawn();
 	EventData.Target = _HitActor;
-	EventData.EventMagnitude = _WeaponBaseDamage;
+	EventData.EventMagnitude = WeaponAttackRate;
 	EventData.ContextHandle = EffectContext;
 	
 	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
@@ -80,7 +78,7 @@ void UPlayerCombatComponent::OnHitTargetActor(AActor* _HitActor, float _WeaponBa
 	}
 }
 
-void UPlayerCombatComponent::OnWeaponPulledFromTargetActor(AActor* _InteractedActor, float _WeaponBaseDamage, EWeaponAttackType AttackType)
+void UPlayerCombatComponent::OnWeaponPulledFromTargetActor(AActor* _HitActor, float WeaponBaseDamage, float WeaponAttackRate, EWeaponAttackType AttackType, EWeaponType WeaponType)
 {
 	if (AttackType == EWeaponAttackType::Heavy)
 	{

@@ -10,8 +10,8 @@
 
 class UBoxComponent;
 
-DECLARE_DELEGATE_FourParams(FOnWeaponHitBegin, AActor*, float, EWeaponAttackType, FName);
-DECLARE_DELEGATE_ThreeParams(FOnWeaponHitEnd, AActor*, float, EWeaponAttackType);
+DECLARE_DELEGATE_SixParams(FOnWeaponHitBegin, AActor*, float, float, EWeaponAttackType, EWeaponType, FName);
+DECLARE_DELEGATE_FiveParams(FOnWeaponHitEnd, AActor*, float, float, EWeaponAttackType, EWeaponType);
 
 UCLASS()
 class RPGPORTFOLIO_API AWeaponBase : public AActor
@@ -25,6 +25,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "WeaponData")
 	FWeaponDefaultData WeaponDefaultData;
 	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "WeaponData")
+	EWeaponType WeaponType;
+
 	FOnWeaponHitBegin OnWeaponHitBegin;
 	FOnWeaponHitEnd OnWeaponHitEnd;
 

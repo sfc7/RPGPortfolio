@@ -33,31 +33,59 @@ struct FPlayerAbilitySkillSet : public FPlayerAbilitySet
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FGameplayTag SkillAbilityTag;
-	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	FGameplayTag SkillCooldown;
+
+
 };
 
 USTRUCT(BlueprintType)
-struct FPlayerWeaponData
+struct FPlayerAbilitySkillInfoSet : public FPlayerAbilitySet
 {
 	GENERATED_BODY()
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FGameplayTag SkillAbilityTag;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TArray<FPlayerAbilitySet> DefaultWeaponAbilities;
+	TSoftObjectPtr<UMaterialInterface> AbilityIcon;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FText SkillDescription;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	int SkillLevel;
 	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	float SkillDamageMultiplier;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	float SkillCostMana;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	float SkillCooldown;
 };
 
 USTRUCT(BlueprintType)
 struct FWeaponDefaultData
 {
 	GENERATED_BODY()
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	float WeaponAttackRate;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	float WeaponBaseDamage;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FName EquipSocketName;
+};
+
+UENUM(BlueprintType)
+enum class EWeaponType : uint8
+{
+	Melee,
+	Body,
+	Range,
+	None
 };
 
 UENUM(BlueprintType)

@@ -15,7 +15,7 @@ void UMonsterCombatComponent::RegisterSpawnedWeapon(FGameplayTag _WeaponTagToReg
 	Super::RegisterSpawnedWeapon(_WeaponTagToRegister, _WeaponToRegister, bEquippedWeaponState);
 }
 
-void UMonsterCombatComponent::OnHitTargetActor(AActor* _HitActor, float _WeaponBaseDamage, EWeaponAttackType AttackType,FName EquipSocketName)
+void UMonsterCombatComponent::OnHitTargetActor(AActor* _HitActor, float WeaponBaseDamage, float WeaponAttackRate, EWeaponAttackType AttackType, EWeaponType WeaponType, FName SocketName)
 {
 	UAbilitySystemComponent* HitActorASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(_HitActor);
 
@@ -81,7 +81,7 @@ void UMonsterCombatComponent::OnHitTargetActor(AActor* _HitActor, float _WeaponB
 }
 
 
-void UMonsterCombatComponent::OnWeaponPulledFromTargetActor(AActor* _InteractedActor, float _WeaponBaseDamage, EWeaponAttackType AttackType)
+void UMonsterCombatComponent::OnWeaponPulledFromTargetActor(AActor* _HitActor, float WeaponBaseDamage, float WeaponAttackRate, EWeaponAttackType AttackType, EWeaponType WeaponType)
 {
 	
 }

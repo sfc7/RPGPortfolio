@@ -55,6 +55,10 @@ void UInteractManager::StartInteract(AActor* TargetActor, APlayerCharacterBase* 
 				{
 					UUserWidget* StoreWidget = HumanNPC->GetStoreWidget();
 
+					if (APlayerController* PlayerController = Player->GetController<APlayerController>())
+					{
+						StoreWidget->SetOwningPlayer(PlayerController);
+					}
 					StoreWidget->AddToViewport();
 				}
 			

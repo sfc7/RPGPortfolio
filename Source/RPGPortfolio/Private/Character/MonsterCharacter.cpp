@@ -171,7 +171,7 @@ void AMonsterCharacter::OnBodyCollisionBoxBeginOverlap(UPrimitiveComponent* Over
 	{
 		if (URPGFunc::CheckTargetTeamAgent(this, HitPawn))
 		{
-			MonsterCombatComponent->OnHitTargetActor(HitPawn, 0, EWeaponAttackType::None);
+			MonsterCombatComponent->OnHitTargetActor(HitPawn, 0, 0, EWeaponAttackType::None, EWeaponType::Body);
 		}
 	}
 }

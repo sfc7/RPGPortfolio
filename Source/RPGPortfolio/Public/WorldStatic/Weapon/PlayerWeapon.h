@@ -14,7 +14,5 @@ UCLASS()
 class RPGPORTFOLIO_API APlayerWeapon : public AWeaponBase
 {
 	GENERATED_BODY()
-public:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "WeaponData")
-	FPlayerWeaponData PlayerWeaponData;
+
 };

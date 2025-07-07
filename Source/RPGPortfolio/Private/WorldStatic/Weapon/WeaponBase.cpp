@@ -26,7 +26,6 @@ AWeaponBase::AWeaponBase()
 void AWeaponBase::SetCurrentAttackType(EWeaponAttackType AttackType)
 {
 	CurrentAttackType = AttackType;
-
 }
 
 void AWeaponBase::OnCollisionBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -39,7 +38,7 @@ void AWeaponBase::OnCollisionBoxBeginOverlap(UPrimitiveComponent* OverlappedComp
 		{
 			if (URPGFunc::CheckTargetTeamAgent(WeaponOwner, HitPawn))
 			{
-				OnWeaponHitBegin.ExecuteIfBound(OtherActor, WeaponDefaultData.WeaponBaseDamage, CurrentAttackType, WeaponDefaultData.EquipSocketName);
+				OnWeaponHitBegin.ExecuteIfBound(OtherActor, WeaponDefaultData.WeaponBaseDamage, WeaponDefaultData.WeaponAttackRate, CurrentAttackType, WeaponType, WeaponDefaultData.EquipSocketName);
 			}
 		}
 	}
@@ -55,7 +54,7 @@ void AWeaponBase::OnCollisionBoxEndOverlap(UPrimitiveComponent* OverlappedCompon
 		{
 			if (URPGFunc::CheckTargetTeamAgent(WeaponOwner, HitPawn))
 			{
-				OnWeaponHitEnd.ExecuteIfBound(OtherActor, WeaponDefaultData.WeaponBaseDamage, CurrentAttackType);
+				OnWeaponHitEnd.ExecuteIfBound(OtherActor, WeaponDefaultData.WeaponBaseDamage, WeaponDefaultData.WeaponAttackRate, CurrentAttackType, WeaponType);
 			}
 		}
 	}

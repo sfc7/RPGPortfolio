@@ -43,7 +43,32 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetSlotSizeBox(float Size);
 
+	UFUNCTION(BlueprintCallable)
+	bool CheckInventoryOwnerAndNPCType();
+
+	UFUNCTION(BlueprintCallable)
+	bool CheckIsPlayerInventory();
+
+	UFUNCTION(BlueprintCallable)
+	bool CheckIsStoreInventory();
+
+	UFUNCTION(BlueprintCallable)
+	bool CheckDropTargetIsStoreInventory(UItemSlotMaster* TargetSlot);
+
+	UFUNCTION(BlueprintCallable, Category = "Store")
+	bool TryPurchaseItem();
+
+	UFUNCTION(BlueprintCallable, Category = "Store")
+	bool CanPurchaseItem();
+
+	UFUNCTION(BlueprintCallable, Category = "Store")
+	bool TrySellItem();
+
+	UFUNCTION()
+	void OnItemButtonClickedInStore();
 protected:
+	virtual void NativeOnInitialized() override;
+	
 	UPROPERTY(BlueprintReadWrite, Category = "ItemSlot", meta = (BindWidget))
 		USizeBox* RPGSizeBox;
 	

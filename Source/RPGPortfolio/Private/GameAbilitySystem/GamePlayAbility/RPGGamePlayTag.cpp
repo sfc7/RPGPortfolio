@@ -110,11 +110,13 @@ namespace RPGGameplayTag
 	
 	// Data
 	UE_DEFINE_GAMEPLAY_TAG(Data_Value_SetByCaller_BaseDamage, "Data.Value.SetByCaller.BaseDamage");
+	UE_DEFINE_GAMEPLAY_TAG(Data_Value_SetByCaller_WeaponAttackRate, "Data.Value.SetByCaller.WeaponAttackRate");
 	UE_DEFINE_GAMEPLAY_TAG(Data_Value_SetByCaller_UsePotion, "Data.Value.SetByCaller.UsePotion");
 
 	UE_DEFINE_GAMEPLAY_TAG(Data_DamageType_SetByCaller_Light, "Data.DamageType.SetByCaller.Light");
 	UE_DEFINE_GAMEPLAY_TAG(Data_DamageType_SetByCaller_Heavy, "Data.DamageType.SetByCaller.Heavy");
 	UE_DEFINE_GAMEPLAY_TAG(Data_DamageType_SetByCaller_Parrying, "Data.DamageType.SetByCaller.Parrying");
+	UE_DEFINE_GAMEPLAY_TAG(Data_DamageType_SetByCaller_Skill, "Data.DamageType.SetByCaller.Skill");
 
 	//Level
 	UE_DEFINE_GAMEPLAY_TAG(Level_Menu_Title, "Level.Menu.Title");

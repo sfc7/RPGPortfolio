@@ -43,6 +43,9 @@ public:
 	void SetInventoryRef(UPlayerInventoryComponent* InventoryRefToSet);
 
 	UFUNCTION(BlueprintCallable)
+	UPlayerInventoryComponent* GetInventoryRef(){ return InventoryRef; }
+
+	UFUNCTION(BlueprintCallable)
 	void RefreshSlots();
 	
 	UFUNCTION(BlueprintCallable)

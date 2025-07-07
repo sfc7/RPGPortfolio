@@ -50,7 +50,7 @@ UPlayerUIComponent* UPlayerGameplayAbility::GetPlayerUIComponentFromActorInfo()
 }
 
 // SpecHandle에 BaseDamage는 기본으로 하여 여러 gameplaytag를 같이 보내서 데미지 최종 계산
-FGameplayEffectSpecHandle UPlayerGameplayAbility::MakePlayerComboDamageEffectSpecHandle(TSubclassOf<UGameplayEffect> _EffectClass, float _WeaponBaseDamage, FGameplayTag _CurrentAttackTypeTag, int32 _UsedComboCount)
+FGameplayEffectSpecHandle UPlayerGameplayAbility::MakePlayerComboDamageEffectSpecHandle(TSubclassOf<UGameplayEffect> _EffectClass, float _WeaponAttackRate,float _WeaponBaseDamage, FGameplayTag _CurrentAttackTypeTag, int32 _UsedComboCount)
 {
 	check(_EffectClass);
 	
@@ -69,6 +69,11 @@ FGameplayEffectSpecHandle UPlayerGameplayAbility::MakePlayerComboDamageEffectSpe
 		_WeaponBaseDamage
 	);
 
+	SpecHandle.Data->SetSetByCallerMagnitude(
+	RPGGameplayTag::Data_Value_SetByCaller_WeaponAttackRate,
+	_WeaponAttackRate
+	);
+
 	if (_CurrentAttackTypeTag.IsValid() && _UsedComboCount > 0)
 	{
 		SpecHandle.Data->SetSetByCallerMagnitude(_CurrentAttackTypeTag, _UsedComboCount);
@@ -77,7 +82,7 @@ FGameplayEffectSpecHandle UPlayerGameplayAbility::MakePlayerComboDamageEffectSpe
 	return SpecHandle;
 }
 
-FGameplayEffectSpecHandle UPlayerGameplayAbility::MakePlayerBaseDamageEffectSpecHandle(TSubclassOf<UGameplayEffect> _EffectClass, float _WeaponBaseDamage, FGameplayTag _CurrentAttackTypeTag)
+FGameplayEffectSpecHandle UPlayerGameplayAbility::MakePlayerBaseDamageEffectSpecHandle(TSubclassOf<UGameplayEffect> _EffectClass, float _WeaponAttackRate, float _WeaponBaseDamage, FGameplayTag _CurrentAttackTypeTag)
 {
 	check(_EffectClass);
 
@@ -95,12 +100,44 @@ FGameplayEffectSpecHandle UPlayerGameplayAbility::MakePlayerBaseDamageEffectSpec
 		RPGGameplayTag::Data_Value_SetByCaller_BaseDamage,
 		_WeaponBaseDamage
 		);
+
+	SpecHandle.Data->SetSetByCallerMagnitude(
+	RPGGameplayTag::Data_Value_SetByCaller_WeaponAttackRate,
+	_WeaponAttackRate
+	);
 	
 	if (_CurrentAttackTypeTag.IsValid())
 	{
 		SpecHandle.Data->SetSetByCallerMagnitude(_CurrentAttackTypeTag, 0);
 	}
 	
+
+	return SpecHandle;
+}
+
+FGameplayEffectSpecHandle UPlayerGameplayAbility::MakePlayerSkillDamageEffectSpecHandle(TSubclassOf<UGameplayEffect> _EffectClass, float _WeaponBaseDamage, float _SkillDamageMultiplier)
+{
+	check(_EffectClass);
+
+	FGameplayEffectContextHandle ContextHandle = GetRPGAbilitySystemComponentFromActorInfo()->MakeEffectContext();
+	ContextHandle.SetAbility(this);
+	ContextHandle.AddSourceObject(GetAvatarActorFromActorInfo());
+	ContextHandle.AddInstigator(GetAvatarActorFromActorInfo(), GetAvatarActorFromActorInfo());
+
+	FGameplayEffectSpecHandle SpecHandle = GetRPGAbilitySystemComponentFromActorInfo()->MakeOutgoingSpec(
+	_EffectClass,
+	GetAbilityLevel(), // Todo Skill Level Apply 
+	ContextHandle);
+	
+	SpecHandle.Data->SetSetByCallerMagnitude(
+	RPGGameplayTag::Data_Value_SetByCaller_BaseDamage,
+	_WeaponBaseDamage
+);
+
+	SpecHandle.Data->SetSetByCallerMagnitude(
+		RPGGameplayTag::Data_DamageType_SetByCaller_Skill,
+		_SkillDamageMultiplier 
+	);
 
 	return SpecHandle;
 }

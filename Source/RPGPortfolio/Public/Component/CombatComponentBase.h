@@ -69,8 +69,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ToggleCarriedWeaponCollision(AWeaponBase* _ToggleWeapon, bool _bShouldEnable, EToggleDamageType _ToggleDamageType = EToggleDamageType::CarriedWeapon);
 
-	virtual void OnHitTargetActor(AActor* _HitActor, float _WeaponBaseDamage, EWeaponAttackType AttackType, FName EquipSocketName = NAME_None);
-	virtual void OnWeaponPulledFromTargetActor(AActor* _InteractedActor, float _WeaponBaseDamage, EWeaponAttackType AttackType);
+	virtual void OnHitTargetActor(AActor* _HitActor, float WeaponBaseDamage, float WeaponAttackRate, EWeaponAttackType AttackType, EWeaponType WeaponType, FName SocketName);
+	virtual void OnWeaponPulledFromTargetActor(AActor* _HitActor, float WeaponBaseDamage, float WeaponAttackRate, EWeaponAttackType AttackType, EWeaponType WeaponType);
 
 
 protected:

@@ -42,6 +42,7 @@ void UDataAsset_PlayerAbilitySet::GiveAbilitySystemComponent(URPGAbilitySystemCo
 			if (PlayerUIComp)
 			{
 				PlayerUIComp->OnSkillIconSlotUpdatedDelegate.Broadcast(AbilitySkillSet.SkillAbilityTag, AbilitySkillSet.AbilityIcon);
+				//Todo FPlayerAbilitySkillSet 대신 다른 어떤 구조체를 만들어 ga에서 정보를 가져와 사용하기?
 			}
 		}
 	}

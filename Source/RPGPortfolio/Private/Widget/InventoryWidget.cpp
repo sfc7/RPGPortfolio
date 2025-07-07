@@ -29,4 +29,6 @@ void UInventoryWidget::NativeConstruct()
 		ItemSlotContainer->SetInventoryRef(	PC->GetPlayerInventoryComponent());
 		OnPlayerGoldChanged(PC->GetPlayerInventoryComponent()->GetPlayerGold());
 	}
+
+	ItemSlotContainer->GetInventoryRef()->OnGoldChangedDelegate.AddDynamic(this, &UInventoryWidget::OnPlayerGoldChanged);
 }

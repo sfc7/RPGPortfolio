@@ -81,8 +81,10 @@ void URPGGA_Player_ParryingAttack::Attack()
 void URPGGA_Player_ParryingAttack::ApplyEffectsSpecHandleToTargetCallback(FGameplayEventData PayloadData)
 {
 	LocalTargetActor = const_cast<AActor*>(PayloadData.Target.Get());
-	float WeaponDamage = PayloadData.EventMagnitude;
-	FGameplayEffectSpecHandle SpecHandle = MakePlayerBaseDamageEffectSpecHandle(DamageEffectClass, WeaponDamage, RPGGameplayTag::Data_DamageType_SetByCaller_Parrying);
+	float WeaponAttackRate = PayloadData.EventMagnitude;
+	float WeaponBaseDamage = GetPlayerCharacterFromActorInfo()->GetCombatComponent()->GetCharacterCurrentEquippedWeapon()->WeaponDefaultData.WeaponBaseDamage;
+	
+	FGameplayEffectSpecHandle SpecHandle = MakePlayerBaseDamageEffectSpecHandle(DamageEffectClass, WeaponAttackRate, WeaponBaseDamage, RPGGameplayTag::Data_DamageType_SetByCaller_Parrying);
 
 	UAbilitySystemComponent* ASC = GetAbilitySystemComponentFromActorInfo();
 	if (ASC)

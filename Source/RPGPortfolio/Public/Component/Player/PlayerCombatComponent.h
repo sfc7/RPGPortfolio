@@ -26,8 +26,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
 	float GetPlayerCurrentEquippedWeaponDamageAtLevel() const;
 	
-	virtual void OnHitTargetActor(AActor* _HitActor, float _WeaponBaseDamage, EWeaponAttackType AttackType,FName EquipSocketName = NAME_None);
-	virtual void OnWeaponPulledFromTargetActor(AActor* _InteractedActor, float _WeaponBaseDamage, EWeaponAttackType AttackType);
+	virtual void OnHitTargetActor(AActor* _HitActor, float WeaponBaseDamage, float WeaponAttackRate, EWeaponAttackType AttackType, EWeaponType WeaponType, FName SocketName);
+	virtual void OnWeaponPulledFromTargetActor(AActor* _HitActor, float WeaponBaseDamage, float WeaponAttackRate, EWeaponAttackType AttackType, EWeaponType WeaponType);
 
 protected:
 	virtual void BeginPlay() override;

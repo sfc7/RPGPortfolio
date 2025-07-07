@@ -26,5 +26,7 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", meta = (AllowPrivateAccess = "true"))
 	UPlayerInventoryComponent* StoreInventory;
 
+	UPROPERTY()
+	UUserWidget* CachedStoreWidget = nullptr;
 	
 };
