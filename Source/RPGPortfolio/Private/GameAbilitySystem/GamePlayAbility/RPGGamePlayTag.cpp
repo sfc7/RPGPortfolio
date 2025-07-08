@@ -46,6 +46,8 @@ namespace RPGGameplayTag
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Parry, "Player.Ability.Attack.Parry");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Skill_AttackBuff, "Player.Ability.Skill.AttackBuff");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Skill_NenShot, "Player.Ability.Skill.NenShot");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Skill_Nova, "Player.Ability.Skill.Nova");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Skill_Meteor, "Player.Ability.Skill.Meteor");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Interact, "Player.Ability.Interact");
 
 	// Player - Status

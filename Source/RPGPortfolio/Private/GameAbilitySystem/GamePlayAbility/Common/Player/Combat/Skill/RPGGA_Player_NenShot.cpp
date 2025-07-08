@@ -9,6 +9,9 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Character/Player/PlayerCharacterBase.h"
 #include "WorldStatic/Projectile/ProjectileBase.h"
+#include "Component/CombatComponentBase.h"
+#include "Component/Player/ObjectPoolComponent.h"
+#include "WorldStatic/Weapon/WeaponBase.h"
 
 URPGGA_Player_NenShot::URPGGA_Player_NenShot()
 {
@@ -43,16 +46,62 @@ void URPGGA_Player_NenShot::ActivateAbility(const FGameplayAbilitySpecHandle Han
 
 void URPGGA_Player_NenShot::OnEndAbilityCallback()
 {
+	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 }
 
 void URPGGA_Player_NenShot::SpawnProjectile(FGameplayEventData PayloadData)
-{
-	FVector ProjectileLocation = GetOwningComponentFromActorInfo()->GetSocketLocation(FName(TEXT("ProjectileSocket")));
+{ 
+	FVector CharacterLocation = GetPlayerCharacterFromActorInfo()->GetActorLocation();
+	FVector CharacterForward = GetPlayerCharacterFromActorInfo()->GetActorForwardVector();
+	FVector CharacterRight = GetPlayerCharacterFromActorInfo()->GetActorRightVector();
+	FVector CharacterUp = GetPlayerCharacterFromActorInfo()->GetActorUpVector();
+	FVector ProjectileLocation = CharacterLocation + 
+									(CharacterForward * 50.0f) +
+										(CharacterUp * 50.0f);
+	
 	FRotator ProjectileDirection = UKismetMathLibrary::MakeRotFromX(GetPlayerCharacterFromActorInfo()->GetActorForwardVector());
-
+	
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.Owner = GetPlayerCharacterFromActorInfo();
 	SpawnParams.Instigator = GetPlayerCharacterFromActorInfo();
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 	
+	APooledActor* PooledActor = GetPlayerCharacterFromActorInfo()->GetObjectPoolComponent()->SpawnFromPool(ProjectileLocation, ProjectileDirection);
+	if (AProjectileBase* Projectile = Cast<AProjectileBase>(PooledActor))
+	{
+		Projectile->LaunchProjectile(GetPlayerCharacterFromActorInfo()->GetActorForwardVector(), 700.0f);
+		float WeaponDamage = GetPlayerCharacterFromActorInfo()->GetCombatComponent()->GetCharacterCurrentEquippedWeapon()->WeaponDefaultData.WeaponBaseDamage;
+		Projectile->DamageEffectSpecHandle = MakePlayerSkillDamageEffectSpecHandle(DamageEffectClass, WeaponDamage, DamageScale);
+	}
+	
+	// FVector CharacterLocation = GetPlayerCharacterFromActorInfo()->GetActorLocation();
+	// FVector CharacterUp = GetPlayerCharacterFromActorInfo()->GetActorUpVector();
+	//
+	// float WeaponDamage = GetPlayerCharacterFromActorInfo()->GetCombatComponent()->GetCharacterCurrentEquippedWeapon()->WeaponDefaultData.WeaponBaseDamage;
+	//
+	// for (int32 i = 0; i < ProjectileCount; i++)
+	// {
+	// 	float Angle = (360.0f / ProjectileCount) * i;
+	// 	float AngleRadians = FMath::DegreesToRadians(Angle);
+	// 	
+	// 	FVector NearBodyPosition = FVector(
+	// 		FMath::Cos(AngleRadians) * StartRadius,
+	// 		FMath::Sin(AngleRadians) * StartRadius,
+	// 		0.0f
+	// 	);
+	// 	
+	// 	FVector ProjectileLocation = CharacterLocation + NearBodyPosition + (CharacterUp * ProjectileHeight);
+	// 	
+	// 	FVector FireDirection = NearBodyPosition.GetSafeNormal();
+	// 	FRotator ProjectileDirection = UKismetMathLibrary::MakeRotFromX(FireDirection);
+	//
+	// 	// ObjectPool 사용
+	// 	APooledActor* PooledActor = GetPlayerCharacterFromActorInfo()->GetObjectPoolComponent()->SpawnFromPool(ProjectileLocation, ProjectileDirection);
+	// 	if (AProjectileBase* Projectile = Cast<AProjectileBase>(PooledActor))
+	// 	{
+	// 		// 바깥쪽 방향으로 발사
+	// 		Projectile->LaunchProjectile(FireDirection, 700.0f);
+	// 		Projectile->DamageEffectSpecHandle = MakePlayerSkillDamageEffectSpecHandle(DamageEffectClass, WeaponDamage, DamageScale);
+	// 	}
+	// }
 }

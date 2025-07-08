@@ -37,7 +37,7 @@ public:
 	FGameplayEffectSpecHandle MakePlayerBaseDamageEffectSpecHandle(TSubclassOf<UGameplayEffect> _EffectClass, float _WeaponAttackRate, float _WeaponBaseDamage, FGameplayTag _CurrentAttackTypeTag);
 
 	UFUNCTION(BlueprintPure, Category = "GA")
-	FGameplayEffectSpecHandle MakePlayerSkillDamageEffectSpecHandle(TSubclassOf<UGameplayEffect> _EffectClass, float _WeaponBaseDamage, float _SkillDamageMultiplier);
+	FGameplayEffectSpecHandle MakePlayerSkillDamageEffectSpecHandle(TSubclassOf<UGameplayEffect> _EffectClass, float _WeaponBaseDamage, const FScalableFloat& _SkillDamageMultiplier);
 	
 	UFUNCTION(BlueprintCallable, Category = "GA")
 	bool GetAbilityRemaningCooldownByTag(FGameplayTag CooldownTag, float& TotalCooldownTime, float& RemaningCooldownTime);

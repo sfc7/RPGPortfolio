@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "WorldStatic/Projectile/PooledActor.h"
 #include "GameplayEffectTypes.h"
 #include "ProjectileBase.generated.h"
 
@@ -21,21 +21,27 @@ class UNiagaraSystem;
 struct FGameplayEventData;
 
 UCLASS()
-class RPGPORTFOLIO_API AProjectileBase : public AActor
+class RPGPORTFOLIO_API AProjectileBase : public APooledActor
 {
 	GENERATED_BODY()
 	
 public:	
-	// Sets default values for this actor's properties
 	AProjectileBase();
 
 	UPROPERTY(BlueprintReadOnly)
 	FGameplayEffectSpecHandle DamageEffectSpecHandle;
+
+	UFUNCTION(BlueprintCallable)
+	UProjectileMovementComponent* GetProjectileMovementComponent() {return ProjectileMovementComponent;}
+
+	UFUNCTION(BlueprintCallable)
+	void LaunchProjectile(const FVector& LaunchDirection, float LaunchSpeed = 700.0f);
 	
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	virtual void SetIsUse(bool NewIsUse) override;
+	
 	UFUNCTION()
 	virtual void OnProjectileHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
@@ -50,7 +56,7 @@ protected:
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
 	UNiagaraComponent* NiagaraComponent;
-
+	
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
 	UProjectileMovementComponent* ProjectileMovementComponent;
 
@@ -61,7 +67,10 @@ protected:
 	USoundBase* SoundToPlay;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UNiagaraSystem* ImpactEffect;
+	UNiagaraSystem* ImpactNiagaraEffect;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UParticleSystem* ImpactParticleEffect;
 
 
 

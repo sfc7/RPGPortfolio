@@ -43,7 +43,8 @@ void UGEEC_DamageTaken::Execute_Implementation(const FGameplayEffectCustomExecut
 
 	float SourceAttackRate = 0.f;
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(GetRPGDamageCapture().AttackRateDef, EvaluateParams,SourceAttackRate);
-	
+
+	float WeaponAttackRate = 1.0f; 
 	
 	float BaseDamage = 0.f;
 	int32 UsedLightAttackComboCount = 0;
@@ -53,7 +54,7 @@ void UGEEC_DamageTaken::Execute_Implementation(const FGameplayEffectCustomExecut
 	{
 		if (TagMagnitude.Key.MatchesTagExact(RPGGameplayTag::Data_Value_SetByCaller_WeaponAttackRate))
 		{
-			SourceAttackRate = TagMagnitude.Value;
+			WeaponAttackRate = TagMagnitude.Value;
 		}
 		
 		if (TagMagnitude.Key.MatchesTagExact(RPGGameplayTag::Data_Value_SetByCaller_BaseDamage))
@@ -100,7 +101,7 @@ void UGEEC_DamageTaken::Execute_Implementation(const FGameplayEffectCustomExecut
 		BaseDamage *= DamageIncreasePercentHeavy;
 	}
 
-	const float FinalDamage = BaseDamage * SourceAttackRate / TargetDefense;
+	const float FinalDamage = BaseDamage * SourceAttackRate * WeaponAttackRate / TargetDefense;
 
 	if (FinalDamage > 0.f)
 	{

@@ -18,6 +18,7 @@ class UPlayerUIComponent;
 class UInputMappingContext;
 struct FInteractionData;
 class UInteractManager;
+class UObjectPoolComponent;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInteractQuest, FString, ObjectiveID);
 /**
@@ -46,6 +47,8 @@ public:
 	virtual UPlayerInventoryComponent* GetPlayerInventoryComponent() const;
 
 	virtual UPlayerInventoryComponent* GetPlayerPotionHotBar() const;
+
+	virtual UObjectPoolComponent* GetObjectPoolComponent() const;
 
 	FOnInteractQuest OnInteractQuest;
 	
@@ -89,10 +92,13 @@ private:
 		UPlayerUIComponent* PlayerUIComponent;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", meta = (AllowPrivateAccess = "true"))
-	UPlayerInventoryComponent* PlayerItemInventoryComponent;
+		UPlayerInventoryComponent* PlayerItemInventoryComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", meta = (AllowPrivateAccess = "true"))
-	UPlayerInventoryComponent* PlayerPotionHotbar;
+		UPlayerInventoryComponent* PlayerPotionHotbar;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", meta = (AllowPrivateAccess = "true"))
+		UObjectPoolComponent* ObjectPoolComponent;
 
 	FInteractionData InteractionTargetData;
 

@@ -6,6 +6,7 @@
 #include "Camera/CameraComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Character/NPC/RPGNPCCharacterBase.h"
+#include "Component/Player/ObjectPoolComponent.h"
 #include "Component/Player/PlayerEnhancedInputComponent.h"
 #include "DataAsset/DataAsset_InputConfig.h"
 #include "DataAsset/DataAsset_AbilitySetBase.h"
@@ -50,6 +51,8 @@ APlayerCharacterBase::APlayerCharacterBase()
 	PlayerItemInventoryComponent = CreateDefaultSubobject<UPlayerInventoryComponent>(TEXT("PlayerItemInventoryComponent"));
 	PlayerPotionHotbar = CreateDefaultSubobject<UPlayerInventoryComponent>(TEXT("PlayerPotionHotbar"));
 
+	ObjectPoolComponent = CreateDefaultSubobject<UObjectPoolComponent>(TEXT("ObjectPoolComponent"));
+	
 	GetCapsuleComponent()->OnComponentBeginOverlap.AddUniqueDynamic(this, &APlayerCharacterBase::OnCollisionBoxBeginOverlap);
 	GetCapsuleComponent()->OnComponentEndOverlap.AddUniqueDynamic(this, &APlayerCharacterBase::OnCollisionBoxEndOverlap);
 	
@@ -94,6 +97,11 @@ UPlayerInventoryComponent* APlayerCharacterBase::GetPlayerInventoryComponent() c
 UPlayerInventoryComponent* APlayerCharacterBase::GetPlayerPotionHotBar() const
 {
 	return PlayerPotionHotbar;
+}
+
+UObjectPoolComponent* APlayerCharacterBase::GetObjectPoolComponent() const
+{
+	return ObjectPoolComponent;
 }
 
 void APlayerCharacterBase::OnCollisionBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)

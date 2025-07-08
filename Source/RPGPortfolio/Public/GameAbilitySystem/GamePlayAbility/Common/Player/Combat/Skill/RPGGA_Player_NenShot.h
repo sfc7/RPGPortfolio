@@ -37,4 +37,13 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	FScalableFloat DamageScale;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	int32 ProjectileCount = 20;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	float StartRadius = 200.0f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	float ProjectileHeight = 30.0f; 
 };

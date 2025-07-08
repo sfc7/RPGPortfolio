@@ -115,7 +115,7 @@ FGameplayEffectSpecHandle UPlayerGameplayAbility::MakePlayerBaseDamageEffectSpec
 	return SpecHandle;
 }
 
-FGameplayEffectSpecHandle UPlayerGameplayAbility::MakePlayerSkillDamageEffectSpecHandle(TSubclassOf<UGameplayEffect> _EffectClass, float _WeaponBaseDamage, float _SkillDamageMultiplier)
+FGameplayEffectSpecHandle UPlayerGameplayAbility::MakePlayerSkillDamageEffectSpecHandle(TSubclassOf<UGameplayEffect> _EffectClass, float _WeaponBaseDamage, const FScalableFloat& _SkillDamageMultiplier)
 {
 	check(_EffectClass);
 
@@ -132,11 +132,11 @@ FGameplayEffectSpecHandle UPlayerGameplayAbility::MakePlayerSkillDamageEffectSpe
 	SpecHandle.Data->SetSetByCallerMagnitude(
 	RPGGameplayTag::Data_Value_SetByCaller_BaseDamage,
 	_WeaponBaseDamage
-);
+	);
 
 	SpecHandle.Data->SetSetByCallerMagnitude(
 		RPGGameplayTag::Data_DamageType_SetByCaller_Skill,
-		_SkillDamageMultiplier 
+		_SkillDamageMultiplier.GetValueAtLevel(GetAbilityLevel())
 	);
 
 	return SpecHandle;
