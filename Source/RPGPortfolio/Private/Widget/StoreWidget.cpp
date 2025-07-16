@@ -33,7 +33,7 @@ void UStoreWidget::NativeConstruct()
 	if (PurchaseConfirmButton)
 	{
 		PurchaseConfirmButton->OnClicked.AddDynamic(this, &UStoreWidget::OnPurchaseConfirmClicked);
-	}
+	}	
 
 	if (PurchaseCancelButton)
 	{

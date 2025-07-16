@@ -12,7 +12,6 @@ AMonsterCharacter* UMonsterGameplayAbility::GetMonsterCharacterFromActorInfo()
 	{
 		MonsterCharacter = CastChecked<AMonsterCharacter>(CurrentActorInfo->AvatarActor);
 	}
-
 	return MonsterCharacter.IsValid() ? MonsterCharacter.Get() : nullptr; 
 }
 

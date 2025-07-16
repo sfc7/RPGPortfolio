@@ -2,6 +2,8 @@
 
 
 #include "Character/MonsterCharacter.h"
+
+#include "AIController.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Component/Monster/MonsterCombatComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -17,6 +19,9 @@
 #include "Kismet/GameplayStatics.h"
 #include "Quest/RPGQuestSystemActor.h"
 #include "WorldStatic/DamageIndicator.h"
+#include "Navigation/PathFollowingComponent.h"
+
+
 AMonsterCharacter::AMonsterCharacter()
 {
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
@@ -47,6 +52,17 @@ AMonsterCharacter::AMonsterCharacter()
 	RightHandCollisionBox->SetupAttachment(GetMesh());
 	RightHandCollisionBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	RightHandCollisionBox->OnComponentBeginOverlap.AddUniqueDynamic(this, &ThisClass::OnBodyCollisionBoxBeginOverlap);
+}
+
+void AMonsterCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+
+	URPGWidgetBase* HpWidget = Cast<URPGWidgetBase>(MonsterHpWidgetComponent->GetUserWidgetObject());
+	if (HpWidget)
+	{
+		HpWidget->InitMonsterCreatedWidget(this);
+	}
 }
 
 UCombatComponentBase* AMonsterCharacter::GetCombatComponent() const
@@ -154,16 +170,103 @@ void AMonsterCharacter::SpawnDamageIndicator(float Damage)
 	}
 }
 
-void AMonsterCharacter::BeginPlay()
+void AMonsterCharacter::Teleport(FVector TargetLocation, AActor* TargetActor)
 {
-	Super::BeginPlay();
-
-	URPGWidgetBase* HpWidget = Cast<URPGWidgetBase>(MonsterHpWidgetComponent->GetUserWidgetObject());
-	if (HpWidget)
+	AAIController* MonsterAIController = Cast<AAIController>(GetController());
+	if (MonsterAIController)
 	{
-		HpWidget->InitMonsterCreatedWidget(this);
+		GetCharacterMovement()->SetMovementMode(MOVE_Flying);
+		GetCharacterMovement()->MaxFlySpeed = 1500.f;
+		GetCharacterMovement()->MaxAcceleration = 99999.f;
+		GetMesh()->SetVisibility(false ,true);
+		GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Pawn,ECollisionResponse::ECR_Ignore);
+
+
+		if (IsValid(TeleportBody))
+		{
+			TeleportBodyComponent = UGameplayStatics::SpawnEmitterAttached(
+				TeleportBody,
+				GetMesh(),
+				TEXT("spine_01"),
+				FVector::ZeroVector,
+				FRotator::ZeroRotator,
+				FVector::OneVector,
+				EAttachLocation::KeepRelativeOffset,
+				true,
+				EPSCPoolMethod::None,
+				true
+			);
+		}
+
+		if (IsValid(TeleportTrail))
+		{
+			TeleportTrailComponent = UGameplayStatics::SpawnEmitterAttached(
+				TeleportTrail,
+				GetMesh(),
+				TEXT("spine_01"),
+				FVector::ZeroVector,
+				FRotator::ZeroRotator,
+				FVector::OneVector,
+				EAttachLocation::KeepRelativeOffset,
+				true,
+				EPSCPoolMethod::None,
+				true
+			);
+		}
+		MonsterAIController->GetPathFollowingComponent()->OnRequestFinished.AddUObject(this, &AMonsterCharacter::OnMoveCompleted);
+
+		if (TargetActor)
+		{
+			MonsterAIController->MoveToActor(TargetActor, 100.f);
+		}
+		else
+		{
+			MonsterAIController->MoveToLocation(TargetLocation, 100.f);
+		}
+
 	}
 }
+
+void AMonsterCharacter::OnMoveCompleted(FAIRequestID RequestID, const FPathFollowingResult& Result)
+{
+	if (AAIController* AIController = Cast<AAIController>(GetController()))
+	{
+		AIController->GetPathFollowingComponent()->OnRequestFinished.RemoveAll(this);
+	}
+    
+	TeleportEnd();
+}
+void AMonsterCharacter::TeleportEnd()
+{
+	GetCharacterMovement()->StopMovementImmediately();
+	GetCharacterMovement()->SetMovementMode(MOVE_Walking);
+	GetCharacterMovement()->MaxAcceleration = 2048.0;
+	GetMesh()->SetVisibility(true ,true);
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Pawn,ECollisionResponse::ECR_Block);
+
+	if (TeleportBodyComponent)
+	{
+		TeleportBodyComponent->DestroyComponent();
+	}
+	if (TeleportTrailComponent)
+	{
+		TeleportTrailComponent->DestroyComponent();
+	}
+	
+	OnTeleportEnd.Broadcast();
+	
+	FTimerHandle Waithandle;
+	GetWorld()->GetTimerManager().SetTimer(Waithandle, FTimerDelegate::CreateLambda([&]() {
+		if (TeleportBodyComponent) {
+			TeleportBodyComponent->DestroyComponent();
+		}
+		if (TeleportTrailComponent) {
+			TeleportTrailComponent->DestroyComponent();	
+		}
+	}), 0.5f, false);
+}
+
+
 
 void AMonsterCharacter::OnBodyCollisionBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {

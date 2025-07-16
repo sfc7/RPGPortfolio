@@ -61,7 +61,7 @@ bool UPlayerCombatGameplayAbility::FindNearestEnemyBeforeAttack(float BoxExtent)
 	{
 		float ClosetDistance = 0.f;
 		RotateTargetActor = UGameplayStatics::FindNearestActor(GetPlayerCharacterFromActorInfo()->GetActorLocation(), FindEnemies, ClosetDistance);
-		FindRototation = UKismetMathLibrary::FindLookAtRotation(
+		FindRotation = UKismetMathLibrary::FindLookAtRotation(
 				GetPlayerCharacterFromActorInfo()->GetActorLocation(),
 				RotateTargetActor->GetActorLocation()
 				);
@@ -75,7 +75,7 @@ void UPlayerCombatGameplayAbility::RotateTargetTickBeforeAttack(float DeltaTime)
 	if (HasMatchingGameplayTag(RPGGameplayTag::Character_Status_Dead)) return;
 	if (!RotateTargetActor) return;
 
-	const FRotator TargetRot = FMath::RInterpTo(GetPlayerCharacterFromActorInfo()->GetActorRotation(),FindRototation,DeltaTime,15.0f);
+	const FRotator TargetRot = FMath::RInterpTo(GetPlayerCharacterFromActorInfo()->GetActorRotation(),FindRotation,DeltaTime,15.0f);
 
 	GetPlayerCharacterFromActorInfo()->SetActorRotation(FRotator(0.f,TargetRot.Yaw,0.f));
 }

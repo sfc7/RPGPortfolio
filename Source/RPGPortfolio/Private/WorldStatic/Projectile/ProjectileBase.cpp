@@ -11,6 +11,7 @@
 #include "RPGFunc.h"
 #include "GameAbilitySystem/RPGAbilitySystemComponent.h"
 #include "GameAbilitySystem/GamePlayAbility/RPGGamePlayTag.h"
+#include "GameMode/GameManager/GASManager.h"
 #include "Kismet/GameplayStatics.h"
 
 AProjectileBase::AProjectileBase()
@@ -29,6 +30,9 @@ AProjectileBase::AProjectileBase()
 	NiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>(TEXT("ProjectileNiagaraComponent"));
 	NiagaraComponent->SetupAttachment(GetRootComponent());
 
+	CascadeComponent = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("ProjectileCascadeComponent"));
+	CascadeComponent->SetupAttachment(GetRootComponent());
+	
 	ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComp"));
 	ProjectileMovementComponent->ProjectileGravityScale = 0.f;
 	ProjectileMovementComponent->InitialSpeed = 700.f;
@@ -170,7 +174,7 @@ void AProjectileBase::HandleApplyProjectileDamage(APawn* HitPawn, const FGamepla
 {
 	check(DamageEffectSpecHandle.IsValid());
 	
-	const bool bApply = URPGFunc::ApplyGameplayEffectSpecHandleToTargetActor(GetInstigator(), HitPawn, DamageEffectSpecHandle);
+	const bool bApply = GetGameInstance()->GetSubsystem<UGASManager>()->ApplyGameplayEffectSpecHandleToTargetActor(GetInstigator(), HitPawn, DamageEffectSpecHandle);
 
 	if (bApply)
 	{

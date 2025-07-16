@@ -133,3 +133,25 @@ void UQuestNPCComponent::LookAt()
 {
 }
 
+void UQuestNPCComponent::DisplayConversation()
+{
+    if (!GetWorld())
+    {
+        return;
+    }
+    
+    if (!ConversationWidgetClass)
+    {
+        return;
+    }
+    
+    UUserWidget* Widget = CreateWidget<UUserWidget>(GetWorld(), ConversationWidgetClass);
+    if (!Widget)
+    {
+        return;
+    }
+
+    
+    Widget->AddToViewport();
+}
+

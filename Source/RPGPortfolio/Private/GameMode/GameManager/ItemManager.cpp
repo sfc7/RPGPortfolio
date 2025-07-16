@@ -39,7 +39,6 @@ FInventorySlot UItemManager::MakeItemToAdd(TSoftObjectPtr<UDataAsset_RPGItemData
 {
 	UDataAsset_RPGItemData* Item = ItemToAdd.LoadSynchronous();
 	if (!Item) return FInventorySlot();
-
 	
 	FInventorySlot MakeInventorySlot;
 	MakeInventorySlot.ItemID = Item->GetItemID();
@@ -84,7 +83,7 @@ bool UItemManager::IsStackableAndIsEqualAndHaveSpace(FInventorySlot& TargetSlot,
 void UItemManager::OnInventorySlotDrop(UPlayerInventoryComponent* FromContainerInventoryComponent, UPlayerInventoryComponent* ToInventoryComponent, int32 FromIndex, int32 ToIndex) const
 {
     bool bIsPlayerToStore = false;
-    
+		
     if (FromContainerInventoryComponent)
     {
         AActor* FromOwner = FromContainerInventoryComponent->GetOwner();

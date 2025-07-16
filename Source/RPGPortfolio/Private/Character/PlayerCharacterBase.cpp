@@ -20,7 +20,9 @@
 #include "GameMode/GameManager/GeneralGameManager.h"
 #include "GameMode/GameManager/UIManager.h"
 #include "Component/Player/PlayerInventoryComponent.h"
+#include "Component/Player/PlayerSkillComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "GameMode/RPGGameInstance.h"
 #include "GameMode/GameManager/InteractManager.h"
 
 APlayerCharacterBase::APlayerCharacterBase()
@@ -52,6 +54,7 @@ APlayerCharacterBase::APlayerCharacterBase()
 	PlayerPotionHotbar = CreateDefaultSubobject<UPlayerInventoryComponent>(TEXT("PlayerPotionHotbar"));
 
 	ObjectPoolComponent = CreateDefaultSubobject<UObjectPoolComponent>(TEXT("ObjectPoolComponent"));
+	PlayerSkillComponent = CreateDefaultSubobject<UPlayerSkillComponent>(TEXT("PlayerSkillComponent"));
 	
 	GetCapsuleComponent()->OnComponentBeginOverlap.AddUniqueDynamic(this, &APlayerCharacterBase::OnCollisionBoxBeginOverlap);
 	GetCapsuleComponent()->OnComponentEndOverlap.AddUniqueDynamic(this, &APlayerCharacterBase::OnCollisionBoxEndOverlap);
@@ -104,6 +107,11 @@ UObjectPoolComponent* APlayerCharacterBase::GetObjectPoolComponent() const
 	return ObjectPoolComponent;
 }
 
+UPlayerSkillComponent* APlayerCharacterBase::GetPlayerSkillComponent() const
+{
+	return PlayerSkillComponent;
+}
+
 void APlayerCharacterBase::OnCollisionBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	Super::OnCollisionBoxBeginOverlap(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult);
@@ -132,16 +140,74 @@ void APlayerCharacterBase::OnCollisionBoxEndOverlap(UPrimitiveComponent* Overlap
 	}
 }
 
+void APlayerCharacterBase::SaveAllPlayerData(URPGSaveGame* SaveGame)
+{
+	if (!SaveGame) return;
+    
+	if (URPGAbilitySystemComponent* ASC = GetRPGAbilitySystemComponent())
+	{
+		ASC->SaveDynamicAbilitiesToSaveGame(SaveGame);
+	}
+    
+	if (UPlayerSkillComponent* SkillComp = GetComponentByClass<UPlayerSkillComponent>())
+	{
+		SkillComp->SaveSkillQuickSlotsToSaveGame(SaveGame);
+	}
+}
+
+void APlayerCharacterBase::LoadAllPlayerData(URPGSaveGame* SaveGame)
+{
+	if (!SaveGame) return;
+    
+	if (UPlayerSkillComponent* SkillComp = GetComponentByClass<UPlayerSkillComponent>())
+	{
+		SkillComp->LoadSkillQuickSlotsFromSaveGame(SaveGame);
+	}
+    
+	if (URPGAbilitySystemComponent* ASC = GetRPGAbilitySystemComponent())
+	{
+		ASC->LoadDynamicAbilitiesFromSaveGame(SaveGame);
+	}
+}
+
 void APlayerCharacterBase::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
- 
+
+	URPGGameInstance* RPGGameInstance = Cast<URPGGameInstance>(GetGameInstance());
+	
 	if (!CharacterStartUpData.IsNull())
 	{
 		if (UDataAsset_AbilitySetBase* LoadedData = CharacterStartUpData.LoadSynchronous())
 		{
 			LoadedData->GiveAbilitySystemComponent(RPGAbilitySystemComponent);
 		}
+	}
+
+	// URPGGameInstance* RPGGameInstance = Cast<URPGGameInstance>(GetGameInstance());
+	// UE_LOG(LogTemp,Log,TEXT("poss  %d"), RPGGameInstance->bFirstTimeLoadIn);
+	// if (RPGGameInstance)
+	// {
+	// 	if (RPGGameInstance->bFirstTimeLoadIn)
+	// 	{
+	// 		if (!CharacterStartUpData.IsNull())
+	// 		{
+	// 			if (UDataAsset_AbilitySetBase* LoadedData = CharacterStartUpData.LoadSynchronous())
+	// 			{
+	// 				LoadedData->GiveAbilitySystemComponent(RPGAbilitySystemComponent);
+	// 			}
+	// 		}
+	//
+	// 		if (IsValid(PlayerSkillComponent))
+	// 		{
+	// 			PlayerSkillComponent->GiveAbilitySystemComponent(RPGAbilitySystemComponent);
+	// 		}
+	// 	}
+	// }
+	
+	if (IsValid(PlayerSkillComponent))
+	{
+		PlayerSkillComponent->GiveAbilitySystemComponent(RPGAbilitySystemComponent);
 	}
 	
 	if (IsValid(PlayerUIComponent))
@@ -169,10 +235,11 @@ auto APlayerCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 			PlayerEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, RPGGameplayTag::InputTag_Move_Keyboard, ETriggerEvent::Triggered, this, &ThisClass::Input_Move);
 			PlayerEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, RPGGameplayTag::InputTag_Look_Mouse, ETriggerEvent::Triggered, this, &ThisClass::Input_Look);
 			PlayerEnhancedInputComponent->BindAbilityInputAction(InputConfigDataAsset, this, &ThisClass::Input_AbilityInputPressed, &ThisClass::Input_AbilityInputReleased);
-			PlayerEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, RPGGameplayTag::InputTag_ShowDebug_Keyboard, ETriggerEvent::Triggered, this, &ThisClass::Input_ShowDebug);
-			PlayerEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, RPGGameplayTag::InputTag_CallPauseMenu_Keyboard, ETriggerEvent::Triggered, this, &ThisClass::Input_CallPauseMenu);
-			PlayerEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, RPGGameplayTag::InputTag_CallInventory_Keyboard, ETriggerEvent::Triggered, this, &ThisClass::Input_CallInventoryUI);
-			PlayerEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, RPGGameplayTag::InputTag_CallQuestUI_Keyboard, ETriggerEvent::Triggered, this, &ThisClass::Input_CallQuestUI);
+			PlayerEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, RPGGameplayTag::InputTag_ShowDebug_Keyboard, ETriggerEvent::Started, this, &ThisClass::Input_ShowDebug);
+			PlayerEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, RPGGameplayTag::InputTag_CallPauseMenu_Keyboard, ETriggerEvent::Started, this, &ThisClass::Input_CallPauseMenu);
+			PlayerEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, RPGGameplayTag::InputTag_CallInventory_Keyboard, ETriggerEvent::Started, this, &ThisClass::Input_CallInventoryUI);
+			PlayerEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, RPGGameplayTag::InputTag_CallQuestUI_Keyboard, ETriggerEvent::Started, this, &ThisClass::Input_CallQuestUI);
+			PlayerEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, RPGGameplayTag::InputTag_CallSkillUI_Keyboard, ETriggerEvent::Started, this, &ThisClass::Input_CallSkillUI);
 		}
 	}
 }
@@ -263,6 +330,11 @@ void APlayerCharacterBase::Input_CallInventoryUI()
 void APlayerCharacterBase::Input_CallQuestUI()
 {
 	GetGameInstance()->GetSubsystem<UGeneralGameManager>()->GetUIManager()->ShowUIAsync(EUICategory::QuestUI, GetWorld());
+}
+
+void APlayerCharacterBase::Input_CallSkillUI()
+{
+	GetGameInstance()->GetSubsystem<UGeneralGameManager>()->GetUIManager()->ShowUIAsync(EUICategory::SkillUI, GetWorld());
 }
 
 void APlayerCharacterBase::Input_Interact()

@@ -12,6 +12,8 @@
 #include "Component/CombatComponentBase.h"
 #include "Component/Player/ObjectPoolComponent.h"
 #include "WorldStatic/Weapon/WeaponBase.h"
+#include "Component/Player/PlayerSkillComponent.h"
+#include "Component/Player/PlayerUIComponent.h"
 
 URPGGA_Player_NenShot::URPGGA_Player_NenShot()
 {
@@ -22,11 +24,25 @@ void URPGGA_Player_NenShot::ActivateAbility(const FGameplayAbilitySpecHandle Han
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
+	CommitAbility(Handle, ActorInfo, ActivationInfo);
+
+	if (GetPlayerCharacterFromActorInfo()->GetPlayerSkillComponent())
+	{
+		int32 QuickSlotIndex = GetPlayerCharacterFromActorInfo()->GetPlayerSkillComponent()->FindQuickSlotIndexByTag(RPGGameplayTag::Player_Ability_Skill_NenShot);
+        
+		GetPlayerCharacterFromActorInfo()->GetPlayerUIComponent()->OnSkillCooldownBeginDelegate.Broadcast(
+			QuickSlotIndex, 
+			RPGGameplayTag::Player_Ability_Skill_NenShot, 
+			GetCooldownTimeRemaining(), 
+			GetCooldownTimeRemaining()
+		);
+		
+	}
 	if (AttackMontage)
 	{
 
 		UAbilityTask_PlayMontageAndWait* PlayMontageTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
-	this,TEXT("Player_Attack_Range"), AttackMontage, 1.0f,  NAME_None,
+	this,TEXT("Player_Skill_NenShot"), AttackMontage, 1.0f,  NAME_None,
 	true, 1.0f, false);
 
 		PlayMontageTask->OnCompleted.AddDynamic(this, &URPGGA_Player_NenShot::OnEndAbilityCallback);
@@ -66,42 +82,11 @@ void URPGGA_Player_NenShot::SpawnProjectile(FGameplayEventData PayloadData)
 	SpawnParams.Instigator = GetPlayerCharacterFromActorInfo();
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 	
-	APooledActor* PooledActor = GetPlayerCharacterFromActorInfo()->GetObjectPoolComponent()->SpawnFromPool(ProjectileLocation, ProjectileDirection);
+	APooledActor* PooledActor = GetPlayerCharacterFromActorInfo()->GetObjectPoolComponent()->SpawnFromPool(RPGGameplayTag::Data_ObjectPoolType_NenShot,ProjectileLocation, ProjectileDirection);
 	if (AProjectileBase* Projectile = Cast<AProjectileBase>(PooledActor))
 	{
 		Projectile->LaunchProjectile(GetPlayerCharacterFromActorInfo()->GetActorForwardVector(), 700.0f);
 		float WeaponDamage = GetPlayerCharacterFromActorInfo()->GetCombatComponent()->GetCharacterCurrentEquippedWeapon()->WeaponDefaultData.WeaponBaseDamage;
 		Projectile->DamageEffectSpecHandle = MakePlayerSkillDamageEffectSpecHandle(DamageEffectClass, WeaponDamage, DamageScale);
 	}
-	
-	// FVector CharacterLocation = GetPlayerCharacterFromActorInfo()->GetActorLocation();
-	// FVector CharacterUp = GetPlayerCharacterFromActorInfo()->GetActorUpVector();
-	//
-	// float WeaponDamage = GetPlayerCharacterFromActorInfo()->GetCombatComponent()->GetCharacterCurrentEquippedWeapon()->WeaponDefaultData.WeaponBaseDamage;
-	//
-	// for (int32 i = 0; i < ProjectileCount; i++)
-	// {
-	// 	float Angle = (360.0f / ProjectileCount) * i;
-	// 	float AngleRadians = FMath::DegreesToRadians(Angle);
-	// 	
-	// 	FVector NearBodyPosition = FVector(
-	// 		FMath::Cos(AngleRadians) * StartRadius,
-	// 		FMath::Sin(AngleRadians) * StartRadius,
-	// 		0.0f
-	// 	);
-	// 	
-	// 	FVector ProjectileLocation = CharacterLocation + NearBodyPosition + (CharacterUp * ProjectileHeight);
-	// 	
-	// 	FVector FireDirection = NearBodyPosition.GetSafeNormal();
-	// 	FRotator ProjectileDirection = UKismetMathLibrary::MakeRotFromX(FireDirection);
-	//
-	// 	// ObjectPool 사용
-	// 	APooledActor* PooledActor = GetPlayerCharacterFromActorInfo()->GetObjectPoolComponent()->SpawnFromPool(ProjectileLocation, ProjectileDirection);
-	// 	if (AProjectileBase* Projectile = Cast<AProjectileBase>(PooledActor))
-	// 	{
-	// 		// 바깥쪽 방향으로 발사
-	// 		Projectile->LaunchProjectile(FireDirection, 700.0f);
-	// 		Projectile->DamageEffectSpecHandle = MakePlayerSkillDamageEffectSpecHandle(DamageEffectClass, WeaponDamage, DamageScale);
-	// 	}
-	// }
 }

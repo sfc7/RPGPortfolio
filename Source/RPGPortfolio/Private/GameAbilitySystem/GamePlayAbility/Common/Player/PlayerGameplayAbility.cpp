@@ -7,6 +7,7 @@
 #include "GameAbilitySystem/RPGAbilitySystemComponent.h"
 #include "GameAbilitySystem/GamePlayAbility/RPGGamePlayTag.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "GameAbilitySystem/RPGAttributeSet.h"
 
 APlayerCharacterBase* UPlayerGameplayAbility::GetPlayerCharacterFromActorInfo()
 {
@@ -160,4 +161,41 @@ bool UPlayerGameplayAbility::GetAbilityRemaningCooldownByTag(FGameplayTag Cooldo
 	}
 
 	return false;
+}
+
+FString UPlayerGameplayAbility::GetDescriptionForUI()
+{
+	int32 CurrentLevel = GetAbilityLevel();
+	
+	const float CostMana = FMath::Abs(GetCostMana(CurrentLevel));
+	const float Cooldown = GetCooldown(CurrentLevel);
+	
+	return *FString::Printf(TEXT("소모마나 %.1f 쿨다운 %.1f"), CostMana, Cooldown);
+}
+
+float UPlayerGameplayAbility::GetCostMana(float InLevel)
+{
+	float cost = 0.f;
+	if (const UGameplayEffect* CostEffect = GetCostGameplayEffect())
+	{
+		for (FGameplayModifierInfo ModifierInfo : CostEffect->Modifiers)
+		{
+			if (ModifierInfo.Attribute == URPGAttributeSet::GetCurrentMpAttribute())
+			{
+				ModifierInfo.ModifierMagnitude.GetStaticMagnitudeIfPossible(InLevel, cost);
+				break;
+			}
+		}
+	}
+	return cost;
+}
+
+float UPlayerGameplayAbility::GetCooldown(float InLevel)
+{
+	float cooldown = 0.f;
+	if (const  UGameplayEffect* CooldownCost = GetCooldownGameplayEffect())
+	{
+		CooldownCost->DurationMagnitude.GetStaticMagnitudeIfPossible(InLevel, cooldown);
+	}
+	return cooldown;
 }

@@ -38,8 +38,5 @@ protected:
 	TMap<int32, UAnimMontage*> HeavyAttackMontages;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-	TSubclassOf<UGameplayEffect> DamageEffectClass;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	TSubclassOf<UGameplayEffect> GainMpEffectClass;
 };	

@@ -19,6 +19,7 @@ class UNiagaraComponent;
 class UProjectileMovementComponent;
 class UNiagaraSystem;
 struct FGameplayEventData;
+class UParticleSystemComponent;
 
 UCLASS()
 class RPGPORTFOLIO_API AProjectileBase : public APooledActor
@@ -36,11 +37,11 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void LaunchProjectile(const FVector& LaunchDirection, float LaunchSpeed = 700.0f);
+
+	virtual void SetIsUse(bool NewIsUse) override;
 	
 protected:
 	virtual void BeginPlay() override;
-
-	virtual void SetIsUse(bool NewIsUse) override;
 	
 	UFUNCTION()
 	virtual void OnProjectileHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
@@ -56,6 +57,9 @@ protected:
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
 	UNiagaraComponent* NiagaraComponent;
+	
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
+	UParticleSystemComponent* CascadeComponent;
 	
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
 	UProjectileMovementComponent* ProjectileMovementComponent;

@@ -46,6 +46,18 @@ void UInteractManager::StartInteract(AActor* TargetActor, APlayerCharacterBase* 
 					FString ObjectiveName = HumanNPC->GetObjectiveName();
 					
 					Player->OnInteractQuest.Broadcast(ObjectiveName);
+					NPC->GetQuestNPCComponent()->DisplayConversation();
+					// NPC->GetQuestNPCComponent()->InteractWith();
+				}
+			}
+			else if (NPC->GetNPCType() == ENPCType::Quest)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("NPC Quest"));
+				if (ANPC_HumanNPC* HumanNPC = Cast<ANPC_HumanNPC>(NPC))
+				{
+					FString ObjectiveName = HumanNPC->GetObjectiveName();
+					
+					Player->OnInteractQuest.Broadcast(ObjectiveName);
 					NPC->GetQuestNPCComponent()->InteractWith();
 				}
 			}

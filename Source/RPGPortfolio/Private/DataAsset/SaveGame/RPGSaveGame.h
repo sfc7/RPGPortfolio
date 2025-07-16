@@ -9,6 +9,20 @@
 #include "GameAbilitySystem/RPGAttributeSet.h"
 #include "RPGSaveGame.generated.h"
 
+USTRUCT(BlueprintType)
+struct FAbilitySpecSaveData
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSoftClassPtr<UGameplayAbility> AbilityClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<FGameplayTag> DynamicSpecSourceTags;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 Level = 1;
+};
 /**
  * 
  */
@@ -60,6 +74,18 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SetSavedAttributes(const TArray<FAttributeSaveData>& Attributes) { SavedAttributes = Attributes; }
+
+	UFUNCTION(BlueprintPure)
+	TArray<FAbilitySpecSaveData> GetPlayerDynamicAbilities() const { return PlayerDynamicAbilities; }
+
+	UFUNCTION(BlueprintCallable)
+	void SetPlayerDynamicAbilities(const TArray<FAbilitySpecSaveData>& Abilities) { PlayerDynamicAbilities = Abilities; }
+
+	UFUNCTION(BlueprintPure)
+	TArray<FGameplayTag> GetPlayerSkillQuickSlots() const { return PlayerSkillQuickSlots; }
+
+	UFUNCTION(BlueprintCallable)
+	void SetPlayerSkillQuickSlots(const TArray<FGameplayTag>& QuickSlots) { PlayerSkillQuickSlots = QuickSlots; }
 	
 	UPROPERTY() 
 	TArray<FName> CurrentActiveQuests;
@@ -81,4 +107,11 @@ public:
 
 	UPROPERTY()
 	TArray<FAttributeSaveData> SavedAttributes;
+
+	UPROPERTY()
+	TArray<FAbilitySpecSaveData> PlayerDynamicAbilities;
+	
+	UPROPERTY()
+	TArray<FGameplayTag> PlayerSkillQuickSlots;
+
 };

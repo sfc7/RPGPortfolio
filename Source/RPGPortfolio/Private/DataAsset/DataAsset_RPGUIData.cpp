@@ -25,6 +25,8 @@ TSoftClassPtr<UUserWidget> UDataAsset_RPGUIData::GetUIWidgetClass(const EUICateg
 		return InventoryUI.UIWidgetClass;
 	case EUICategory::QuestUI:
 		return PlayerQuestUI.UIWidgetClass;
+	case EUICategory::SkillUI:
+		return PlayerSkillUI.UIWidgetClass;
 	default:
 		return nullptr;
 	}

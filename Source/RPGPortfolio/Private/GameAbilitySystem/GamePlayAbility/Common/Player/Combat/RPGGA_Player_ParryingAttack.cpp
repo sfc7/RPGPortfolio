@@ -29,7 +29,7 @@ void URPGGA_Player_ParryingAttack::ActivateAbility(const FGameplayAbilitySpecHan
 	{		
 		URPGAT_Player_RotateTarget* RotateTickTask = URPGAT_Player_RotateTarget::ExecuteTaskOnTick(this);
 		RotateTickTask->OnRotateTargetTaskTick.AddDynamic(this, &UPlayerCombatGameplayAbility::RotateTargetTickBeforeAttack);
-		RotateTickTask->SetTargetRotation(FindRototation);
+		RotateTickTask->SetTargetRotation(FindRotation);
 		RotateTickTask->OnRotationCompleted.AddDynamic(this, &URPGGA_Player_ParryingAttack::Attack);
 		RotateTickTask->ReadyForActivation();
 	}

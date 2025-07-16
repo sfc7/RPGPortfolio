@@ -36,4 +36,7 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	UAnimMontage* AttackMontage;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	float EarthQuakeRadius;
 };

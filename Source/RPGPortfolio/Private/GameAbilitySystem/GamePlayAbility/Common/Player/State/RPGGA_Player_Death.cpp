@@ -27,8 +27,8 @@ void URPGGA_Player_Death::ActivateAbility(const FGameplayAbilitySpecHandle Handl
 	
 	PlayMontageTask->OnCompleted.AddDynamic(this, &URPGGA_Player_Death::OnEndAbilityCallback);
 	PlayMontageTask->OnBlendOut.AddDynamic(this, &URPGGA_Player_Death::OnEndAbilityCallback);
-	PlayMontageTask->OnInterrupted.AddDynamic(this, &URPGGA_Player_Death::OnEndAbilityCallback);
-	PlayMontageTask->OnCancelled.AddDynamic(this, &URPGGA_Player_Death::OnEndAbilityCallback);
+	// PlayMontageTask->OnInterrupted.AddDynamic(this, &URPGGA_Player_Death::OnEndAbilityCallback);
+	// PlayMontageTask->OnCancelled.AddDynamic(this, &URPGGA_Player_Death::OnEndAbilityCallback);
 	PlayMontageTask->ReadyForActivation();
 }
 

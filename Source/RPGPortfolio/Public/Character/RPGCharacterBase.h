@@ -31,6 +31,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	virtual UCombatComponentBase* GetCombatComponent() const;
+
+	UFUNCTION(BlueprintCallable)
+	TSoftObjectPtr<UDataAsset_AbilitySetBase> GetCharacterStartUpData() const { return CharacterStartUpData; } 
 	
 	virtual void CreateDefaultAttributeSet();
 

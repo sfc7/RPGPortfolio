@@ -15,9 +15,12 @@ class RPGPORTFOLIO_API UPlayerAttackSkillGameplayAbility : public UPlayerCombatG
 	GENERATED_BODY()
 	
 public:
+	FString GetSkillDescriptionForUI();
 
 protected:
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	FScalableFloat DamageScale; 
 };

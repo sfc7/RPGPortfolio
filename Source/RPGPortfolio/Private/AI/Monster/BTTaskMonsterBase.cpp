@@ -4,7 +4,13 @@
 #include "AI/Monster/BTTaskMonsterBase.h"
 #include "AIController.h"
 #include "Character/MonsterCharacter.h"
+#include "GameAbilitySystem/GamePlayAbility/RPGGamePlayTag.h"
+#include "GameAbilitySystem/RPGAbilitySystemComponent.h"
 
+UBTTaskMonsterBase::UBTTaskMonsterBase(FObjectInitializer const& ObjectInitializer)
+{
+	bNotifyTick = true;
+}
 
 EBTNodeResult::Type UBTTaskMonsterBase::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
@@ -19,18 +25,34 @@ EBTNodeResult::Type UBTTaskMonsterBase::ExecuteTask(UBehaviorTreeComponent& Owne
 	if (IsValid(MonsterCharacter))
 	{
 		OnExecuteTask(OwnerComp, NodeMemory);
-		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
-		return Result = EBTNodeResult::Succeeded;
+		return Result = EBTNodeResult::InProgress;
 	}
 	else
 	{
-		FinishLatentTask(OwnerComp, EBTNodeResult::Failed);
+		return Result = EBTNodeResult::Failed;
 	}
 	
-	return Result = EBTNodeResult::Failed;
+
 }
 
 void UBTTaskMonsterBase::OnExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
+}
+
+void UBTTaskMonsterBase::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
+{
+	Super::TickTask(OwnerComp, NodeMemory, DeltaSeconds);
+
+	if (URPGAbilitySystemComponent* ASC = MonsterCharacter->GetRPGAbilitySystemComponent())
+	{
+		if (ASC->HasMatchingGameplayTag(RPGGameplayTag::Monster_Status_IsTasking))
+		{
+			return;
+		}
+		else
+		{
+			FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
+		}
+	}
 }
 	

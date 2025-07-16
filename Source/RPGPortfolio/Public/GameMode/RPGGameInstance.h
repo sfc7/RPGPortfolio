@@ -17,6 +17,8 @@ class RPGPORTFOLIO_API URPGGameInstance : public UGameInstance
 public:
 	virtual void Init() override;
 
+	bool bFirstTimeLoadIn = true;
+	
 protected:
 	virtual void OnPreLoadMap(const FString& MapName);
 	virtual void OnDestinationWorldLoaded(UWorld* LoadedWorld);

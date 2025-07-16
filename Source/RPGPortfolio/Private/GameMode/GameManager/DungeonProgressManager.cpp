@@ -76,9 +76,18 @@ void UDungeonProgressManager::AsyncLoadSoftClassptrMonster()
 void UDungeonProgressManager::SpawnMonster()
 {
 	TArray<AActor*> MonsterSpawnPoints;
+	TArray<AActor*> AllSpawnPoints;
 	
-	UGameplayStatics::GetAllActorsOfClass(this, ATargetPoint::StaticClass(), MonsterSpawnPoints);
+	UGameplayStatics::GetAllActorsOfClass(this, ATargetPoint::StaticClass(), AllSpawnPoints);
 
+	for (AActor* Actor : AllSpawnPoints)
+	{
+		if (Actor->ActorHasTag("Normal"))
+		{
+			MonsterSpawnPoints.Add(Actor);
+		}
+	}
+	
 	if (MonsterSpawnPoints.IsEmpty())
 	{
 		return;
@@ -108,7 +117,7 @@ void UDungeonProgressManager::SpawnMonster()
 
 	int32 MonsterIndex = 0;
 	for (AActor* SpawnPoint : MonsterSpawnPoints)
-	{
+	{		
 		if (!SpawnPoint) continue;
 		
 		int32 SelectedMontserIndex = MonsterIndex % NormalMonsterClasses.Num();
@@ -145,12 +154,16 @@ void UDungeonProgressManager::SpawnBossMonster()
 	//ToDo 밑에 부분 삭제 후 보스몬스터 스폰위치 지정
 
 	TArray<AActor*> MonsterSpawnPoints;
+	TArray<AActor*> AllSpawnPoints;
 	
-	UGameplayStatics::GetAllActorsOfClass(this, ATargetPoint::StaticClass(), MonsterSpawnPoints);
+	UGameplayStatics::GetAllActorsOfClass(this, ATargetPoint::StaticClass(), AllSpawnPoints);
 
-	if (MonsterSpawnPoints.IsEmpty())
+	for (AActor* Actor : AllSpawnPoints)
 	{
-		return;
+		if (Actor->ActorHasTag("Boss"))
+		{
+			MonsterSpawnPoints.Add(Actor);
+		}
 	}
 	
 	UClass* BossMonsterClass = nullptr;
@@ -212,7 +225,7 @@ void UDungeonProgressManager::OnDungeonStateChanged(EDungeonState NewState)
 		break;
             
 	case EDungeonState::BossMonsterPhase:
-
+		SpawnBossMonster();
 		break;
             
 	case EDungeonState::Clear:

@@ -17,55 +17,67 @@ void UObjectPoolComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	InitializePool();
+	for (auto& PoolPair : ProjectilePools)
+	{
+		CreatePool(PoolPair.Key, PoolPair.Value);
+	}
 }
 
-
-void UObjectPoolComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+APooledActor* UObjectPoolComponent::SpawnFromPool(FGameplayTag PoolTag, FVector ObjectLocation, FRotator ObjectRotation)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	APooledActor* AvailableActor = FindAvailableActor(PoolTag);
+	if (AvailableActor)
+	{
+		AvailableActor->SetActorLocation(ObjectLocation);
+		AvailableActor->SetActorRotation(ObjectRotation);
+		AvailableActor->SetIsUse(true);
+	}
+	return AvailableActor;
 }
 
-
-
-void UObjectPoolComponent::InitializePool()
+void UObjectPoolComponent::CreatePool(FGameplayTag PoolTag, FProjectilePoolData& PoolData)
 {
-	for (int index = 0; index < PoolSize; index++)
+	if (!PoolData.ProjectileClass)
+	{
+		return;
+	}
+
+	for (int32 i = 0; i < PoolData.PoolSize; i++)
 	{
 		FActorSpawnParameters SpawnParams;
 		SpawnParams.Owner = GetOwner();
 		SpawnParams.Instigator = Cast<APawn>(GetOwner());
-		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
-		APooledActor* SpawnProjectile = GetWorld()->SpawnActor<APooledActor>(PooledActorClass, FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
-		SpawnProjectile->SetIsUse(false);
-		SpawnProjectile->SetTimeToLive(TimeToLive);
-		ObjectPool.AddUnique(SpawnProjectile);
-	}
-}
+		APooledActor* NewActor = GetWorld()->SpawnActor<APooledActor>(
+			PoolData.ProjectileClass, 
+			FVector::ZeroVector, 
+			FRotator::ZeroRotator, 
+			SpawnParams
+		);
 
-APooledActor* UObjectPoolComponent::FindAvailableActor()
-{
-	for (APooledActor* PoolActor : ObjectPool)
-	{
-		if (!PoolActor->GetIsUse())
+		if (NewActor)
 		{
-			return PoolActor;
+			NewActor->SetIsUse(false);
+			NewActor->SetTimeToLive(PoolData.TimeToLive);
+			PoolData.ObjectPool.Add(NewActor);
 		}
 	}
-
-	return nullptr;
 }
 
-APooledActor* UObjectPoolComponent::SpawnFromPool(FVector ObjectLocation, FRotator ObjectRotation)
+APooledActor* UObjectPoolComponent::FindAvailableActor(FGameplayTag PoolTag)
 {
-	APooledActor* AvailableActor = FindAvailableActor();
-	if (IsValid(AvailableActor))
+	if (!ProjectilePools.Contains(PoolTag))
 	{
-		AvailableActor->SetActorLocation(ObjectLocation);
-		AvailableActor->SetActorRotation(ObjectRotation);		
-		AvailableActor->SetIsUse(true);
-		return AvailableActor;
+		return nullptr;
+	}
+
+	for (APooledActor* Actor : ProjectilePools[PoolTag].ObjectPool)
+	{
+		if (Actor && !Actor->GetIsUse())
+		{
+			return Actor;
+		}
 	}
 	return nullptr;
 }
+

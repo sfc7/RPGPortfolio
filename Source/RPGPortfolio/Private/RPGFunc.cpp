@@ -83,16 +83,6 @@ bool URPGFunc::IsValidDefense(AActor* Attacker, AActor* Defender)
 	
 }
 
-bool URPGFunc::ApplyGameplayEffectSpecHandleToTargetActor(AActor* Instigator, AActor* TargetActor, const FGameplayEffectSpecHandle& SpecHandle)
-{
-	URPGAbilitySystemComponent* InstigatorASC = CastChecked<URPGAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Instigator));
-	URPGAbilitySystemComponent* TargetActorASC = CastChecked<URPGAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor));
-
-	FActiveGameplayEffectHandle ActiveGameplayEffectHandle = InstigatorASC->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data, TargetActorASC);
-
-	return ActiveGameplayEffectHandle.WasSuccessfullyApplied();
-}
-
 void URPGFunc::CountDown(const UObject* WorldContextObject, float TotalTime, float UpdateInterval, float& OutRemainingTime, ERPGCountDownActionInput CountDownInput, ERPGCountDownActionOutput& CountDownOutput, FLatentActionInfo LatentInfo)
 {
 	UWorld* World = nullptr;
@@ -125,7 +115,6 @@ void URPGFunc::CountDown(const UObject* WorldContextObject, float TotalTime, flo
 		if (FoundAction)
 		{
 			FoundAction->CancelAction();
-			
 		}
 	}
 }

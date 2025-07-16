@@ -16,12 +16,21 @@ void URPGGA_Player_RegenMp::ActivateAbility(const FGameplayAbilitySpecHandle Han
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
-	FGameplayEffectContextHandle EffectContextHandle = GetPlayerCharacterFromActorInfo()->GetRPGAbilitySystemComponent()->MakeEffectContext();
-	FGameplayEffectSpecHandle SpecHandle = GetPlayerCharacterFromActorInfo()->GetRPGAbilitySystemComponent()->MakeOutgoingSpec(RegenEffectClass, 1, EffectContextHandle);
+	URPGAbilitySystemComponent* ASC = GetPlayerCharacterFromActorInfo()->GetRPGAbilitySystemComponent();
+    
+	if (CurrentRegenHandle.IsValid())
+	{
+		ASC->RemoveActiveGameplayEffect(CurrentRegenHandle);
+		CurrentRegenHandle.Invalidate();
+	}
+
+	
+	FGameplayEffectContextHandle EffectContextHandle = ASC->MakeEffectContext();
+	FGameplayEffectSpecHandle SpecHandle = ASC->MakeOutgoingSpec(RegenEffectClass, 1, EffectContextHandle);
 	if (SpecHandle.IsValid())
 	{
 		FGameplayEffectSpec* Spec = SpecHandle.Data.Get();
-		GetPlayerCharacterFromActorInfo()->GetRPGAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*Spec);
+		CurrentRegenHandle = ASC->ApplyGameplayEffectSpecToSelf(*Spec);
 	}
 
 	EndAbility(Handle, ActorInfo, ActivationInfo, true, false);

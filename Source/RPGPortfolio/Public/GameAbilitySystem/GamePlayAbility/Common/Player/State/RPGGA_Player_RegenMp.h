@@ -24,4 +24,7 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	TSubclassOf<UGameplayEffect> RegenEffectClass;
+
+	UPROPERTY()
+	FActiveGameplayEffectHandle CurrentRegenHandle;
 };

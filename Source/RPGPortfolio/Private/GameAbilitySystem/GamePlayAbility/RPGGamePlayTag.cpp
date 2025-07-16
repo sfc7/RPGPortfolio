@@ -18,6 +18,7 @@ namespace RPGGameplayTag
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_CallPauseMenu_Keyboard, "InputTag.CallPauseMenu.Keyboard");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_CallInventory_Keyboard, "InputTag.CallInventory.Keyboard");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_CallQuestUI_Keyboard, "InputTag.CallQuestUI.Keyboard");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_CallSkillUI_Keyboard, "InputTag.CallSkillUI.Keyboard");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Dodge_Keyboard, "InputTag.Dodge.Keyboard");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_8WaysDodge_Keyboard, "InputTag.8WaysDodge.Keyboard");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Interact_Keyboard, "InputTag.Interact.Keyboard");
@@ -48,6 +49,7 @@ namespace RPGGameplayTag
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Skill_NenShot, "Player.Ability.Skill.NenShot");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Skill_Nova, "Player.Ability.Skill.Nova");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Skill_Meteor, "Player.Ability.Skill.Meteor");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Skill_DropKick, "Player.Ability.Skill.DropKick");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Interact, "Player.Ability.Interact");
 
 	// Player - Status
@@ -72,6 +74,8 @@ namespace RPGGameplayTag
 	// Player - Status - Cooldown
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_CoolDown_NenShot, "Player.Status.CoolDown.NenShot");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_CoolDown_AttackBuff, "Player.Status.CoolDown.AttackBuff");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Status_CoolDown_Nova, "Player.Status.CoolDown.Nova");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Status_CoolDown_Meteor, "Player.Status.CoolDown.Meteor");
 	
 	
 	UE_DEFINE_GAMEPLAY_TAG(Player_Event_HitPause, "Player.Event.HitPause");
@@ -86,10 +90,14 @@ namespace RPGGameplayTag
 	UE_DEFINE_GAMEPLAY_TAG(Monster_Ability_Attack_Melee, "Monster.Ability.Attack.Melee");
 	UE_DEFINE_GAMEPLAY_TAG(Monster_Ability_Attack_Ranged, "Monster.Ability.Attack.Ranged");
 	UE_DEFINE_GAMEPLAY_TAG(Monster_Ability_Attack_EarthQuake, "Monster.Ability.Attack.EarthQuake");
+	UE_DEFINE_GAMEPLAY_TAG(Monster_Ability_Attack_Meteor, "Monster.Ability.Attack.Meteor");
+	UE_DEFINE_GAMEPLAY_TAG(Monster_Ability_Attack_RollShot, "Monster.Ability.Attack.RollShot");
 
+	
 	UE_DEFINE_GAMEPLAY_TAG(Monster_Status_Strafe, "Monster.Status.Strafe");
 	UE_DEFINE_GAMEPLAY_TAG(Monster_Status_IsBeingAttacked, "Monster.Status.IsBeingAttacked");
 	UE_DEFINE_GAMEPLAY_TAG(Monster_Status_IsBeingUndefendableAttacked, "Monster.Status.IsBeingUndefendableAttacked");
+	UE_DEFINE_GAMEPLAY_TAG(Monster_Status_IsTasking, "Monster.Status.IsTasking");
 	// Event
 
 	
@@ -97,7 +105,8 @@ namespace RPGGameplayTag
 	UE_DEFINE_GAMEPLAY_TAG(Character_Event_AttackHit_AreaAttack, "Character.Event.AttackHit.AreaAttack");
 	UE_DEFINE_GAMEPLAY_TAG(Character_Event_HitReact, "Character.Event.HitReact");
 	UE_DEFINE_GAMEPLAY_TAG(Character_Event_SpawnProjectile, "Character.Event.SpawnProjectile");
-
+	UE_DEFINE_GAMEPLAY_TAG(Character_Event_ShowWeapon, "Character.Event.ShowWeapon");
+	UE_DEFINE_GAMEPLAY_TAG(Character_Event_HideWeapon, "Character.Event.HideWeapon");
 	
 	UE_DEFINE_GAMEPLAY_TAG(Character_Ability_HitReact, "Character.Ability.HitReact");
 	UE_DEFINE_GAMEPLAY_TAG(Character_Ability_Death, "Character.Ability.Death");
@@ -114,6 +123,10 @@ namespace RPGGameplayTag
 	UE_DEFINE_GAMEPLAY_TAG(Data_Value_SetByCaller_BaseDamage, "Data.Value.SetByCaller.BaseDamage");
 	UE_DEFINE_GAMEPLAY_TAG(Data_Value_SetByCaller_WeaponAttackRate, "Data.Value.SetByCaller.WeaponAttackRate");
 	UE_DEFINE_GAMEPLAY_TAG(Data_Value_SetByCaller_UsePotion, "Data.Value.SetByCaller.UsePotion");
+
+	UE_DEFINE_GAMEPLAY_TAG(Data_ObjectPoolType_NenShot, "Data.ObjectPoolType.NenShot");
+	UE_DEFINE_GAMEPLAY_TAG(Data_ObjectPoolType_Nova, "Data.ObjectPoolType.Nova");
+	UE_DEFINE_GAMEPLAY_TAG(Data_ObjectPoolType_Meteor, "Data.ObjectPoolType.Meteor");
 
 	UE_DEFINE_GAMEPLAY_TAG(Data_DamageType_SetByCaller_Light, "Data.DamageType.SetByCaller.Light");
 	UE_DEFINE_GAMEPLAY_TAG(Data_DamageType_SetByCaller_Heavy, "Data.DamageType.SetByCaller.Heavy");

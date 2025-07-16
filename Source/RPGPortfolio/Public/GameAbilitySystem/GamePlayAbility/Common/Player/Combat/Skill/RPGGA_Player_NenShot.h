@@ -28,22 +28,9 @@ protected:
 
 	UFUNCTION()
 	void SpawnProjectile(FGameplayEventData PayloadData);
-
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	TSubclassOf<AProjectileBase> ProjectileClass;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-	TSubclassOf<UGameplayEffect> DamageEffectClass;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-	FScalableFloat DamageScale;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-	int32 ProjectileCount = 20;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-	float StartRadius = 200.0f;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-	float ProjectileHeight = 30.0f; 
 };

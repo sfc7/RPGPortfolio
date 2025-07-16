@@ -21,8 +21,17 @@ void UCharacterAnimInstance::NativeThreadSafeUpdateAnimation(float DeltaSeconds)
 	if (!IsValid(OwningCharacter) || !IsValid(OwningMovementComponent)) return;
  
 	GroundSpeed = OwningCharacter->GetVelocity().Size2D();
- 
-	bHasAcceleration = OwningMovementComponent->GetCurrentAcceleration().SizeSquared2D()>0.f;
-
+	bHasAcceleration = OwningMovementComponent->GetCurrentAcceleration().SizeSquared2D() > 0.f;
 	LocomotionDirection = UKismetAnimationLibrary::CalculateDirection(OwningCharacter->GetVelocity(), OwningCharacter->GetActorRotation());
+
+}
+
+void UCharacterAnimInstance::SetbShowWeapon(bool flag)
+{
+	bShowWeapon = flag;
+}
+
+void UCharacterAnimInstance::SetbFirstUnEquipWeapon(bool flag)
+{
+	bFirstUnEquipWeapon = flag;
 }

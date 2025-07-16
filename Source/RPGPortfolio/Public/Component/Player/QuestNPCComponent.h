@@ -7,6 +7,7 @@
 #include "QuestNPCComponent.generated.h"
 
 struct FDataTableRowHandle;
+class UUserWidget;
 UCLASS()
 class RPGPORTFOLIO_API UQuestNPCComponent : public UActorComponent
 {
@@ -24,6 +25,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	FString InteractWith();
 
+	UFUNCTION(BlueprintCallable)
+	void DisplayConversation();
 protected:
 	virtual void BeginPlay() override;
 
@@ -36,4 +39,7 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess=true), Category = "Quest")
 	FString OwnerObjectiveID;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(AllowPrivateAccess=true), Category = "Conversation")
+	TSubclassOf<UUserWidget> ConversationWidgetClass;
 };

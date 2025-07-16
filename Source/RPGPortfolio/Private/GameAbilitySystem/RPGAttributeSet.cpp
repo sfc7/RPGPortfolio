@@ -193,17 +193,32 @@ void URPGAttributeSet::LoadAllAttributesFromSaveData(TArray<FAttributeSaveData> 
 		}
 	}
 	
-	UUIComponentBase* UIComponent = UIInterface->GetUIComponent();
-
-	if (UIComponent)
+	// UIInterface 유효성 확인 및 초기화
+	if (!UIInterface.IsValid())
 	{
-		UIComponent->OnCurrentHpChanged.Broadcast(GetCurrentHp()/GetMaxHp());
+		if (UAbilitySystemComponent* ASC = GetOwningAbilitySystemComponent())
+		{
+			if (AActor* AvatarActor = ASC->GetAvatarActor())
+			{
+				UIInterface = TWeakInterfacePtr<IUIInterface>(AvatarActor);
+			}
+		}
 	}
 	
-	UPlayerUIComponent* PlayerUIComponent = UIInterface->GetPlayerUIComponent();
-	if (PlayerUIComponent)
+	// UIInterface가 유효한 경우에만 UI 업데이트
+	if (UIInterface.IsValid())
 	{
-		PlayerUIComponent->OnCurrentMpChanged.Broadcast(GetCurrentMp()/GetMaxMp());
+		UUIComponentBase* UIComponent = UIInterface->GetUIComponent();
+		if (UIComponent)
+		{
+			UIComponent->OnCurrentHpChanged.Broadcast(GetCurrentHp()/GetMaxHp());
+		}
+		
+		UPlayerUIComponent* PlayerUIComponent = UIInterface->GetPlayerUIComponent();
+		if (PlayerUIComponent)
+		{
+			PlayerUIComponent->OnCurrentMpChanged.Broadcast(GetCurrentMp()/GetMaxMp());
+		}
 	}
 }
 

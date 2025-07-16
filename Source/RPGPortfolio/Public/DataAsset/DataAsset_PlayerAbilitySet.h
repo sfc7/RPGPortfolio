@@ -18,10 +18,16 @@ class RPGPORTFOLIO_API UDataAsset_PlayerAbilitySet : public UDataAsset_AbilitySe
 public:
 	virtual void GiveAbilitySystemComponent(URPGAbilitySystemComponent* _ASC,int32 ApplyLevel = 1);
 
+	UFUNCTION(BlueprintPure)
+	TArray<FPlayerAbilitySet> GetPlayerInitialAbilitySet() const { return PlayerInitialAbilitySet; }
+	
+	UFUNCTION(BlueprintPure)
+	TArray<FGameplayTag> GetInitialQuickSlotSkills() const { return InitialQuickSlotSkills; }
+	
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "GA")
 	TArray<FPlayerAbilitySet> PlayerInitialAbilitySet;
 
-	UPROPERTY(EditDefaultsOnly, Category = "GA")
-	TArray<FPlayerAbilitySkillSet> PlayerInitialAbilitySkillSet;
+	UPROPERTY(EditDefaultsOnly, Category = "Initial QuickSlot")
+	TArray<FGameplayTag> InitialQuickSlotSkills;
 };

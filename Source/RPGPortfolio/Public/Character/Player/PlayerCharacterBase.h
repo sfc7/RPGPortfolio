@@ -19,7 +19,8 @@ class UInputMappingContext;
 struct FInteractionData;
 class UInteractManager;
 class UObjectPoolComponent;
-
+class UPlayerSkillComponent;
+class URPGSaveGame;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInteractQuest, FString, ObjectiveID);
 /**
  * 
@@ -50,6 +51,8 @@ public:
 
 	virtual UObjectPoolComponent* GetObjectPoolComponent() const;
 
+	virtual UPlayerSkillComponent* GetPlayerSkillComponent() const;
+
 	FOnInteractQuest OnInteractQuest;
 	
 	UFUNCTION()
@@ -57,7 +60,13 @@ public:
 
 	UFUNCTION()
 	virtual void OnCollisionBoxEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	UFUNCTION(BlueprintCallable, Category = "Save System")
+	void SaveAllPlayerData(URPGSaveGame* SaveGame);
+
+	UFUNCTION(BlueprintCallable, Category = "Save System")
 	
+	void LoadAllPlayerData(URPGSaveGame* SaveGame);
 protected:
 	virtual void PossessedBy(AController* NewController) override;
 	
@@ -100,6 +109,9 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", meta = (AllowPrivateAccess = "true"))
 		UObjectPoolComponent* ObjectPoolComponent;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", meta = (AllowPrivateAccess = "true"))
+		UPlayerSkillComponent* PlayerSkillComponent;
+
 	FInteractionData InteractionTargetData;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
@@ -115,6 +127,7 @@ private:
 	void Input_CallPauseMenu();
 	void Input_CallInventoryUI();
 	void Input_CallQuestUI();
+	void Input_CallSkillUI();
 	void Input_Interact();
 
 };

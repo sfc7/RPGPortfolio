@@ -33,7 +33,7 @@ void URPGGA_Player_LightAttack::ActivateAbility(const FGameplayAbilitySpecHandle
 	{
 		URPGAT_Player_RotateTarget* RotateTickTask = URPGAT_Player_RotateTarget::ExecuteTaskOnTick(this);
 		RotateTickTask->OnRotateTargetTaskTick.AddDynamic(this, &UPlayerCombatGameplayAbility::RotateTargetTickBeforeAttack);
-		RotateTickTask->SetTargetRotation(FindRototation);
+		RotateTickTask->SetTargetRotation(FindRotation);
 		RotateTickTask->OnRotationCompleted.AddDynamic(this, &URPGGA_Player_LightAttack::Attack);
 		RotateTickTask->ReadyForActivation();
 	}

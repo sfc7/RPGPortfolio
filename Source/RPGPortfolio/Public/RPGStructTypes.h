@@ -8,6 +8,7 @@
 class URPGGameplayAbility;
 class UDataAsset_RPGItemData;        
 class UPlayerInventoryComponent;    
+class UMaterialInterface;
 
 USTRUCT(BlueprintType)
 struct FPlayerAbilitySet
@@ -27,42 +28,44 @@ USTRUCT(BlueprintType)
 struct FPlayerAbilitySkillSet : public FPlayerAbilitySet
 {
 	GENERATED_BODY()
-	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TSoftObjectPtr<UMaterialInterface> AbilityIcon;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	FGameplayTag SkillAbilityTag;
-
-
-};
-
-USTRUCT(BlueprintType)
-struct FPlayerAbilitySkillInfoSet : public FPlayerAbilitySet
-{
-	GENERATED_BODY()
+	UMaterialInterface* AbilityIcon;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FGameplayTag SkillAbilityTag;
-	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TSoftObjectPtr<UMaterialInterface> AbilityIcon;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FText SkillName;
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FText SkillDescription;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	int SkillLevel;
+	int32 SkillPrice;
+
+	//Todo 변경핊요
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	float SkillDamageMultiplier;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	float SkillCostMana;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	float SkillCooldown;
+	// UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	// int SkillLevel;
+	//
+	// UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	// float SkillDamageMultiplier;
+	//
+	// UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	// float SkillCostMana;
+	//
+	// UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	// float SkillCooldown;
 };
+
+// USTRUCT(BlueprintType)
+// struct FPlayerAbilitySkillInfoSet : public FPlayerAbilitySet
+// {
+// 	GENERATED_BODY()
+//
+//
+// };
 
 USTRUCT(BlueprintType)
 struct FWeaponDefaultData
@@ -173,6 +176,8 @@ enum class ENPCType : uint8
 	Conversational,
 	Storage,
 	Store,
+	Quest,
+	None,
 };
 
 USTRUCT(BlueprintType)

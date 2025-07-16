@@ -23,7 +23,6 @@
 void UQuestLogWidget::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
-	
 	TArray<ARPGQuestSystemActor*> CurrentQuests = GetWorld()->GetGameInstance()->GetSubsystem<UQuestManager>()->GetCurrentQuests();
 	
 	for (ARPGQuestSystemActor* CurrentQuest : CurrentQuests)

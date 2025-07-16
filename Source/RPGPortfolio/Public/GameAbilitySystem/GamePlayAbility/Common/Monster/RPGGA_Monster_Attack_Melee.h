@@ -41,4 +41,6 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	TArray<UAnimMontage*> AttackMontages;
+
+	
 };

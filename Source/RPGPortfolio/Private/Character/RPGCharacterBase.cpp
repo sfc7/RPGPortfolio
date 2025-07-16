@@ -44,6 +44,29 @@ UUIComponentBase* ARPGCharacterBase::GetUIComponent() const
 
 void ARPGCharacterBase::SetInteractTargetActor(AActor* TargetActor)
 {
+	TArray<FGameplayAbilitySpec> SkillAbilities = RPGAbilitySystemComponent->GetAllSkillAbilities();
+	   
+	for (int32 i = 0; i < SkillAbilities.Num(); i++)
+	{
+		const FGameplayAbilitySpec& Spec = SkillAbilities[i];
+	       
+		if (Spec.Ability)
+		{
+			FString AbilityName = Spec.Ability->GetClass()->GetName();
+			FString AssetTags = "";
+	           
+			for (const FGameplayTag& Tag : Spec.Ability->GetAssetTags())
+			{
+				AssetTags += Tag.ToString() + TEXT(", ");
+			}
+	           
+			FString DynamicTags = "";
+			for (const FGameplayTag& Tag : Spec.GetDynamicSpecSourceTags())
+			{
+				DynamicTags += Tag.ToString() + TEXT(", ");
+			}
+		}
+	}
 	InteractTargetActor = TargetActor;
 }
 
@@ -59,7 +82,8 @@ void ARPGCharacterBase::PossessedBy(AController* NewController)
 	if (IsValid(RPGAbilitySystemComponent))
 	{
 		RPGAbilitySystemComponent->InitAbilityActorInfo(this, this);
-		
 	}
+	    
+	
 }
 

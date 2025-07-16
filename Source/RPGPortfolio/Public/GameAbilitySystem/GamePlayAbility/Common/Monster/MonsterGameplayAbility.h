@@ -24,6 +24,7 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "GA")
 	FGameplayEffectSpecHandle MakeMonsterBaseDamageEffectSpecHandle(TSubclassOf<UGameplayEffect> _EffectClass, const FScalableFloat& _DamageScale);
+
 private:
 	TWeakObjectPtr<AMonsterCharacter> MonsterCharacter;
 };

@@ -22,7 +22,7 @@ void UInventoryWidget::OnPlayerGoldChanged(int32 NewGoldAmount)
 void UInventoryWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
-
+	
 	APlayerCharacter_Fighter* PC = Cast<APlayerCharacter_Fighter>(GetOwningPlayerPawn());
 	if (PC)
 	{

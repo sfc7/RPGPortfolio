@@ -33,7 +33,7 @@ true, 1.0f, false);
 
 		UAbilityTask_WaitGameplayEvent* WaitGameplayEvent = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
 		this, RPGGameplayTag::Character_Event_SpawnProjectile, nullptr, false, true
-);
+		);
 
 		WaitGameplayEvent->EventReceived.AddDynamic(this, &ThisClass::SpawnProjectile);
 		WaitGameplayEvent->ReadyForActivation();
@@ -57,5 +57,7 @@ void URPGGA_Monster_Attack_Range::SpawnProjectile(FGameplayEventData PayloadData
 
 
 	AProjectileBase* Projectile = GetWorld()->SpawnActor<AProjectileBase>(ProjectileClass, ProjectileLocation, ProjectileDirection, SpawnParams);
+	Projectile->LaunchProjectile(GetMonsterCharacterFromActorInfo()->GetActorForwardVector(), 700.0f);
+	Projectile->SetIsUse(true);
 	Projectile->DamageEffectSpecHandle = MakeMonsterBaseDamageEffectSpecHandle(DamageEffectClass, DamageScale);
 }

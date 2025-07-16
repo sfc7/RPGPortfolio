@@ -23,27 +23,26 @@ void UDataAsset_PlayerAbilitySet::GiveAbilitySystemComponent(URPGAbilitySystemCo
 		_ASC->GiveAbility(AbilitySpec);
 	}
 
-	for (const FPlayerAbilitySkillSet& AbilitySkillSet : PlayerInitialAbilitySkillSet)
-	{
-		if (!AbilitySkillSet.IsValid()) continue;
-
-		
-		FGameplayAbilitySpec AbilitySpec(AbilitySkillSet.AbilityToGrant);
-		AbilitySpec.SourceObject = _ASC->GetAvatarActor();
-		AbilitySpec.Level = ApplyLevel;
-		AbilitySpec.GetDynamicSpecSourceTags().AddTag(AbilitySkillSet.InputTag);
-
-		_ASC->GiveAbility(AbilitySpec);
-
-		AActor* AvatarActor = _ASC->GetAvatarActor();
-		if (AvatarActor)
-		{
-			UPlayerUIComponent* PlayerUIComp = AvatarActor->FindComponentByClass<UPlayerUIComponent>();
-			if (PlayerUIComp)
-			{
-				PlayerUIComp->OnSkillIconSlotUpdatedDelegate.Broadcast(AbilitySkillSet.SkillAbilityTag, AbilitySkillSet.AbilityIcon);
-				//Todo FPlayerAbilitySkillSet 대신 다른 어떤 구조체를 만들어 ga에서 정보를 가져와 사용하기?
-			}
-		}
-	}
+	// for (FGameplayTag InitialSkill : InitialQuickSlotSkills)
+	// {
+	// 	if (!InitialSkill.IsValid()) continue;
+	//
+	// 	
+	// 	FGameplayAbilitySpec AbilitySpec(AbilitySkillSet.AbilityToGrant);
+	// 	AbilitySpec.SourceObject = _ASC->GetAvatarActor();
+	// 	AbilitySpec.Level = ApplyLevel;
+	// 	AbilitySpec.GetDynamicSpecSourceTags().AddTag(AbilitySkillSet.InputTag);
+	//
+	// 	_ASC->GiveAbility(AbilitySpec);
+	//
+	// 	AActor* AvatarActor = _ASC->GetAvatarActor();
+	// 	if (AvatarActor)
+	// 	{
+	// 		UPlayerUIComponent* PlayerUIComp = AvatarActor->FindComponentByClass<UPlayerUIComponent>();
+	// 		if (PlayerUIComp)
+	// 		{
+	// 			PlayerUIComp->OnSkillIconSlotUpdatedDelegate.Broadcast(AbilitySkillSet.SkillAbilityTag, AbilitySkillSet.AbilityIcon);
+	// 		}
+	// 	}
+	// }
 }

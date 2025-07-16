@@ -41,8 +41,16 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category = "GA")
 	bool GetAbilityRemaningCooldownByTag(FGameplayTag CooldownTag, float& TotalCooldownTime, float& RemaningCooldownTime);
+
+	FString GetDescriptionForUI();
+	
+protected:
+	float GetCostMana(float InLevel);
+	float GetCooldown(float InLevel);
 	
 private:
 	TWeakObjectPtr<APlayerCharacterBase> PlayerCharacter;
 	TWeakObjectPtr<APlayerCharacterController> PlayerCharacterController;
+
+	
 };
