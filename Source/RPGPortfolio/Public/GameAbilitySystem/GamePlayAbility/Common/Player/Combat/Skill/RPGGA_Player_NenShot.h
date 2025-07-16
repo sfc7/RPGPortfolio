@@ -27,6 +27,9 @@ protected:
 	void OnEndAbilityCallback();
 
 	UFUNCTION()
+	void Attack();
+	
+	UFUNCTION()
 	void SpawnProjectile(FGameplayEventData PayloadData);
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)

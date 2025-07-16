@@ -3,6 +3,7 @@
 
 #include "GameAbilitySystem/GamePlayAbility/Common/Player/Combat/Skill/RPGGA_Player_NenShot.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
 #include "GameAbilitySystem/GamePlayAbility/RPGGamePlayTag.h"
@@ -14,6 +15,7 @@
 #include "WorldStatic/Weapon/WeaponBase.h"
 #include "Component/Player/PlayerSkillComponent.h"
 #include "Component/Player/PlayerUIComponent.h"
+#include "GameAbilitySystem/GameplayTask/Player/RPGAT_Player_RotateTarget.h"
 
 URPGGA_Player_NenShot::URPGGA_Player_NenShot()
 {
@@ -38,9 +40,32 @@ void URPGGA_Player_NenShot::ActivateAbility(const FGameplayAbilitySpecHandle Han
 		);
 		
 	}
+
+	bool bRotate = FindNearestEnemyBeforeAttack(1500.f); 
+
+	if (bRotate)
+	{
+		URPGAT_Player_RotateTarget* RotateTickTask = URPGAT_Player_RotateTarget::ExecuteTaskOnTick(this);
+		RotateTickTask->OnRotateTargetTaskTick.AddDynamic(this, &UPlayerCombatGameplayAbility::RotateTargetTickBeforeAttack);
+		RotateTickTask->SetTargetRotation(FindRotation);
+		RotateTickTask->OnRotationCompleted.AddDynamic(this, &URPGGA_Player_NenShot::Attack);
+		RotateTickTask->ReadyForActivation();
+	}
+	else
+	{	
+		Attack();
+	}
+}
+
+void URPGGA_Player_NenShot::OnEndAbilityCallback()
+{
+	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
+}
+
+void URPGGA_Player_NenShot::Attack()
+{
 	if (AttackMontage)
 	{
-
 		UAbilityTask_PlayMontageAndWait* PlayMontageTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
 	this,TEXT("Player_Skill_NenShot"), AttackMontage, 1.0f,  NAME_None,
 	true, 1.0f, false);
@@ -58,11 +83,6 @@ void URPGGA_Player_NenShot::ActivateAbility(const FGameplayAbilitySpecHandle Han
 		WaitGameplayEvent->EventReceived.AddDynamic(this, &ThisClass::SpawnProjectile);
 		WaitGameplayEvent->ReadyForActivation();
 	}
-}
-
-void URPGGA_Player_NenShot::OnEndAbilityCallback()
-{
-	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 }
 
 void URPGGA_Player_NenShot::SpawnProjectile(FGameplayEventData PayloadData)
