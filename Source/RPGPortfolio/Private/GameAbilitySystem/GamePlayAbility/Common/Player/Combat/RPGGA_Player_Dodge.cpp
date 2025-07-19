@@ -33,11 +33,11 @@ void URPGGA_Player_Dodge::ActivateAbility(const FGameplayAbilitySpecHandle Handl
 	PlayMontageTask->OnCancelled.AddDynamic(this, &URPGGA_Player_Dodge::OnEndAbilityCallback);
 	PlayMontageTask->ReadyForActivation();
 
-	UAbilityTask_WaitGameplayEvent* DefenseSuccessGE = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
+	UAbilityTask_WaitGameplayEvent* DodgeSuccessGE = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
 	this, RPGGameplayTag::Player_Event_DodgeSuccess, nullptr, false, true
 	);
-	DefenseSuccessGE->EventReceived.AddDynamic(this, &URPGGA_Player_Dodge::SuccessDodgeCallback);
-	DefenseSuccessGE->ReadyForActivation();
+	DodgeSuccessGE->EventReceived.AddDynamic(this, &URPGGA_Player_Dodge::SuccessDodgeCallback);
+	DodgeSuccessGE->ReadyForActivation();
 	
 }
 

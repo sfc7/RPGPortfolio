@@ -38,7 +38,7 @@ public:
 	void OnInventorySlotDrop(UPlayerInventoryComponent* FromContainerInventoryComponent, UPlayerInventoryComponent* ToInventoryComponent, int32 FromIndex, int32 ToIndex) const;
 	
 	UFUNCTION(BlueprintCallable)
-	int32 GetStaciSize(FInventorySlot TargetSlot);
+	int32 GetStackSize(FInventorySlot TargetSlot);
 
 	
 protected:

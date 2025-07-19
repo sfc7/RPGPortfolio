@@ -136,7 +136,7 @@ void UItemManager::OnInventorySlotDrop(UPlayerInventoryComponent* FromContainerI
     FromContainerInventoryComponent->TransferItem(ToInventoryComponent, FromIndex, ToIndex);
 }
 
-int32 UItemManager::GetStaciSize(FInventorySlot TargetSlot)
+int32 UItemManager::GetStackSize(FInventorySlot TargetSlot)
 {
 	UDataAsset_RPGItemData* TargetSlotItem = TargetSlot.ItemDataAsset.LoadSynchronous();
 

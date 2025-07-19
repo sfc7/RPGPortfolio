@@ -196,7 +196,7 @@ bool UPlayerInventoryComponent::IsValidSlotIndex(int32 FindIndex)
 bool UPlayerInventoryComponent::StackItemOnTransfer(FInventorySlot TargetSlot, FInventorySlot FromSlot, bool& OutAreAllItemAdded)
 {
 	bool IsStackableAndIsEqualAndHaveSpace = ItemManager->IsStackableAndIsEqualAndHaveSpace(TargetSlot, FromSlot);
-	int32 ItemStackSize = ItemManager->GetStaciSize(TargetSlot);
+	int32 ItemStackSize = ItemManager->GetStackSize(TargetSlot);
 
 	if (IsStackableAndIsEqualAndHaveSpace)
 	{

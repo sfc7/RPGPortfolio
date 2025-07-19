@@ -193,7 +193,6 @@ void URPGAttributeSet::LoadAllAttributesFromSaveData(TArray<FAttributeSaveData> 
 		}
 	}
 	
-	// UIInterface 유효성 확인 및 초기화
 	if (!UIInterface.IsValid())
 	{
 		if (UAbilitySystemComponent* ASC = GetOwningAbilitySystemComponent())
@@ -205,7 +204,6 @@ void URPGAttributeSet::LoadAllAttributesFromSaveData(TArray<FAttributeSaveData> 
 		}
 	}
 	
-	// UIInterface가 유효한 경우에만 UI 업데이트
 	if (UIInterface.IsValid())
 	{
 		UUIComponentBase* UIComponent = UIInterface->GetUIComponent();
