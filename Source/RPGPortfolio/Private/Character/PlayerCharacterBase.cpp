@@ -24,6 +24,7 @@
 #include "Components/CapsuleComponent.h"
 #include "GameMode/RPGGameInstance.h"
 #include "GameMode/GameManager/InteractManager.h"
+#include "Component/Player/PlayerEquipmentComponent.h"
 
 APlayerCharacterBase::APlayerCharacterBase()
 {
@@ -52,6 +53,7 @@ APlayerCharacterBase::APlayerCharacterBase()
 	PlayerUIComponent = CreateDefaultSubobject<UPlayerUIComponent>(TEXT("PlayerUIComponent"));
 	PlayerItemInventoryComponent = CreateDefaultSubobject<UPlayerInventoryComponent>(TEXT("PlayerItemInventoryComponent"));
 	PlayerPotionHotbar = CreateDefaultSubobject<UPlayerInventoryComponent>(TEXT("PlayerPotionHotbar"));
+	PlayerEquipmentComponent = CreateDefaultSubobject<UPlayerEquipmentComponent>(TEXT("PlayerEquipmentComponent"));
 
 	ObjectPoolComponent = CreateDefaultSubobject<UObjectPoolComponent>(TEXT("ObjectPoolComponent"));
 	PlayerSkillComponent = CreateDefaultSubobject<UPlayerSkillComponent>(TEXT("PlayerSkillComponent"));
@@ -110,6 +112,11 @@ UObjectPoolComponent* APlayerCharacterBase::GetObjectPoolComponent() const
 UPlayerSkillComponent* APlayerCharacterBase::GetPlayerSkillComponent() const
 {
 	return PlayerSkillComponent;
+}
+
+UPlayerEquipmentComponent* APlayerCharacterBase::GetPlayerEquipmentComponent() const
+{
+	return PlayerEquipmentComponent;
 }
 
 void APlayerCharacterBase::OnCollisionBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)

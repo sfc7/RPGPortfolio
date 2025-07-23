@@ -85,7 +85,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SwapIndex(FInventorySlot TargetSlot, FInventorySlot FromSlot);
 
-	
+	UFUNCTION(BlueprintCallable)
+	void EquipItem(FInventorySlot FromSlot);
+
+	UFUNCTION(BlueprintCallable)
+	UPlayerEquipmentComponent* GetPlayerEquipmentComponentRef() const { return PlayerEquipmentComponentRef;}
 protected:
 	virtual void BeginPlay() override;
 
@@ -96,4 +100,6 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, SaveGame)
 	int32 PlayerGold = 0;
+
+	UPlayerEquipmentComponent* PlayerEquipmentComponentRef;
 };

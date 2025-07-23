@@ -5,6 +5,7 @@
 
 #include "Character/NPC/NPC_HumanNPC.h"
 #include "Character/Player/PlayerCharacter_Fighter.h"
+#include "Component/Player/PlayerEquipmentComponent.h"
 #include "Component/Player/PlayerInventoryComponent.h"
 #include "DataAsset/Item/DataAsset_RPGItemData.h"
 
@@ -83,6 +84,7 @@ bool UItemManager::IsStackableAndIsEqualAndHaveSpace(FInventorySlot& TargetSlot,
 void UItemManager::OnInventorySlotDrop(UPlayerInventoryComponent* FromContainerInventoryComponent, UPlayerInventoryComponent* ToInventoryComponent, int32 FromIndex, int32 ToIndex) const
 {
     bool bIsPlayerToStore = false;
+	bool bToEquipment = false;
 		
     if (FromContainerInventoryComponent)
     {
@@ -102,6 +104,17 @@ void UItemManager::OnInventorySlotDrop(UPlayerInventoryComponent* FromContainerI
             }
         }
     }
+
+	if (FromContainerInventoryComponent)
+	{
+		if (UPlayerEquipmentComponent* PlayerEquipmentComponent = Cast<UPlayerEquipmentComponent>(FromContainerInventoryComponent))
+		{
+			if (PlayerEquipmentComponent)
+			{
+				bToEquipment = true;
+			}
+		}
+	}
     
     if (bIsPlayerToStore)
     {
@@ -133,6 +146,12 @@ void UItemManager::OnInventorySlotDrop(UPlayerInventoryComponent* FromContainerI
             }
         }
     }
+
+	if (bToEquipment)
+	{
+		
+	}
+	
     FromContainerInventoryComponent->TransferItem(ToInventoryComponent, FromIndex, ToIndex);
 }
 

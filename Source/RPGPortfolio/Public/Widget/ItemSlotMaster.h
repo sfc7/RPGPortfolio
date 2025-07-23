@@ -66,6 +66,9 @@ public:
 
 	UFUNCTION()
 	void OnItemButtonClickedInStore();
+
+	UFUNCTION(BlueprintCallable)
+	void OnEquipmentItemButtonDoubleClicked();
 protected:
 	virtual void NativeOnInitialized() override;
 	
@@ -89,5 +92,8 @@ protected:
 	
 	UPROPERTY(BlueprintReadWrite)
 		UPlayerInventoryComponent* InventoryRef;
+
+	UPROPERTY(BlueprintReadWrite)
+		UPlayerEquipmentComponent* EquipmentRef;
 	
 };

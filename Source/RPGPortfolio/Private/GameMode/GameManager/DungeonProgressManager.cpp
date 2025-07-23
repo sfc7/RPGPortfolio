@@ -12,13 +12,17 @@
 #include "Blueprint/UserWidget.h"
 #include "DataAsset/DataAsset_RPGUIData.h"
 #include "GameMode/GameManager/UIManager.h"
+#include "WorldStatic/SpawningVolume/SpawningVolume.h"
+#include "GameMode/DungeonGameMode.h"
+#include "Widget/RPGWidgetBase.h"
+#include "Components/WidgetComponent.h"
 
 UDungeonProgressManager::UDungeonProgressManager()
 {
-	static ConstructorHelpers::FObjectFinder<UDataTable> MonsterDataTableRef(TEXT("/Script/Engine.DataTable'/Game/MyProject/System/GameMode/DataTable/DT_MonsterInDuegeon.DT_MonsterInDuegeon'"));
-	if (MonsterDataTableRef.Succeeded())
+	static ConstructorHelpers::FObjectFinder<UDataTable> MonsterSpawnTableRef(TEXT("/Script/Engine.DataTable'/Game/MyProject/System/GameMode/DataTable/DT_MonsterSpawnInDungeon.DT_MonsterSpawnInDungeon'"));
+	if (MonsterSpawnTableRef.Succeeded())
 	{
-		MonsterDataTable = MonsterDataTableRef.Object;
+		MonsterSpawnTable = MonsterSpawnTableRef.Object;
 	}
 }
 
@@ -26,7 +30,7 @@ void UDungeonProgressManager::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
 
-	if (MonsterDataTable)
+	if (MonsterSpawnTable)
 	{
 		AsyncLoadSoftClassptrMonster();
 	}
@@ -48,204 +52,180 @@ void UDungeonProgressManager::SetDungeonState(EDungeonState GamemodeState)
 
 void UDungeonProgressManager::AsyncLoadSoftClassptrMonster()
 {
-	TArray<FName> RowNames = MonsterDataTable->GetRowNames();
+	if (!MonsterSpawnTable) return;
+
+	TArray<FName> RowNames = MonsterSpawnTable->GetRowNames();
+
 	for (const FName& RowName : RowNames)
 	{
-		FMonsterInDungeonTable* RowMonsterData = MonsterDataTable->FindRow<FMonsterInDungeonTable>(RowName, TEXT(""));
-		if (RowMonsterData)
+		FMonsterSpawnTable* RowSpawnData = MonsterSpawnTable->FindRow<FMonsterSpawnTable>(RowName, TEXT(""));
+		if (RowSpawnData)
 		{
-			const FMonsterInfo& RowMonsterInfo = RowMonsterData->MonsterInfo;
-			
+			const FMonsterInfo& RowMonsterInfo = RowSpawnData->MonsterInfo;
+
 			if (RowMonsterInfo.MonsterSoftClassPtr.IsNull()) continue;
 
 			UAssetManager::GetStreamableManager().RequestAsyncLoad(
 				RowMonsterInfo.MonsterSoftClassPtr.ToSoftObjectPath(),
 				FStreamableDelegate::CreateLambda(
 					[RowMonsterInfo, this]()
-				{
-					if (UClass* AsyncLoadMonsterClass = RowMonsterInfo.MonsterSoftClassPtr.Get())
 					{
-						AsyncLoadMonsterMap.Emplace(RowMonsterInfo.MonsterSoftClassPtr,AsyncLoadMonsterClass);
-					}
-				})
+						if (UClass* LoadedMonsterClass = RowMonsterInfo.MonsterSoftClassPtr.Get())
+						{
+							AsyncLoadMonsterMap.Emplace(RowMonsterInfo.MonsterSoftClassPtr, LoadedMonsterClass);
+						}
+					})
 			);
 		}
 	}
 }
 
-void UDungeonProgressManager::SpawnMonster()
+void UDungeonProgressManager::SpawnMonster(ASpawningVolume& SpawningVolume)
 {
-	TArray<AActor*> MonsterSpawnPoints;
-	TArray<AActor*> AllSpawnPoints;
-	
-	UGameplayStatics::GetAllActorsOfClass(this, ATargetPoint::StaticClass(), AllSpawnPoints);
+	if (!MonsterSpawnTable) return;
 
-	for (AActor* Actor : AllSpawnPoints)
-	{
-		if (Actor->ActorHasTag("Normal"))
-		{
-			MonsterSpawnPoints.Add(Actor);
-		}
-	}
-	
-	if (MonsterSpawnPoints.IsEmpty())
-	{
-		return;
-	}
-	
-	TArray<UClass*> NormalMonsterClasses;
-	
-	TArray<FName> RowNames = MonsterDataTable->GetRowNames();
+	TArray<FName> RowNames = MonsterSpawnTable->GetRowNames();
+	int32 MonsterIndex = 0;
+
 	for (const FName& RowName : RowNames)
 	{
-		FMonsterInDungeonTable* RowMonsterData = MonsterDataTable->FindRow<FMonsterInDungeonTable>(RowName, TEXT(""));
-		if (RowMonsterData && RowMonsterData->MonsterType == EMonsterType::NormalMonster)
+		FMonsterSpawnTable* RowSpawnData = MonsterSpawnTable->FindRow<FMonsterSpawnTable>(RowName, TEXT("SpawnMonsterFromTable"));
+		if (!RowSpawnData) continue;
+
+		if (RowSpawnData->MonsterType != EMonsterType::NormalMonster) continue;
+
+		const FMonsterInfo& RowMonsterInfo = RowSpawnData->MonsterInfo;
+
+		if (UClass** FoundClass = AsyncLoadMonsterMap.Find(RowMonsterInfo.MonsterSoftClassPtr))
 		{
-			const FMonsterInfo& RowMonsterInfo = RowMonsterData->MonsterInfo;
-			
-			if (UClass** FoundClass = AsyncLoadMonsterMap.Find(RowMonsterInfo.MonsterSoftClassPtr))
+			UClass* MonsterClass = *FoundClass;
+
+			FVector SpawnLocation = RowSpawnData->SpawnLocation;
+			FRotator SpawnRotation = RowSpawnData->SpawnRotation;
+
+			AMonsterCharacter* SpawnedMonster = Cast<AMonsterCharacter>(SpawningVolume.SpawnActorAtBoxLocalLocation(MonsterClass, SpawnLocation));
+
+			if (SpawnedMonster)
 			{
-				NormalMonsterClasses.Add(*FoundClass);
+				SpawnedMonster->OnDestroyed.AddUniqueDynamic(this, &ThisClass::MonsterKillCount);
+				NormalMonsterCount++;
 			}
+
+			MonsterIndex++;
 		}
 	}
-
-	if (NormalMonsterClasses.IsEmpty())
-	{
-		return;
-	}
-
-	int32 MonsterIndex = 0;
-	for (AActor* SpawnPoint : MonsterSpawnPoints)
-	{		
-		if (!SpawnPoint) continue;
-		
-		int32 SelectedMontserIndex = MonsterIndex % NormalMonsterClasses.Num();
-		UClass* SelectedMonsterClass = NormalMonsterClasses[SelectedMontserIndex];
-
-		FVector SpawnLocation = SpawnPoint->GetActorLocation();
-		FRotator SpawnRotation = SpawnPoint->GetActorRotation();
-
-		FVector RandomLocation;
-		UNavigationSystemV1::K2_GetRandomLocationInNavigableRadius(this,SpawnLocation,RandomLocation,200.f);
-		
-		RandomLocation += FVector(0.f, 0.f, 100.f);
-
-		FActorSpawnParameters SpawnParams;
-		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-		
-		AMonsterCharacter* SpawnedMonster = GetWorld()->SpawnActor<AMonsterCharacter>(
-			SelectedMonsterClass,
-			SpawnLocation,
-			SpawnRotation,
-			SpawnParams
-		);
-
-		SpawnedMonster->OnDestroyed.AddUniqueDynamic(this, &ThisClass::MonsterKillCount);
-		NormalMonsterCount++;
-		MonsterIndex++;
-	}
-
+	
 	SpawnFinish = true;
 }
 
-void UDungeonProgressManager::SpawnBossMonster()
+void UDungeonProgressManager::SpawnBossMonster(ASpawningVolume& SpawningVolume)
 {
-	//ToDo 밑에 부분 삭제 후 보스몬스터 스폰위치 지정
+	TArray<FName> RowNames = MonsterSpawnTable->GetRowNames();
+	int32 MonsterIndex = 0;
 
-	TArray<AActor*> MonsterSpawnPoints;
-	TArray<AActor*> AllSpawnPoints;
-	
-	UGameplayStatics::GetAllActorsOfClass(this, ATargetPoint::StaticClass(), AllSpawnPoints);
-
-	for (AActor* Actor : AllSpawnPoints)
-	{
-		if (Actor->ActorHasTag("Boss"))
-		{
-			MonsterSpawnPoints.Add(Actor);
-		}
-	}
-	
-	UClass* BossMonsterClass = nullptr;
-	
-	TArray<FName> RowNames = MonsterDataTable->GetRowNames();
 	for (const FName& RowName : RowNames)
 	{
-		FMonsterInDungeonTable* RowMonsterData = MonsterDataTable->FindRow<FMonsterInDungeonTable>(RowName, TEXT(""));
-		if (RowMonsterData && RowMonsterData->MonsterType == EMonsterType::BossMonster)
+		FMonsterSpawnTable* RowSpawnData = MonsterSpawnTable->FindRow<FMonsterSpawnTable>(RowName, TEXT("SpawnMonsterFromTable"));
+		if (!RowSpawnData) continue;
+
+		if (RowSpawnData->MonsterType == EMonsterType::BossMonster)
 		{
-			const FMonsterInfo& RowMonsterInfo = RowMonsterData->MonsterInfo;
-			
+			const FMonsterInfo& RowMonsterInfo = RowSpawnData->MonsterInfo;
+
 			if (UClass** FoundClass = AsyncLoadMonsterMap.Find(RowMonsterInfo.MonsterSoftClassPtr))
 			{
-				BossMonsterClass = *FoundClass;
+				UClass* MonsterClass = *FoundClass;
+
+				FVector SpawnLocation = RowSpawnData->SpawnLocation;
+				FRotator SpawnRotation = RowSpawnData->SpawnRotation;
+
+				AMonsterCharacter* SpawnedMonster = Cast<AMonsterCharacter>(SpawningVolume.SpawnActorAtBoxLocalLocation(MonsterClass, SpawnLocation));
+
+				if (SpawnedMonster)
+				{
+					SpawnedMonster->OnDestroyed.AddUniqueDynamic(this, &ThisClass::BossMonsterKilled);
+
+					if (SpawnedMonster->MonsterHpWidgetComponent)
+					{
+						URPGWidgetBase* HpWidget = Cast<URPGWidgetBase>(SpawnedMonster->MonsterHpWidgetComponent->GetUserWidgetObject());
+						if (HpWidget)
+						{
+							HpWidget->InitMonsterCreatedWidget(SpawnedMonster);
+						}
+					}
+				}
 			}
 		}
 	}
+}
 
-	if (BossMonsterClass == nullptr)
+void UDungeonProgressManager::RegisterSpawningVolume(ASpawningVolume* SpawningVolume)
+{
+	if (!SpawningVolume)
 	{
 		return;
 	}
 
-	//ToDo 밑에 부분 삭제 후 보스몬스터 스폰위치 지정
-	int32 MonsterIndex = 0;
-	for (AActor* SpawnPoint : MonsterSpawnPoints)
+	FString SpawningVolumeName = SpawningVolume->GetVolumeName();
+	if (SpawningVolumeName.IsEmpty())
 	{
-		if (!SpawnPoint) continue;
-
-		FVector SpawnLocation = SpawnPoint->GetActorLocation();
-		FRotator SpawnRotation = SpawnPoint->GetActorRotation();
-
-		FVector RandomLocation;
-		UNavigationSystemV1::K2_GetRandomLocationInNavigableRadius(this,SpawnLocation,RandomLocation,200.f);
-		
-		RandomLocation += FVector(0.f, 0.f, 100.f);
-
-		FActorSpawnParameters SpawnParams;
-		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-		
-		AMonsterCharacter* SpawnedMonster = GetWorld()->SpawnActor<AMonsterCharacter>(
-			BossMonsterClass,
-			SpawnLocation,
-			SpawnRotation,
-			SpawnParams
-		);
-
-		SpawnedMonster->OnDestroyed.AddUniqueDynamic(this, &ThisClass::BossMonsterKilled);
+		return;
 	}
+	
+	SpawningVolumes.Add(SpawningVolumeName, SpawningVolume);
+}
+
+ASpawningVolume* UDungeonProgressManager::FindSpawningVolumebyName(FString SpawningVolumeName) const
+{
+	if (SpawningVolumeName.IsEmpty())
+	{
+		return nullptr;
+	}
+
+	if (ASpawningVolume* const* FoundVolume = SpawningVolumes.Find(SpawningVolumeName))
+	{
+		return *FoundVolume;
+	}
+
+	return nullptr;
 }
 
 void UDungeonProgressManager::OnDungeonStateChanged(EDungeonState NewState)
-{	
-	switch (NewState)
-	{
-	case EDungeonState::NormalMonsterPhase:
+{
+	ADungeonGameMode* DungeonGameMode = Cast<ADungeonGameMode>(UGameplayStatics::GetGameMode(this));
 
-		break;
+	if (IsValid(DungeonGameMode))
+	{
+		switch (NewState)
+		{
+		case EDungeonState::NormalMonsterPhase:
+			break;
             
-	case EDungeonState::BossMonsterPhase:
-		SpawnBossMonster();
-		break;
+		case EDungeonState::BossMonsterPhase:
+			DungeonGameMode->DungeonCinemaPlay();			
+			break;
             
-	case EDungeonState::Clear:
-		UWidgetLayoutLibrary::RemoveAllWidgets(GetWorld());
-		GetGameInstance()->GetSubsystem<UUIManager>()->ShowUIAsync(EUICategory::VictoryUI, GetWorld());
-		break;
+		case EDungeonState::Clear:
+			UWidgetLayoutLibrary::RemoveAllWidgets(GetWorld());
+			GetGameInstance()->GetSubsystem<UUIManager>()->ShowUIAsync(EUICategory::VictoryUI, GetWorld());
+			break;
             
-	case EDungeonState::GameOver:
-		UWidgetLayoutLibrary::RemoveAllWidgets(GetWorld());
-		GetGameInstance()->GetSubsystem<UUIManager>()->ShowUIAsync(EUICategory::GameOverUI, GetWorld());
-		break;
+		case EDungeonState::GameOver:
+			UWidgetLayoutLibrary::RemoveAllWidgets(GetWorld());
+			GetGameInstance()->GetSubsystem<UUIManager>()->ShowUIAsync(EUICategory::GameOverUI, GetWorld());
+			break;
             
-	default:
-		break;
+		default:
+			break;
+		}
 	}
+
 }
 
 void UDungeonProgressManager::MonsterKillCount(AActor* DestroyedActor)
 {
 	NormalMonsterCount--;
+	
 	if (SpawnFinish && NormalMonsterCount == 0)
 	{
 		SetDungeonState(EDungeonState::BossMonsterPhase);

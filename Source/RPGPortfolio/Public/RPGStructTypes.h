@@ -3,12 +3,15 @@
 
 #include "GameplayTagContainer.h"
 #include "ScalableFloat.h"
+#include "DataAsset/Item/DataAsset_RPGItemData_Equipment.h"
+
 #include "RPGStructTypes.generated.h"
 
 class URPGGameplayAbility;
 class UDataAsset_RPGItemData;        
 class UPlayerInventoryComponent;    
 class UMaterialInterface;
+class UPlayerEquipmentComponent;
 
 USTRUCT(BlueprintType)
 struct FPlayerAbilitySet
@@ -161,6 +164,9 @@ struct FInventorySlot
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<UPlayerInventoryComponent> InventoryRef;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<UPlayerEquipmentComponent> EquipmentRef;
 };
 
 UENUM(BlueprintType)

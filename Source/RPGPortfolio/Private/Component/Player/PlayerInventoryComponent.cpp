@@ -7,8 +7,10 @@
 #include "Kismet/KismetArrayLibrary.h"
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "Character/Player/PlayerCharacterBase.h"
 #include "DataAsset/Item/DataAsset_RPGItemData.h"
 #include "GameMode/GameManager/UIManager.h"
+#include "Component/Player/PlayerEquipmentComponent.h"
 
 UPlayerInventoryComponent::UPlayerInventoryComponent()
 {
@@ -18,6 +20,11 @@ void UPlayerInventoryComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
+	if (APlayerCharacterBase* PlayerCharacter = Cast<APlayerCharacterBase>(GetOwner()))
+	{
+		PlayerEquipmentComponentRef = PlayerCharacter->GetPlayerEquipmentComponent();
+	}
+	
 	ItemManager = GetWorld()->GetGameInstance()->GetSubsystem<UItemManager>();
 	SetupSlots(SlotAmounts);
 }
@@ -29,6 +36,10 @@ void UPlayerInventoryComponent::SetupSlots(int32 SlotAmountstoSetup)
 		FInventorySlot InventorySlot;
 		InventorySlot.SlotIndex = Index;
 		InventorySlot.InventoryRef = this;
+		if (IsValid(PlayerEquipmentComponentRef))
+		{
+			InventorySlot.EquipmentRef = PlayerEquipmentComponentRef;
+		}
 		ItemSlots.Add(InventorySlot);
 	}
 }
@@ -235,6 +246,24 @@ void UPlayerInventoryComponent::SwapIndex(FInventorySlot TargetSlot, FInventoryS
 	FromSlot.InventoryRef->SetItem(FromSlot, TargetSlot);
 }
 
+void UPlayerInventoryComponent::EquipItem(FInventorySlot FromSlot)
+{
+	int32 FromIndex = FromSlot.SlotIndex;	
+
+	if (ItemSlots.IsValidIndex(FromIndex))
+	{
+		if (ItemSlots[FromIndex].ItemDataAsset->ItemType != EItemType::Equipment) return;
+		
+		if (InventoryType != EInventoryType::PlayerInventory) return;
+
+		if (IsValid(PlayerEquipmentComponentRef))
+		{
+			PlayerEquipmentComponentRef->ApplyEquipmentItem(FromSlot);
+			RemoveItemToIndex(FromIndex);
+		}
+	}
+}
+
 void UPlayerInventoryComponent::SetItem(FInventorySlot TargetSlot, FInventorySlot ItemToSet)
 {
 	int32 TargetIndex = TargetSlot.SlotIndex;	
@@ -244,7 +273,11 @@ void UPlayerInventoryComponent::SetItem(FInventorySlot TargetSlot, FInventorySlo
 		ItemSlots[TargetIndex] = ItemToSet;
 		ItemSlots[TargetIndex].SlotIndex = TargetIndex;
 		ItemSlots[TargetIndex].InventoryRef = this;
-	
+		if (IsValid(PlayerEquipmentComponentRef))
+		{
+			ItemSlots[TargetIndex].EquipmentRef = PlayerEquipmentComponentRef;
+		}
+		
 		OnInventorySlotChangedDelegate.Broadcast(ItemSlots[TargetIndex]);
 		
 		if (InventoryType == EInventoryType::Potion)

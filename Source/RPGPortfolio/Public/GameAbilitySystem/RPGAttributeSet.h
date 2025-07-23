@@ -91,6 +91,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void LoadAllAttributesFromSaveData(TArray<FAttributeSaveData> AttributeSaveData);
 
+	UFUNCTION(BlueprintCallable)
+	void ApplyEquipmentStats(float AddMaxHp, float AddMaxMp, float AddAttackRate, float AddDefense);
+
+	UFUNCTION(BlueprintCallable)
+	void RemoveEquipmentStats(float RemoveMaxHp, float RemoveMaxMp, float RemoveAttackRate, float RemoveDefense);
 private:
 	TWeakInterfacePtr<IUIInterface> UIInterface;
 };

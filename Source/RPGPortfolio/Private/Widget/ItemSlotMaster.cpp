@@ -16,7 +16,7 @@
 #include "Component/Player/PlayerInventoryComponent.h"
 #include "Widget/StoreWidget.h"
 #include "Components/Button.h"
-
+#include "Component/Player/PlayerEquipmentComponent.h"
 
 UItemSlotMaster::UItemSlotMaster(const FObjectInitializer& ObjectInitializer)
 {
@@ -72,6 +72,10 @@ void UItemSlotMaster::SetWidgetVisibility(UWidget* Target, bool IsVisible)
 void UItemSlotMaster::SetInventoryRef(UPlayerInventoryComponent* InventoryReftoSet)
 {
 	InventoryRef = InventoryReftoSet;
+	if (IsValid(InventoryReftoSet->GetPlayerEquipmentComponentRef()))
+	{
+		EquipmentRef = InventoryReftoSet->GetPlayerEquipmentComponentRef();
+	}
 }
 
 void UItemSlotMaster::SetSlotSizeBox(float Size)
@@ -318,5 +322,24 @@ void UItemSlotMaster::OnItemButtonClickedInStore()
 	if (StoreWidget)
 	{
 		StoreWidget->OnStoreItemPurchase(this);
+	}
+}
+
+void UItemSlotMaster::OnEquipmentItemButtonDoubleClicked()
+{
+	if (SlotData.ItemDataAsset->ItemType == EItemType::Equipment)
+	{
+		if (IsValid(EquipmentRef))
+		{
+			APlayerCharacterBase* PlayerCharacter = Cast<APlayerCharacterBase>(EquipmentRef->GetOwner());
+			if (!PlayerCharacter)
+			{
+				return;
+			}
+
+			InventoryRef->EquipItem(SlotData);
+
+			// Todo: Equipment->ApplyStat
+		}
 	}
 }

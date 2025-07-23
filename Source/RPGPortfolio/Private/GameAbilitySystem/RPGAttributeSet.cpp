@@ -220,6 +220,52 @@ void URPGAttributeSet::LoadAllAttributesFromSaveData(TArray<FAttributeSaveData> 
 	}
 }
 
+void URPGAttributeSet::ApplyEquipmentStats(float AddMaxHp, float AddMaxMp, float AddAttackRate, float AddDefense)
+{
+	SetMaxHp(GetMaxHp() + AddMaxHp);
+	SetMaxMp(GetMaxMp() + AddMaxMp);
+	SetAttackRate(GetAttackRate() + AddAttackRate);
+	SetDefense(GetDefense() + AddDefense);
+
+	if (UIInterface.IsValid())
+	{
+		UUIComponentBase* UIComponent = UIInterface->GetUIComponent();
+		if (UIComponent)
+		{
+			UIComponent->OnCurrentHpChanged.Broadcast(GetCurrentHp()/GetMaxHp());
+		}
+		
+		UPlayerUIComponent* PlayerUIComponent = UIInterface->GetPlayerUIComponent();
+		if (PlayerUIComponent)
+		{
+			PlayerUIComponent->OnCurrentMpChanged.Broadcast(GetCurrentMp()/GetMaxMp());
+		}
+	}
+}
+
+void URPGAttributeSet::RemoveEquipmentStats(float RemoveMaxHp, float RemoveMaxMp, float RemoveAttackRate, float RemoveDefense)
+{
+	SetMaxHp(GetMaxHp() - RemoveMaxHp);
+	SetMaxMp(GetMaxMp() - RemoveMaxMp);
+	SetAttackRate(GetAttackRate() - RemoveAttackRate);
+	SetDefense(GetDefense() - RemoveDefense);
+
+	if (UIInterface.IsValid())
+	{
+		UUIComponentBase* UIComponent = UIInterface->GetUIComponent();
+		if (UIComponent)
+		{
+			UIComponent->OnCurrentHpChanged.Broadcast(GetCurrentHp()/GetMaxHp());
+		}
+		
+		UPlayerUIComponent* PlayerUIComponent = UIInterface->GetPlayerUIComponent();
+		if (PlayerUIComponent)
+		{
+			PlayerUIComponent->OnCurrentMpChanged.Broadcast(GetCurrentMp()/GetMaxMp());
+		}
+	}
+}
+
 void URPGAttributeSet::AddGameplayTagToOwner(FGameplayTag AddTag)
 {
 	URPGAbilitySystemComponent* ASC = CastChecked<URPGAbilitySystemComponent>(GetOwningAbilitySystemComponent());

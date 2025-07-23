@@ -8,6 +8,8 @@
 #include "DungeonProgressManager.generated.h"
 
 class AMonsterCharacter;
+class ASpawningVolume;
+class ADungeonGameMode;
 
 /**
  * 
@@ -42,15 +44,27 @@ struct FMonsterInfo
 };
 
 USTRUCT(BlueprintType)
-struct FMonsterInDungeonTable : public FTableRowBase
+struct FMonsterSpawnTable : public FTableRowBase
 {
-	GENERATED_BODY()
+	GENERATED_BODY();
 
 	UPROPERTY(EditAnywhere)
 	FMonsterInfo MonsterInfo;
 
 	UPROPERTY(EditAnywhere)
 	EMonsterType MonsterType;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int MonsterLevel;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FVector SpawnLocation;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FRotator SpawnRotation;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString SpawningVolumeName;
 };
 
 /**
@@ -70,9 +84,13 @@ public:
 
 	void AsyncLoadSoftClassptrMonster();
 
-	void SpawnMonster();
+	void SpawnMonster(ASpawningVolume& SpawningVolume);
 
-	void SpawnBossMonster();
+	void SpawnBossMonster(ASpawningVolume& SpawningVolume);
+
+	void RegisterSpawningVolume(ASpawningVolume *SpawningVolume);
+
+	ASpawningVolume* FindSpawningVolumebyName(FString SpawningVolumeName) const;
 	
 protected:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
@@ -80,13 +98,16 @@ protected:
 
 private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	UDataTable* MonsterDataTable;
+	UDataTable* MonsterSpawnTable;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TSoftClassPtr<UUserWidget> GameOverUIWidgetClass;
 	
 	UPROPERTY()
 	TMap<TSoftClassPtr<AMonsterCharacter>, UClass*> AsyncLoadMonsterMap;
+
+	UPROPERTY()
+	TMap<FString, ASpawningVolume*> SpawningVolumes;
 
 	UPROPERTY(VisibleAnywhere)
 	EDungeonState DungeonState;
@@ -112,6 +133,8 @@ private:
 	bool SpawnFinish;
 
 	bool BossSpawnFinish;
+
+
 };
 
 

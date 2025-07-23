@@ -21,6 +21,8 @@ class UInteractManager;
 class UObjectPoolComponent;
 class UPlayerSkillComponent;
 class URPGSaveGame;
+class UPlayerEquipmentComponent;
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInteractQuest, FString, ObjectiveID);
 /**
  * 
@@ -52,6 +54,8 @@ public:
 	virtual UObjectPoolComponent* GetObjectPoolComponent() const;
 
 	virtual UPlayerSkillComponent* GetPlayerSkillComponent() const;
+
+	virtual UPlayerEquipmentComponent* GetPlayerEquipmentComponent() const;
 
 	FOnInteractQuest OnInteractQuest;
 	
@@ -111,6 +115,9 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", meta = (AllowPrivateAccess = "true"))
 		UPlayerSkillComponent* PlayerSkillComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", meta = (AllowPrivateAccess = "true"))
+		UPlayerEquipmentComponent* PlayerEquipmentComponent;
 
 	FInteractionData InteractionTargetData;
 

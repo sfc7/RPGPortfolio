@@ -7,6 +7,7 @@
 #include "NiagaraComponent.h"
 #include "MonsterCharacter.generated.h"
 
+
 class UMonsterCombatComponent;
 class UNiagaraSystem;
 class UMonsterUIComponent;
@@ -34,7 +35,6 @@ public:
 	FORCEINLINE UBoxComponent* GetLeftHandCollisionBox() const { return LeftHandCollisionBox; }
 
 	FORCEINLINE UBoxComponent* GetRightHandCollisionBox() const { return RightHandCollisionBox; }
-
 	
 	virtual UCombatComponentBase* GetCombatComponent() const override;
 
@@ -56,6 +56,9 @@ public:
 	void OnMoveCompleted(FAIRequestID RequestID, const FPathFollowingResult& Result);
 
 	FOnTeleportEnd OnTeleportEnd;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
+	UWidgetComponent* MonsterHpWidgetComponent;
 protected:
 	virtual void BeginPlay() override;
 	
@@ -71,8 +74,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
 	UMonsterUIComponent* MonsterUIComponent;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
-	UWidgetComponent* MonsterHpWidgetComponent;
+
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DamageIndicator")
 	TSubclassOf<ADamageIndicator> DamageIndicator;
