@@ -72,10 +72,6 @@ void UItemSlotMaster::SetWidgetVisibility(UWidget* Target, bool IsVisible)
 void UItemSlotMaster::SetInventoryRef(UPlayerInventoryComponent* InventoryReftoSet)
 {
 	InventoryRef = InventoryReftoSet;
-	if (IsValid(InventoryReftoSet->GetPlayerEquipmentComponentRef()))
-	{
-		EquipmentRef = InventoryReftoSet->GetPlayerEquipmentComponentRef();
-	}
 }
 
 void UItemSlotMaster::SetSlotSizeBox(float Size)
@@ -329,17 +325,25 @@ void UItemSlotMaster::OnEquipmentItemButtonDoubleClicked()
 {
 	if (SlotData.ItemDataAsset->ItemType == EItemType::Equipment)
 	{
-		if (IsValid(EquipmentRef))
+		if (InventoryRef->GetInventoryType() == EInventoryType::PlayerInventory)
 		{
-			APlayerCharacterBase* PlayerCharacter = Cast<APlayerCharacterBase>(EquipmentRef->GetOwner());
+			APlayerCharacterBase* PlayerCharacter = Cast<APlayerCharacterBase>(InventoryRef->GetOwner());
 			if (!PlayerCharacter)
 			{
 				return;
 			}
 
 			InventoryRef->EquipItem(SlotData);
+		}
+		else if (InventoryRef->GetInventoryType() == EInventoryType::Equipment)
+		{
+			APlayerCharacterBase* PlayerCharacter = Cast<APlayerCharacterBase>(InventoryRef->GetOwner());
+			if (!PlayerCharacter)
+			{
+				return;
+			}
 
-			// Todo: Equipment->ApplyStat
+			InventoryRef->UnEquipItem(SlotData);
 		}
 	}
 }

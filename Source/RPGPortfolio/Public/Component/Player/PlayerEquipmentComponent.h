@@ -18,6 +18,12 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void ApplyEquipmentItem(FInventorySlot ItemToSet);
+
+	UFUNCTION(BlueprintCallable)
+	void ApplyUnEquipmentItem(FInventorySlot ItemToSet);
+protected:
+	virtual void BeginPlay() override;
+	
 private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
 	FInventorySlot HelmetSlot;
@@ -33,4 +39,6 @@ private:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
 	FInventorySlot BootsSlot;
+
+	UPlayerInventoryComponent* PlayerInventoryComponentRef;
 };

@@ -36,10 +36,6 @@ void UPlayerInventoryComponent::SetupSlots(int32 SlotAmountstoSetup)
 		FInventorySlot InventorySlot;
 		InventorySlot.SlotIndex = Index;
 		InventorySlot.InventoryRef = this;
-		if (IsValid(PlayerEquipmentComponentRef))
-		{
-			InventorySlot.EquipmentRef = PlayerEquipmentComponentRef;
-		}
 		ItemSlots.Add(InventorySlot);
 	}
 }
@@ -264,6 +260,24 @@ void UPlayerInventoryComponent::EquipItem(FInventorySlot FromSlot)
 	}
 }
 
+void UPlayerInventoryComponent::UnEquipItem(FInventorySlot FromSlot)
+{
+	int32 FromIndex = FromSlot.SlotIndex;	
+
+	if (ItemSlots.IsValidIndex(FromIndex))
+	{
+		if (ItemSlots[FromIndex].ItemDataAsset->ItemType != EItemType::Equipment) return;
+		
+		if (InventoryType != EInventoryType::Equipment) return;
+
+		if (IsValid(PlayerEquipmentComponentRef))
+		{
+			PlayerEquipmentComponentRef->ApplyUnEquipmentItem(FromSlot);
+			
+		}
+	}
+}
+
 void UPlayerInventoryComponent::SetItem(FInventorySlot TargetSlot, FInventorySlot ItemToSet)
 {
 	int32 TargetIndex = TargetSlot.SlotIndex;	
@@ -273,16 +287,16 @@ void UPlayerInventoryComponent::SetItem(FInventorySlot TargetSlot, FInventorySlo
 		ItemSlots[TargetIndex] = ItemToSet;
 		ItemSlots[TargetIndex].SlotIndex = TargetIndex;
 		ItemSlots[TargetIndex].InventoryRef = this;
-		if (IsValid(PlayerEquipmentComponentRef))
-		{
-			ItemSlots[TargetIndex].EquipmentRef = PlayerEquipmentComponentRef;
-		}
 		
 		OnInventorySlotChangedDelegate.Broadcast(ItemSlots[TargetIndex]);
 		
 		if (InventoryType == EInventoryType::Potion)
 		{
 			OnPotionBarSlotChangedDelegate.Broadcast();
+		}
+		else if (InventoryType == EInventoryType::Equipment)
+		{
+			OnEquipmentSlotChangedDelegate.Broadcast();
 		}
 	}
 }

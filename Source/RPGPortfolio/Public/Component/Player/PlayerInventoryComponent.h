@@ -24,6 +24,7 @@ class UDataAsset_RPGItemData;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInventorySlotChangedDelegate, FInventorySlot, Slot);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGoldChangedDelegate, int32, GoldAmount);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPotionBarSlotChangedDelegate);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnEquipmentSlotChangedDelegate);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class RPGPORTFOLIO_API UPlayerInventoryComponent : public UActorComponent
@@ -60,6 +61,7 @@ public:
 	FOnInventorySlotChangedDelegate OnInventorySlotChangedDelegate;
 	FOnGoldChangedDelegate OnGoldChangedDelegate;
 	FOnPotionBarSlotChangedDelegate OnPotionBarSlotChangedDelegate;
+	FOnEquipmentSlotChangedDelegate OnEquipmentSlotChangedDelegate;
 	
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Size")
 	int32 SlotAmounts;
@@ -89,7 +91,10 @@ public:
 	void EquipItem(FInventorySlot FromSlot);
 
 	UFUNCTION(BlueprintCallable)
-	UPlayerEquipmentComponent* GetPlayerEquipmentComponentRef() const { return PlayerEquipmentComponentRef;}
+	void UnEquipItem(FInventorySlot FromSlot);
+
+	UFUNCTION(BlueprintCallable)
+	EInventoryType GetInventoryType() const { return InventoryType;}
 protected:
 	virtual void BeginPlay() override;
 

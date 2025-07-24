@@ -17,6 +17,20 @@ void UEquipmentWidget::NativeConstruct()
 	APlayerCharacter_Fighter* PC = Cast<APlayerCharacter_Fighter>(GetOwningPlayerPawn());
 	if (PC)
 	{
-		EquipmentSlotContainer->SetInventoryRef(PC->GetPlayerEquipmentComponent());
+		UPlayerEquipmentComponent* EquipmentInventory = PC->GetPlayerEquipmentComponent();
+
+		if (EquipmentInventory)
+		{
+			EquipmentSlotContainer->SetInventoryRef(EquipmentInventory);
+			EquipmentInventory->OnEquipmentSlotChangedDelegate.AddDynamic(this, &UEquipmentWidget::OnEquipmentChanged);
+		}
+	}
+}
+
+void UEquipmentWidget::OnEquipmentChanged()
+{
+	if (EquipmentSlotContainer)
+	{
+		EquipmentSlotContainer->RefreshSlots();
 	}
 }

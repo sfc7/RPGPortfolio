@@ -17,10 +17,10 @@ void UItemPotionHotBar::NativeOnInitialized()
 	if (PC)
 	{
 		UPlayerInventoryComponent* PotionInventory = PC->GetPlayerPotionHotBar();
-		ItemSlotContainer->SetInventoryRef(PotionInventory);
-		
+
 		if (PotionInventory)
 		{
+			ItemSlotContainer->SetInventoryRef(PotionInventory);
 			PotionInventory->OnPotionBarSlotChangedDelegate.AddDynamic(this, &UItemPotionHotBar::OnPotionBarChanged);
 		}
 	}
@@ -28,7 +28,6 @@ void UItemPotionHotBar::NativeOnInitialized()
 
 void UItemPotionHotBar::OnPotionBarChanged()
 {
-	// 포션 바 UI 강제 갱신
 	if (ItemSlotContainer)
 	{
 		ItemSlotContainer->RefreshSlots();

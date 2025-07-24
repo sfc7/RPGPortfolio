@@ -92,8 +92,5 @@ protected:
 	
 	UPROPERTY(BlueprintReadWrite)
 		UPlayerInventoryComponent* InventoryRef;
-
-	UPROPERTY(BlueprintReadWrite)
-		UPlayerEquipmentComponent* EquipmentRef;
 	
 };

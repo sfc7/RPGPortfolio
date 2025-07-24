@@ -164,9 +164,6 @@ struct FInventorySlot
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<UPlayerInventoryComponent> InventoryRef;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TObjectPtr<UPlayerEquipmentComponent> EquipmentRef;
 };
 
 UENUM(BlueprintType)

@@ -22,4 +22,7 @@ public:
 
 protected:
 	virtual void NativeConstruct() override;
+
+	UFUNCTION()
+	void OnEquipmentChanged();
 };
