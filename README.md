@@ -10,5 +10,5 @@
 
  
 # 기술 설명서
-## 구조 다이어그램
+## 구조
 ![Diagram](https://github.com/user-attachments/assets/e349150f-ae0c-4b32-af77-6e3c6eb8aadc)
