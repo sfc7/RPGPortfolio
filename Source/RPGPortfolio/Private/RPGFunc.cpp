@@ -75,12 +75,11 @@ FGameplayTag URPGFunc::GetHitReactDirection(AActor* Attacker, AActor* HitReactAc
 
 bool URPGFunc::IsValidDefense(AActor* Attacker, AActor* Defender)
 {
-	check(Attacker && Defender);
+	if (!IsValid(Attacker) && !IsValid(Defender)) return false;
 
 	const float InnerProduct = FVector::DotProduct(Attacker->GetActorForwardVector(), Defender->GetActorForwardVector());
 
 	return InnerProduct < -0.1f;
-	
 }
 
 void URPGFunc::CountDown(const UObject* WorldContextObject, float TotalTime, float UpdateInterval, float& OutRemainingTime, ERPGCountDownActionInput CountDownInput, ERPGCountDownActionOutput& CountDownOutput, FLatentActionInfo LatentInfo)

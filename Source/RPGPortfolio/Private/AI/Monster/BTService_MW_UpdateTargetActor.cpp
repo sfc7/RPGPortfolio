@@ -36,6 +36,4 @@ void UBTService_MW_UpdateTargetActor::TickNode(UBehaviorTreeComponent& OwnerComp
 			MonsterCharacter = Cast<AMonsterCharacter>(AIController->GetPawn());
 		}
 	}
-
-	
 }

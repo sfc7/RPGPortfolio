@@ -202,7 +202,7 @@ void UDungeonProgressManager::OnDungeonStateChanged(EDungeonState NewState)
 			break;
             
 		case EDungeonState::BossMonsterPhase:
-			DungeonGameMode->DungeonCinemaPlay();			
+			DungeonGameMode->DungeonCinemaPlay();
 			break;
             
 		case EDungeonState::Clear:

@@ -35,4 +35,6 @@ protected:
 	void OnParryingStateChange(const FGameplayTag CallbackTag, int32 NewCount);
 
 	void InitRegisterGameplayTagEvent();
+
+	int32 MappingPriority = 1; 
 };

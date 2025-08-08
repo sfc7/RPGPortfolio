@@ -41,7 +41,7 @@ void URPGGA_Player_NenShot::ActivateAbility(const FGameplayAbilitySpecHandle Han
 		
 	}
 
-	bool bRotate = FindNearestEnemyBeforeAttack(1500.f); 
+	bool bRotate = FindNearestEnemyBeforeAttack(1000.f) && !HasMatchingGameplayTag(RPGGameplayTag::Player_Status_LockOnTarget); 
 
 	if (bRotate)
 	{

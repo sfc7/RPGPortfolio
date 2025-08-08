@@ -124,10 +124,15 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	UInteractManager* InteractManager;
 
+	FVector2D SwitchDirection = FVector2D::ZeroVector;
+
+
 	void PerformInteractionCheck();
 	
 	void Input_Move(const FInputActionValue& InputActionValue);
 	void Input_Look(const FInputActionValue& InputActionValue);
+	void Input_SwitchTargetTriggered(const FInputActionValue& InputActionValue);
+	void Input_SwitchTargetCompleted(const FInputActionValue& InputActionValue);
 	void Input_AbilityInputPressed(FGameplayTag _InputTag);
 	void Input_AbilityInputReleased(FGameplayTag _InputTag);
 	void Input_ShowDebug();

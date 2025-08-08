@@ -25,11 +25,13 @@ namespace RPGGameplayTag
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_UseHotBarItem_1_Keyboard, "InputTag.UseHotBarItem.1.Keyboard");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_UseHotBarItem_2_Keyboard, "InputTag.UseHotBarItem.2.Keyboard");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_UseHotBarItem_3_Keyboard, "InputTag.UseHotBarItem.3.Keyboard");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_SwitchTarget, "InputTag.SwitchTarget");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Hold, "InputTag.Hold");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Hold_Defense_Keyboard, "InputTag.Hold.Defense.Keyboard");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Toggle, "InputTag.Toggle");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_Toggle_LockOnTarget, "InputTag.Toggle.LockOnTarget");
 
-
+	
 	RPGPORTFOLIO_API UE_DECLARE_GAMEPLAY_TAG_EXTERN();
 	RPGPORTFOLIO_API UE_DECLARE_GAMEPLAY_TAG_EXTERN();
 	RPGPORTFOLIO_API UE_DECLARE_GAMEPLAY_TAG_EXTERN();
@@ -51,12 +53,14 @@ namespace RPGGameplayTag
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Skill_Meteor, "Player.Ability.Skill.Meteor");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Skill_DropKick, "Player.Ability.Skill.DropKick");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Interact, "Player.Ability.Interact");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_LockOnTarget, "Player.Ability.LockOnTarget");
 
 	// Player - Status
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_CanHeavyAttackCombo, "Player.Status.CanHeavyAttackCombo");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_CanParryingAttack, "Player.Status.CanParryingAttack");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_CanInteract, "Player.Status.CanInteract");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_ActiveAttackBuff, "Player.Status.ActiveAttackBuff");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Status_LockOnTarget, "Player.Status.LockOnTarget");
 
 	
 	// Player - Status - ActionState
@@ -82,8 +86,8 @@ namespace RPGGameplayTag
 	UE_DEFINE_GAMEPLAY_TAG(Player_Event_DodgeSuccess, "Player.Event.DodgeSuccess");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Event_DefenseSuccess, "Player.Event.DefenseSuccess");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Event_ActiveBuff, "Player.Event.ActiveBuff");
-
-	
+	UE_DEFINE_GAMEPLAY_TAG(Player_Event_SwitchTarget_Left, "Player.Event.SwitchTarget.Left");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Event_SwitchTarget_Right, "Player.Event.SwitchTarget.Right");
 	//Monster
 	UE_DEFINE_GAMEPLAY_TAG(Monster_Weapon, "Monster.Weapon");
 	

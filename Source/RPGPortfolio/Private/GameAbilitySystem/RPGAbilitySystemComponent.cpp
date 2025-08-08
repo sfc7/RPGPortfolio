@@ -17,9 +17,16 @@ void URPGAbilitySystemComponent::OnAbilityInputPressed(const FGameplayTag& _Inpu
 	{
 		if (!AbilitySpec.GetDynamicSpecSourceTags().HasTagExact(_InputTag)) continue;
 
-		if (_InputTag.MatchesTag(RPGGameplayTag::InputTag_Toggle) && AbilitySpec.IsActive())
+		if (_InputTag.MatchesTag(RPGGameplayTag::InputTag_Toggle))
 		{
-			CancelAbilityHandle(AbilitySpec.Handle);
+			if (AbilitySpec.IsActive())
+			{
+				CancelAbilityHandle(AbilitySpec.Handle);
+			}
+			else
+			{
+				TryActivateAbility(AbilitySpec.Handle);
+			}
 		}
 		else
 		{

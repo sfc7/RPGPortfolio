@@ -89,7 +89,7 @@ void URPGGA_Player_Defense::SuccessDefenseCallback(FGameplayEventData PayloadDat
 		GetWorld()->GetTimerManager().SetTimer(ParryingInputTimerHandle, [this]()
 		{
 			RemoveGameplayTag(GetPlayerCharacterFromActorInfo(), RPGGameplayTag::Player_Status_CanParryingAttack);
-		}, 0.5f, false);
+		}, CanParryingAttackStateDelayTime, false);
 	}
 	else
 	{
@@ -128,7 +128,7 @@ void URPGGA_Player_Defense::RemoveParryingAttackReady()
 			{
 				GetRPGAbilitySystemComponentFromActorInfo()->ClearAbility(ParryAbilityHandle);
 				ParryAbilityHandle = FGameplayAbilitySpecHandle(); 
-			}, 1.0f, false);
+			}, ParryingAttackASCActiveTime, false);
 		}
 	}
 }

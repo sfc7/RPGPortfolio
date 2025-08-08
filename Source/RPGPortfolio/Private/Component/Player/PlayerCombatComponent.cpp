@@ -46,6 +46,7 @@ void UPlayerCombatComponent::OnHitTargetActor(AActor* _HitActor, float WeaponBas
 		if (MeshComp && SocketName != NAME_None)
 		{
 			SocketLocation = MeshComp->GetSocketLocation(SocketName);
+			
 		}
 	}
 	
@@ -94,17 +95,23 @@ void UPlayerCombatComponent::OnWeaponPulledFromTargetActor(AActor* _HitActor, fl
 void UPlayerCombatComponent::OnParryingStateChange(const FGameplayTag CallbackTag, int32 NewCount)
 {	
 	APlayerController* PC = GetOwningController<APlayerController>();
-	if (!PC) return;
+	if (!IsValid(PC)) return;
 
 	ULocalPlayer* LocalPlayer = PC->GetLocalPlayer();
+	if (!IsValid(LocalPlayer)) return;
+	
 	UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(LocalPlayer);
+	if (!IsValid(Subsystem)) return;
+	
 	APlayerCharacterBase* PlayerCharacter = GetOwningPawn<APlayerCharacterBase>();
+	if (!IsValid(PlayerCharacter)) return;
+	
 	if (!IsValid(Subsystem) || !PlayerCharacter->GetParryingInputMappingContext())
 		return;
 
 	if (NewCount > 0)
 	{
-		Subsystem->AddMappingContext(PlayerCharacter->GetParryingInputMappingContext(), 1);
+		Subsystem->AddMappingContext(PlayerCharacter->GetParryingInputMappingContext(), MappingPriority);
 	}
 	else
 	{

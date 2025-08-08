@@ -12,6 +12,8 @@ class UUIManager;
 class UDungeonProgressManager;
 class UItemManager;
 class UInteractManager;
+class UQuestManager;
+class UGASManager;
 /**
  * 
  */
@@ -34,6 +36,12 @@ public:
 
 	UFUNCTION(BlueprintPure)
 	UInteractManager* GetInteractManager() const;
+
+	UFUNCTION(BlueprintPure)
+	UQuestManager* GetQuestManager() const;
+
+	UFUNCTION(BlueprintPure)
+	UGASManager* GetGASManager() const;
 	
 protected:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;

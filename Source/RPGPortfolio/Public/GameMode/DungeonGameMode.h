@@ -36,12 +36,21 @@ private:
 	
 	UPROPERTY()
 	float GameTime;
-
-	UFUNCTION(BlueprintCallable)
-	void HandleSequenceFinished();
-
-	UFUNCTION(BlueprintCallable)
-	void BossAppear();
 	
 	bool flagspawn;
+
+	FTimerHandle FadeBackTimerHandle;
+	
+	UFUNCTION()
+	void OnCinemaFinished();
+
+	UFUNCTION()
+	void BossAppear();
+
+	void StartCinema();
+	void HidePlayerUI();
+	void ShowPlayerUI();
+	void StartCameraFadeInOut();
+
+	
 };

@@ -47,28 +47,7 @@ struct FPlayerAbilitySkillSet : public FPlayerAbilitySet
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	int32 SkillPrice;
 
-	//Todo 변경핊요
-	
-	// UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	// int SkillLevel;
-	//
-	// UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	// float SkillDamageMultiplier;
-	//
-	// UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	// float SkillCostMana;
-	//
-	// UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	// float SkillCooldown;
 };
-
-// USTRUCT(BlueprintType)
-// struct FPlayerAbilitySkillInfoSet : public FPlayerAbilitySet
-// {
-// 	GENERATED_BODY()
-//
-//
-// };
 
 USTRUCT(BlueprintType)
 struct FWeaponDefaultData

@@ -45,12 +45,12 @@ void URPGGA_Player_TeleportDropKick::ActivateAbility(const FGameplayAbilitySpecH
 		GetPlayerCharacterFromActorInfo()->GetPlayerUIComponent()->OnSkillCooldownBeginDelegate.Broadcast(
 			QuickSlotIndex, 
 			RPGGameplayTag::Player_Ability_Skill_DropKick, 
-			GetCooldownTimeRemaining(), 
+			GetCooldownTimeRemaining(),		
 			GetCooldownTimeRemaining()
 		);
 	}
 	
-	bool bRotate = FindNearestEnemyBeforeAttack(1000.f);
+	bool bRotate = FindNearestEnemyBeforeAttack(1000.f) && !HasMatchingGameplayTag(RPGGameplayTag::Player_Status_LockOnTarget); 
 	
 	if (RotateTargetActor)
 	{

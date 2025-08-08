@@ -47,26 +47,35 @@ ETeamAttitude::Type ARPGAIController::GetTeamAttitudeTowards(const AActor& Other
 
 void ARPGAIController::BeginPlay()
 {
-	Super::BeginPlay();
+    Super::BeginPlay();
 
-	UCrowdFollowingComponent* CrowdFollowingComponent = Cast<UCrowdFollowingComponent>(GetPathFollowingComponent());
-	if (CrowdFollowingComponent)
-	{
-		CrowdFollowingComponent->SetCrowdSimulationState(bEnableDetourCrowdAvoidance? ECrowdSimulationState::Enabled : ECrowdSimulationState::Disabled);
+    UCrowdFollowingComponent* CrowdFollowingComponent = Cast<UCrowdFollowingComponent>(GetPathFollowingComponent());
+    if (CrowdFollowingComponent)
+    {
+        CrowdFollowingComponent->SetCrowdSimulationState(bEnableDetourCrowdAvoidance ? ECrowdSimulationState::Enabled : ECrowdSimulationState::Disabled);
 
-		switch (DetourCrowdAvoidanceQuality)
-		{
-		case 1: CrowdFollowingComponent->SetCrowdAvoidanceQuality(ECrowdAvoidanceQuality::Low); break;
-		case 2: CrowdFollowingComponent->SetCrowdAvoidanceQuality(ECrowdAvoidanceQuality::Medium); break;
-		case 3: CrowdFollowingComponent->SetCrowdAvoidanceQuality(ECrowdAvoidanceQuality::Good); break;
-		case 4: CrowdFollowingComponent->SetCrowdAvoidanceQuality(ECrowdAvoidanceQuality::High); break;
-		default: break;
-		}
+        switch (CrowdAvoidanceQualityLevel)
+        {
+        case ECrowdAvoidanceQualityLevel::Low: 
+            CrowdFollowingComponent->SetCrowdAvoidanceQuality(ECrowdAvoidanceQuality::Low); 
+            break;
+        case ECrowdAvoidanceQualityLevel::Medium: 
+            CrowdFollowingComponent->SetCrowdAvoidanceQuality(ECrowdAvoidanceQuality::Medium); 
+            break;
+        case ECrowdAvoidanceQualityLevel::Good: 
+            CrowdFollowingComponent->SetCrowdAvoidanceQuality(ECrowdAvoidanceQuality::Good); 
+            break;
+        case ECrowdAvoidanceQualityLevel::High: 
+            CrowdFollowingComponent->SetCrowdAvoidanceQuality(ECrowdAvoidanceQuality::High); 
+            break;
+        default: 
+            break;
+        }
 
-		CrowdFollowingComponent->SetAvoidanceGroup(1);
-		CrowdFollowingComponent->SetGroupsToAvoid(1);
-		CrowdFollowingComponent->SetCrowdCollisionQueryRange(CollisionQueryRange);
-	}
+        CrowdFollowingComponent->SetAvoidanceGroup(1);
+        CrowdFollowingComponent->SetGroupsToAvoid(1);
+        CrowdFollowingComponent->SetCrowdCollisionQueryRange(CollisionQueryRange);
+    }
 }
 
 void ARPGAIController::OnPossess(APawn* InPawn)

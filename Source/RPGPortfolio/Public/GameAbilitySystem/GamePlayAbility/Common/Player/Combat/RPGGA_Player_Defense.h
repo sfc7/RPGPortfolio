@@ -65,6 +65,6 @@ protected:
 	void RemoveParryingAttackReady();
 	// Parry 
 	
-
-	
+	float CanParryingAttackStateDelayTime = 0.5f;
+	float ParryingAttackASCActiveTime = 1.0f;
 };

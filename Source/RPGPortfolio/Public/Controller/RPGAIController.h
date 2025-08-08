@@ -6,6 +6,15 @@
 #include "AIController.h"
 #include "RPGAIController.generated.h"
 
+UENUM(BlueprintType)
+enum class ECrowdAvoidanceQualityLevel : uint8
+{
+	Low     = 0,
+	Medium  = 1,
+	Good    = 2,
+	High    = 3
+};
+
 class UAIPerceptionComponent;
 class UAISenseConfig_Sight;
 class UBehaviorTree;
@@ -42,8 +51,8 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "CrowdFollowingComponent")
 		bool bEnableDetourCrowdAvoidance = true;
 
-	UPROPERTY(EditDefaultsOnly, Category = "CrowdFollowingComponent", meta = (EditCondition = "bEnableDetourCrowdAvoidance", UIMin = "1", UIMax = "4"))
-		int32 DetourCrowdAvoidanceQuality = 4;
+	UPROPERTY(EditDefaultsOnly, Category = "CrowdFollowingComponent", meta = (EditCondition = "bEnableDetourCrowdAvoidance"))
+	ECrowdAvoidanceQualityLevel CrowdAvoidanceQualityLevel = ECrowdAvoidanceQualityLevel::Medium;
 
 	UPROPERTY(EditDefaultsOnly, Category = "CrowdFollowingComponent", meta = (EditCondition = "bEnableDetourCrowdAvoidance"))
 		float CollisionQueryRange = 600.f;

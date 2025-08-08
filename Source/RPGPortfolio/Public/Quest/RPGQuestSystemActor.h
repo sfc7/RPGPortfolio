@@ -68,7 +68,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FQuest QuestDetails;
 
-	//
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 CurrentStage = 0;
 

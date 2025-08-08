@@ -35,17 +35,18 @@ void ARPGQuestSystemActor::SetCurrentStage(int32 QuestStageToSet)
 
 void ARPGQuestSystemActor::OnObjectiveIDHeard(FString ObjectiveID)
 {
-	if (CurrentObjectiveProgress.Find(ObjectiveID))
+	if (!CurrentObjectiveProgress.Contains(ObjectiveID))
 	{
-		int32 Index = *CurrentObjectiveProgress.Find(ObjectiveID);
-		FObjectiveDetail CurrentObjectiveDetail = GetObjectiveDataByID(ObjectiveID);
-		int AddIndex = FMath::Clamp(Index+1, 0, CurrentObjectiveDetail.Quantity);
-		
-		CurrentObjectiveProgress.Add(ObjectiveID, AddIndex);
-		IsObjectiveComplete(ObjectiveID);
-
-		OnObjectiveHeard.Broadcast();
+		return;
 	}
+
+	const int32 CurrentProgress = *CurrentObjectiveProgress.Find(ObjectiveID);
+	const FObjectiveDetail ObjectiveDetail = GetObjectiveDataByID(ObjectiveID);
+	const int32 NewProgress = FMath::Clamp(CurrentProgress + 1, 0, ObjectiveDetail.Quantity);
+	
+	CurrentObjectiveProgress.Add(ObjectiveID, NewProgress);
+	IsObjectiveComplete(ObjectiveID);
+	OnObjectiveHeard.Broadcast();
 }
 
 void ARPGQuestSystemActor::GetQuestDetails()

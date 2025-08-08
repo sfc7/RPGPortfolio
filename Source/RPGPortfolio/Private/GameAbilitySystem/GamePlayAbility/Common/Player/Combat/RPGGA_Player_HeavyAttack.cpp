@@ -26,7 +26,7 @@ void URPGGA_Player_HeavyAttack::ActivateAbility(const FGameplayAbilitySpecHandle
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
-	bool bRotate = FindNearestEnemyBeforeAttack(1000.f); 
+	bool bRotate = FindNearestEnemyBeforeAttack(1000.f) && !HasMatchingGameplayTag(RPGGameplayTag::Player_Status_LockOnTarget); 
 
 	if (bRotate)
 	{
