@@ -123,15 +123,23 @@ void UQuestManager::ClearAllQuests()
 
 void UQuestManager::TurnInQuest(FName QuestID)
 {
-	ARPGQuestSystemActor* QuestSystemActor = GetQuestActor(QuestID);
-
 	CompleteQuest(QuestID);
 }
 
 ARPGQuestSystemActor* UQuestManager::GetQuestActor(FName QuestID)
 {
+	if (QuestID.IsNone())
+	{
+		return nullptr;
+	}
+	
 	for (ARPGQuestSystemActor* QuestActor : CurrentQuests)
 	{
+		if (!QuestActor)
+		{
+			continue;
+		}
+		
 		if (QuestActor->GetQuestID() == QuestID)
 		{
 			return QuestActor;

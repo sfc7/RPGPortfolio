@@ -159,7 +159,23 @@ void ULevelManager::LoadPlayerInventoryData(URPGSaveGame* SaveGame)
 
 void ULevelManager::SavePlayerGold(URPGSaveGame* SaveGame)
 {
-	APlayerCharacterBase* Player =  Cast<APlayerCharacterBase>(GetWorld()->GetFirstPlayerController()->GetPawn());
+	if (!SaveGame)
+	{
+		return;
+	}
+
+	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+	if (!PlayerController)
+	{
+		return;
+	}
+
+	APlayerCharacterBase* Player = Cast<APlayerCharacterBase>(PlayerController->GetPawn());
+	if (!Player)
+	{
+		return;
+	}
+	
 	if (Player && Player->GetPlayerInventoryComponent())
 	{
 		SaveGame->SetPlayerGold(Player->GetPlayerInventoryComponent()->GetPlayerGold());
@@ -168,7 +184,23 @@ void ULevelManager::SavePlayerGold(URPGSaveGame* SaveGame)
 
 void ULevelManager::LoadPlayerGold(URPGSaveGame* SaveGame)
 {
-	APlayerCharacterBase* Player =  Cast<APlayerCharacterBase>(GetWorld()->GetFirstPlayerController()->GetPawn());
+	if (!SaveGame)
+	{
+		return;
+	}
+
+	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+	if (!PlayerController)
+	{
+		return;
+	}
+
+	APlayerCharacterBase* Player = Cast<APlayerCharacterBase>(PlayerController->GetPawn());
+	if (!Player)
+	{
+		return;
+	}
+	
 	if (Player && Player->GetPlayerInventoryComponent())
 	{
 		int32 LoadedPlayerGold = SaveGame->GetPlayerGold();
@@ -178,7 +210,23 @@ void ULevelManager::LoadPlayerGold(URPGSaveGame* SaveGame)
 
 void ULevelManager::SavePlayerAttribute(URPGSaveGame* SaveGame)
 {
-	APlayerCharacterBase* Player =  Cast<APlayerCharacterBase>(GetWorld()->GetFirstPlayerController()->GetPawn());
+	if (!SaveGame)
+	{
+		return;
+	}
+
+	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+	if (!PlayerController)
+	{
+		return;
+	}
+
+	APlayerCharacterBase* Player = Cast<APlayerCharacterBase>(PlayerController->GetPawn());
+	if (!Player)
+	{
+		return;
+	}
+	
 	if (Player)
 	{
 		TArray<FAttributeSaveData> AttributeData = Player->GetRPGAttributeSet()->SaveAllAttributesToSaveData();
@@ -188,7 +236,22 @@ void ULevelManager::SavePlayerAttribute(URPGSaveGame* SaveGame)
 
 void ULevelManager::LoadPlayerAttribute(URPGSaveGame* SaveGame)
 {
-	APlayerCharacterBase* Player =  Cast<APlayerCharacterBase>(GetWorld()->GetFirstPlayerController()->GetPawn());
+	if (!SaveGame)
+	{
+		return;
+	}
+
+	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+	if (!PlayerController)
+	{
+		return;
+	}
+
+	APlayerCharacterBase* Player = Cast<APlayerCharacterBase>(PlayerController->GetPawn());
+	if (!Player)
+	{
+		return;
+	}
 
 	if (Player)
 	{
@@ -202,27 +265,6 @@ void ULevelManager::LoadLoadingScreen(const FString& LevelName)
 	FLoadingScreenAttributes LoadingScreenAttributes;
 	LoadingScreenAttributes.bAutoCompleteWhenLoadingCompletes = true;
 	LoadingScreenAttributes.MinimumLoadingScreenDisplayTime = 2.f;	
-
-	// TSubclassOf<UUserWidget> LoadingScreenClass;
-	// UUserWidget* LoadingWidget = nullptr;
-	//
-	// if (LevelName == TEXT("Town"))
-	// {
-	// 	LoadingScreenClass = GetGameInstance()->GetSubsystem<UGeneralGameManager>()->GetUIManager()->GetLoadingScreen(ELoadingCategory::Town);
-	// }
-	// else if (LevelName == TEXT("Dungeon"))
-	// {
-	// 	LoadingScreenClass = GetGameInstance()->GetSubsystem<UGeneralGameManager>()->GetUIManager()->GetLoadingScreen(ELoadingCategory::Dungeon);
-	// }
-	//
-	// if (LoadingScreenClass)
-	// {
-	// 	LoadingWidget = CreateWidget<UUserWidget>(GetWorld(), LoadingScreenClass);
-	// 	if (LoadingWidget)
-	// 	{
-	// 		LoadingScreenAttributes.WidgetLoadingScreen = FLoadingScreenAttributes::NewTestLoadingScreenWidget();
-	// 	}
-	// }
 	LoadingScreenAttributes.WidgetLoadingScreen = FLoadingScreenAttributes::NewTestLoadingScreenWidget();
 	GetMoviePlayer()->SetupLoadingScreen(LoadingScreenAttributes);
 }

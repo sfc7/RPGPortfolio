@@ -224,8 +224,8 @@ bool UPlayerInventoryComponent::StackItemOnTransfer(FInventorySlot TargetSlot, F
 			OutAreAllItemAdded = true;
 			return true;
 		}   
-		}
-		else
+	}
+	else
 	{
 		SwapIndex(TargetSlot, FromSlot);
 		OutAreAllItemAdded = false;

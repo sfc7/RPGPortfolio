@@ -91,6 +91,10 @@ void URPGGameplayAbility::ApplyGameplayEffectgSpecHandleToHitResults(const FGame
 	}
 
 	APawn* Owner = Cast<APawn>(GetAvatarActorFromActorInfo());
+	if (!Owner)
+	{
+		return;
+	}
 	
 	TSet<AActor*> UniqueActors;
 

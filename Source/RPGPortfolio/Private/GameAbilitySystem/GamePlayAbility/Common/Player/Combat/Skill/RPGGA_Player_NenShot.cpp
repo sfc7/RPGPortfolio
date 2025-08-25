@@ -97,11 +97,6 @@ void URPGGA_Player_NenShot::SpawnProjectile(FGameplayEventData PayloadData)
 	
 	FRotator ProjectileDirection = UKismetMathLibrary::MakeRotFromX(GetPlayerCharacterFromActorInfo()->GetActorForwardVector());
 	
-	FActorSpawnParameters SpawnParams;
-	SpawnParams.Owner = GetPlayerCharacterFromActorInfo();
-	SpawnParams.Instigator = GetPlayerCharacterFromActorInfo();
-	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-	
 	APooledActor* PooledActor = GetPlayerCharacterFromActorInfo()->GetObjectPoolComponent()->SpawnFromPool(RPGGameplayTag::Data_ObjectPoolType_NenShot,ProjectileLocation, ProjectileDirection);
 	if (AProjectileBase* Projectile = Cast<AProjectileBase>(PooledActor))
 	{

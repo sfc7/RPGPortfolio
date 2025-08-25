@@ -95,13 +95,12 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	EInventoryType GetInventoryType() const { return InventoryType;}
+	
 protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
 	EInventoryType InventoryType = EInventoryType::None;
-	
-	UUserWidget* InventoryWidget;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, SaveGame)
 	int32 PlayerGold = 0;

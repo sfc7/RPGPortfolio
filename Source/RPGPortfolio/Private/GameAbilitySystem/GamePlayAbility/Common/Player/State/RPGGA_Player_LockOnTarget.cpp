@@ -101,7 +101,8 @@ void URPGGA_Player_LockOnTarget::SwitchTarget(const FGameplayTag& InSwitchDirect
 	if (InSwitchDirectionTag == RPGGameplayTag::Player_Event_SwitchTarget_Left)
 	{
 		NewTargetToLock = GetNearestTargetFromAvailableActors(ActorsOnLeft);
-	} else
+	}
+	else
 	{
 		NewTargetToLock = GetNearestTargetFromAvailableActors(ActorsOnRight);
 	}
