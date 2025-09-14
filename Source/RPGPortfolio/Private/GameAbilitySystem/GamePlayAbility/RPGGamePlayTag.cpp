@@ -61,6 +61,7 @@ namespace RPGGameplayTag
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_CanInteract, "Player.Status.CanInteract");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_ActiveAttackBuff, "Player.Status.ActiveAttackBuff");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_LockOnTarget, "Player.Status.LockOnTarget");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Status_ParryingSuccessCheck, "Player.Status.ParryingSuccessCheck");
 
 	
 	// Player - Status - ActionState

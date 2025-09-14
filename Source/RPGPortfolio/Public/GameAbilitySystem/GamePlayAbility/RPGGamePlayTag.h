@@ -59,6 +59,7 @@ namespace RPGGameplayTag
 	RPGPORTFOLIO_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Status_CanInteract);
 	RPGPORTFOLIO_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Status_ActiveAttackBuff);
 	RPGPORTFOLIO_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Status_LockOnTarget);
+	RPGPORTFOLIO_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Status_ParryingSuccessCheck);
 	
 	// Player - Status - ActionState
 	RPGPORTFOLIO_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Status_ActionState_IsAttacking);

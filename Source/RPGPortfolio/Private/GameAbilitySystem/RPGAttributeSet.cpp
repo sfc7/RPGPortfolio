@@ -10,6 +10,7 @@
 #include "GameAbilitySystem/RPGAbilitySystemComponent.h"
 #include "GameAbilitySystem/GamePlayAbility/RPGGamePlayTag.h"
 #include "Component/Player/PlayerUIComponent.h"
+#include "GameMode/GameManager/CombatManager.h"
 #include "Interface/UIInterface.h"
 #include "WorldStatic/DamageIndicator.h"
 
@@ -41,8 +42,15 @@ void URPGAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectMod
 		
 	if (Data.EvaluatedData.Attribute == GetCurrentHpAttribute())
 	{
-		float NewCurrentHp = FMath::Clamp(GetCurrentHp(), 0.f, GetMaxHp());
+		URPGAbilitySystemComponent* ASC = CastChecked<URPGAbilitySystemComponent>(GetOwningAbilitySystemComponent());
 
+		if (ASC->HasMatchingGameplayTag(RPGGameplayTag::Player_Status_ParryingSuccessCheck))
+		{
+			GetWorld()->GetGameInstance()->GetSubsystem<UCombatManager>()->RecordParryAttempt(false);
+		}
+		
+		float NewCurrentHp = FMath::Clamp(GetCurrentHp(), 0.f, GetMaxHp());
+		
 		SetCurrentHp(NewCurrentHp);
 		
 		UIComponent->OnCurrentHpChanged.Broadcast(GetCurrentHp()/GetMaxHp());

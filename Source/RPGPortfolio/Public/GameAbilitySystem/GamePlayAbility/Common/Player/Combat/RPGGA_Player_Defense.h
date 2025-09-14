@@ -8,6 +8,7 @@
 
 class UPlayerGameplayAbility;
 class UGameplayEffect;
+class UCombatManager;
 /**
  * 
  */
@@ -64,7 +65,10 @@ protected:
 	UFUNCTION()
 	void RemoveParryingAttackReady();
 	// Parry 
+
+	UCombatManager* CachedCombatManager;
 	
+	float ParryingSuccessCheckTime = 1.0f;
 	float CanParryingAttackStateDelayTime = 0.5f;
 	float ParryingAttackASCActiveTime = 1.0f;
 };

@@ -31,7 +31,7 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	TSubclassOf<AProjectileBase> ProjectileClass;
-
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	int32 ProjectileCount = 20;
 
