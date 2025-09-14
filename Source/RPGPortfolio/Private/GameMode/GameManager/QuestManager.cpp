@@ -5,7 +5,7 @@
 
 #include "Quest/RPGQuestSystemActor.h"
 #include "Character/Player/PlayerCharacterBase.h"
-#include "Component/Player/PlayerInventoryComponent.h"
+#include "Component/InventoryComponent.h"
 #include "GameMode/GameManager/ItemManager.h"
 #include "DataAsset/Item/DataAsset_RPGItemData.h"
 
@@ -162,7 +162,7 @@ bool UQuestManager::GrantQuestRewards(FName QuestID, APlayerCharacterBase* Playe
 		return false;
 	}
 
-	UPlayerInventoryComponent* PlayerInventory = Player->GetPlayerInventoryComponent();
+	UInventoryComponent* PlayerInventory = Player->GetPlayerInventoryComponent();
     
 	bool bItemsGranted = GrantItemRewards(QuestData.QuestStages[0].ItemRewardAndQuantity, PlayerInventory);
 	GrantGoldReward(QuestData.QuestStages[0].GoldReward, PlayerInventory);
@@ -170,7 +170,7 @@ bool UQuestManager::GrantQuestRewards(FName QuestID, APlayerCharacterBase* Playe
 	return bItemsGranted;
 }
 
-bool UQuestManager::GrantItemRewards(const TMap<TSoftObjectPtr<UDataAsset_RPGItemData>, int32>& ItemRewards, UPlayerInventoryComponent* PlayerInventory)
+bool UQuestManager::GrantItemRewards(const TMap<TSoftObjectPtr<UDataAsset_RPGItemData>, int32>& ItemRewards, UInventoryComponent* PlayerInventory)
 {
 	if (!PlayerInventory)
 	{
@@ -200,7 +200,7 @@ bool UQuestManager::GrantItemRewards(const TMap<TSoftObjectPtr<UDataAsset_RPGIte
 	return bAllItemsAdded;
 }
 
-void UQuestManager::GrantGoldReward(int32 GoldAmount, UPlayerInventoryComponent* PlayerInventory)
+void UQuestManager::GrantGoldReward(int32 GoldAmount, UInventoryComponent* PlayerInventory)
 {
 	if (!PlayerInventory || GoldAmount <= 0)
 	{

@@ -7,13 +7,13 @@
 #include "Component/Player/QuestNPCComponent.h"
 #include "GameMode/GameManager/UIManager.h"
 #include "Widget/StoreWidget.h"
-#include "Component/Player/PlayerInventoryComponent.h"
+#include "Component/InventoryComponent.h"
 
 
 ANPC_HumanNPC::ANPC_HumanNPC()
 {
 	NPCType = ENPCType::Conversational;
-	StoreInventory = CreateDefaultSubobject<UPlayerInventoryComponent>(TEXT("StoreInventory"));
+	StoreInventory = CreateDefaultSubobject<UInventoryComponent>(TEXT("StoreInventory"));
 }
 
 UUserWidget* ANPC_HumanNPC::GetStoreWidget()

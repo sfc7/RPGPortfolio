@@ -22,11 +22,11 @@ void UPlayerEquipmentComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	HelmetSlot = ItemSlots[0];
-	ArmorSlot = ItemSlots[1];
-	PantsSlot = ItemSlots[2];
-	GlovesSlot = ItemSlots[3];
-	BootsSlot = ItemSlots[4];
+	HelmetSlot = DefaultItemSlots[0];
+	ArmorSlot = DefaultItemSlots[1];
+	PantsSlot = DefaultItemSlots[2];
+	GlovesSlot = DefaultItemSlots[3];
+	BootsSlot = DefaultItemSlots[4];
 }
 void UPlayerEquipmentComponent::ApplyEquipmentItem(FInventorySlot ItemToSet)
 {
@@ -105,7 +105,7 @@ void UPlayerEquipmentComponent::ApplyEquipmentItem(FInventorySlot ItemToSet)
 		*TargetSlot = ItemToSet;
 		TargetSlot->SlotIndex = SlotIndex;
 		TargetSlot->InventoryRef = this;
-		ItemSlots[SlotIndex] = *TargetSlot;
+		DefaultItemSlots[SlotIndex] = *TargetSlot;
 	}
 
 	APlayerCharacterBase* Player = Cast<APlayerCharacterBase>(GetOwner());
@@ -193,7 +193,7 @@ void UPlayerEquipmentComponent::ApplyUnEquipmentItem(FInventorySlot ItemToSet)
 		*TargetSlot = FInventorySlot();
 		TargetSlot->SlotIndex = SlotIndex;
 		TargetSlot->InventoryRef = this;
-		ItemSlots[SlotIndex] = *TargetSlot;
+		DefaultItemSlots[SlotIndex] = *TargetSlot;
 	}
 
 	OnEquipmentSlotChangedDelegate.Broadcast();

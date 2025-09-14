@@ -20,11 +20,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 	UUserWidget* GetStoreWidget();
 
-	virtual UPlayerInventoryComponent* GetNPCInventoryComponent() const { return StoreInventory; }
+	virtual UInventoryComponent* GetNPCInventoryComponent() const { return StoreInventory; }
 	
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", meta = (AllowPrivateAccess = "true"))
-	UPlayerInventoryComponent* StoreInventory;
+	UInventoryComponent* StoreInventory;
 
 	UPROPERTY()
 	UUserWidget* CachedStoreWidget = nullptr;

@@ -9,7 +9,7 @@
 
 class URPGGameplayAbility;
 class UDataAsset_RPGItemData;        
-class UPlayerInventoryComponent;    
+class UInventoryComponent;    
 class UMaterialInterface;
 class UPlayerEquipmentComponent;
 
@@ -142,7 +142,7 @@ struct FInventorySlot
 	TSoftObjectPtr<UDataAsset_RPGItemData> ItemDataAsset;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TObjectPtr<UPlayerInventoryComponent> InventoryRef;
+	TObjectPtr<UInventoryComponent> InventoryRef;
 };
 
 UENUM(BlueprintType)

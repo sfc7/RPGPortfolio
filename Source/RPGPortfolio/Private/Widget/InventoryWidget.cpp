@@ -2,7 +2,7 @@
 
 
 #include "Widget/InventoryWidget.h"
-#include "Component/Player/PlayerInventoryComponent.h"
+#include "Component/InventoryComponent.h"
 #include "Character/Player/PlayerCharacter_Fighter.h"
 #include "Widget/ItemSlotContainer.h"
 #include "Components/TextBlock.h"

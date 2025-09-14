@@ -8,7 +8,7 @@
 #include "ItemSlotMaster.generated.h"
 
 class UDataAsset_RPGItemData;
-class UPlayerInventoryComponent;
+class UInventoryComponent;
 class USizeBox;
 class UButton;
 class UImage;
@@ -38,7 +38,7 @@ public:
 	void SetWidgetVisibility(UWidget* Target, bool IsVisible);
 
 	UFUNCTION(BlueprintCallable)
-	void SetInventoryRef(UPlayerInventoryComponent* InventoryReftoSet);
+	void SetInventoryRef(UInventoryComponent* InventoryReftoSet);
 
 	UFUNCTION(BlueprintCallable)
 	void SetSlotSizeBox(float Size);
@@ -89,8 +89,14 @@ protected:
 	
 	UPROPERTY(BlueprintReadWrite, Category = "ItemSlot", meta = (BindWidget))
 		UTextBlock* QuantityText;
+
+	UPROPERTY(BlueprintReadWrite, Category = "ItemSlot", meta = (BindWidget))
+		UTextBlock* PlusInfoText;
+
+	UPROPERTY(BlueprintReadWrite, Category = "ItemSlot", meta = (BindWidget))
+		UTextBlock* PlusInfoText2;
 	
 	UPROPERTY(BlueprintReadWrite)
-		UPlayerInventoryComponent* InventoryRef;
+		UInventoryComponent* InventoryRef;
 	
 };

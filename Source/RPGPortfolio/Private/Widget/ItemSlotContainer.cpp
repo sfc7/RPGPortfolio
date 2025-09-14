@@ -3,7 +3,7 @@
 
 #include "Widget/ItemSlotContainer.h"
 
-#include "Component/Player/PlayerInventoryComponent.h"
+#include "Component/InventoryComponent.h"
 #include "Components/UniformGridPanel.h"
 #include "Components/UniformGridSlot.h"
 #include "GameMode/GameManager/UIManager.h"
@@ -43,7 +43,7 @@ void UItemSlotContainer::RefreshSlots()
 
 	ResizeSlot();
 
-	for (FInventorySlot ItemSlot : InventoryRef->ItemSlots)
+	for (FInventorySlot ItemSlot : InventoryRef->GetCurrentItemSlots())
 	{
 		UpdateSlotWidgetData(ItemSlot);
 	}
@@ -54,7 +54,7 @@ void UItemSlotContainer::UpdateSlotWidgetData(FInventorySlot UpdateSlot)
 	SlotWidgets[UpdateSlot.SlotIndex]->UpdateSlotData(UpdateSlot);
 }
 
-void UItemSlotContainer::SetInventoryRef(UPlayerInventoryComponent* InventoryRefToSet)
+void UItemSlotContainer::SetInventoryRef(UInventoryComponent* InventoryRefToSet)
 {
 	InventoryRef = InventoryRefToSet;
 	TotalSlots = InventoryRef->SlotAmounts;

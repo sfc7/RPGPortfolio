@@ -6,7 +6,7 @@
 #include "Character/NPC/RPGNPCCharacterBase.h"
 #include "NPC_Storage.generated.h"
 
-class UPlayerInventoryComponent;
+class UInventoryComponent;
 /**
  ** 
  */
@@ -22,5 +22,5 @@ public:
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", meta = (AllowPrivateAccess = "true"))
-	UPlayerInventoryComponent* StorageInventory;
+	UInventoryComponent* StorageInventory;
 };

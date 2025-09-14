@@ -8,7 +8,7 @@
 
 struct FInventorySlot;
 class UDataAsset_RPGItemData;
-class UPlayerInventoryComponent;
+class UInventoryComponent;
 /**
  * 
  */
@@ -35,7 +35,7 @@ public:
 	bool IsStackableAndIsEqualAndHaveSpace(FInventorySlot& TargetSlot, FInventorySlot& SlotToStack);
 
 	UFUNCTION(BlueprintCallable)
-	void OnInventorySlotDrop(UPlayerInventoryComponent* FromContainerInventoryComponent, UPlayerInventoryComponent* ToInventoryComponent, int32 FromIndex, int32 ToIndex) const;
+	void OnInventorySlotDrop(UInventoryComponent* FromContainerInventoryComponent, UInventoryComponent* ToInventoryComponent, int32 FromIndex, int32 ToIndex) const;
 	
 	UFUNCTION(BlueprintCallable)
 	int32 GetStackSize(FInventorySlot TargetSlot);

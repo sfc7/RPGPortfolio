@@ -13,10 +13,12 @@
 #include "Components/SizeBox.h"
 #include "DataAsset/Item/DataAsset_RPGItemData.h"
 #include "Widget/ItemInfomation.h"
-#include "Component/Player/PlayerInventoryComponent.h"
+#include "Component/InventoryComponent.h"
 #include "Widget/StoreWidget.h"
 #include "Components/Button.h"
 #include "Component/Player/PlayerEquipmentComponent.h"
+#include "Component/Player/PlayerInventoryComponent.h"
+#include "DataAsset/Item/DataAsset_RPGItemData_Potion.h"
 
 UItemSlotMaster::UItemSlotMaster(const FObjectInitializer& ObjectInitializer)
 {
@@ -53,7 +55,35 @@ void UItemSlotMaster::UpdateSlotData(FInventorySlot UpdateSlotData)
 		if (TooltipWidget)
 		{
 			TooltipWidget->UpdateSlotData(SlotData);
-		}	
+		}
+
+		if (Cast<UDefaultInventoryStrategy>(InventoryRef->CurrentInventoryStrategy.GetObject()))
+		{
+			PlusInfoText->SetText(FText::GetEmpty());
+			PlusInfoText2->SetText(FText::GetEmpty());
+		}
+		else if (Cast<UEquipmentInventoryStrategy>(InventoryRef->CurrentInventoryStrategy.GetObject()))
+		{
+			UDataAsset_RPGItemData_Equipment* Equipment = Cast<UDataAsset_RPGItemData_Equipment>(ItemDataAssetObject);
+			
+			PlusInfoText->SetText(FText::Format(FText::FromString(TEXT("+{0}")), Equipment->AttackRate));
+			PlusInfoText->SetColorAndOpacity(FSlateColor(FLinearColor::Red));
+
+			PlusInfoText2->SetText(FText::Format(FText::FromString(TEXT("+{0}")), Equipment->Defense));
+			PlusInfoText2->SetColorAndOpacity(FSlateColor(FLinearColor::Blue));
+		}
+		else if (Cast<UPotionInventoryStrategy>(InventoryRef->CurrentInventoryStrategy.GetObject()))
+		{
+			UDataAsset_RPGItemData_Potion* Potion = Cast<UDataAsset_RPGItemData_Potion>(ItemDataAssetObject);
+			
+			PlusInfoText->SetText(FText::Format(FText::FromString(TEXT("+{0}")), Potion->HealAmount));
+			PlusInfoText->SetColorAndOpacity(FSlateColor(FLinearColor::Green));
+
+			PlusInfoText2->SetText(FText::GetEmpty());
+		}
+		else if (Cast<UMaterialInventoryStrategy>(InventoryRef->CurrentInventoryStrategy.GetObject()))
+		{
+		}
 	}
 }
 
@@ -69,7 +99,7 @@ void UItemSlotMaster::SetWidgetVisibility(UWidget* Target, bool IsVisible)
 	}
 }
 
-void UItemSlotMaster::SetInventoryRef(UPlayerInventoryComponent* InventoryReftoSet)
+void UItemSlotMaster::SetInventoryRef(UInventoryComponent* InventoryReftoSet)
 {
 	InventoryRef = InventoryReftoSet;
 }
@@ -181,7 +211,7 @@ bool UItemSlotMaster::TryPurchaseItem()
         return false;
     }
 
-    UPlayerInventoryComponent* PlayerInventory = Player->GetPlayerInventoryComponent();
+    UInventoryComponent* PlayerInventory = Player->GetPlayerInventoryComponent();
 	
     UDataAsset_RPGItemData* ItemData = SlotData.ItemDataAsset.LoadSynchronous();
     if (!ItemData)
@@ -270,7 +300,7 @@ bool UItemSlotMaster::TrySellItem()
 		return false;
 	}
 
-	UPlayerInventoryComponent* PlayerInventory = Player->GetPlayerInventoryComponent();
+	UInventoryComponent* PlayerInventory = Player->GetPlayerInventoryComponent();
     
 	UDataAsset_RPGItemData* ItemData = SlotData.ItemDataAsset.LoadSynchronous();
 	if (!ItemData)

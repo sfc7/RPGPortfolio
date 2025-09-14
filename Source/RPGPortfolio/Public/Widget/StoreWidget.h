@@ -6,7 +6,7 @@
 #include "Widget/InventoryWidget.h"
 #include "StoreWidget.generated.h"
 
-class UPlayerInventoryComponent;
+class UInventoryComponent;
 class UItemSlotContainer;
 class UItemSlotMaster;
 class UButton;
@@ -26,7 +26,7 @@ public:
 	UItemSlotContainer* StoreSlotContainer;
 
 	UPROPERTY(BlueprintReadWrite)
-	UPlayerInventoryComponent*  StoreInventoryRef;
+	UInventoryComponent*  StoreInventoryRef;
 
 	UFUNCTION(BlueprintCallable)
 	void OnStoreItemPurchase(UItemSlotMaster* ClickedSlot);

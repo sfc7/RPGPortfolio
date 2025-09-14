@@ -151,10 +151,10 @@ public:
 	bool GrantQuestRewards(FName QuestID, APlayerCharacterBase* Player);
 
 	UFUNCTION(BlueprintCallable)
-	bool GrantItemRewards(const TMap<TSoftObjectPtr<UDataAsset_RPGItemData>, int32>& ItemRewards, UPlayerInventoryComponent* PlayerInventory);
+	bool GrantItemRewards(const TMap<TSoftObjectPtr<UDataAsset_RPGItemData>, int32>& ItemRewards, UInventoryComponent* PlayerInventory);
     
 	UFUNCTION(BlueprintCallable)
-	void GrantGoldReward(int32 GoldAmount, UPlayerInventoryComponent* PlayerInventory);
+	void GrantGoldReward(int32 GoldAmount, UInventoryComponent* PlayerInventory);
 
 	FOnQuestCompleted OnQuestCompleted;
 protected:

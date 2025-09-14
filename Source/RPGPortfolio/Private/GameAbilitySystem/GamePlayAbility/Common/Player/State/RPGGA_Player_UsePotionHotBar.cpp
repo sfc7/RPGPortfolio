@@ -6,7 +6,7 @@
 #include "GameAbilitySystem/GamePlayAbility/RPGGamePlayTag.h"
 #include "Abilities/GameplayAbilityTypes.h"
 #include "AbilitySystemComponent.h"
-#include "Component/Player/PlayerInventoryComponent.h"
+#include "Component/InventoryComponent.h"
 #include "DataAsset/Item/DataAsset_RPGItemData_Potion.h"
 #include "GameAbilitySystem/GamePlayAbility/RPGGameplayAbility.h"
 #include "GameAbilitySystem/RPGAbilitySystemComponent.h"
@@ -37,14 +37,14 @@ void URPGGA_Player_UsePotionHotBar::ActivateAbility(const FGameplayAbilitySpecHa
 	}
 
 	APlayerCharacterBase* Player = GetPlayerCharacterFromActorInfo();
-	UPlayerInventoryComponent* HotBarInventory = Player->GetPlayerPotionHotBar();
+	UInventoryComponent* HotBarInventory = Player->GetPlayerPotionHotBar();
     
 	if (!HotBarInventory || !HotBarInventory->IsValidSlotIndex(SlotIndex))
 	{
 		EndAbility(Handle, ActorInfo, ActivationInfo, true, true);
 	}
 
-	FInventorySlot& TargetSlot = HotBarInventory->ItemSlots[SlotIndex];
+	FInventorySlot& TargetSlot = HotBarInventory->DefaultItemSlots[SlotIndex];
 	UDataAsset_RPGItemData_Potion* PotionData = Cast<UDataAsset_RPGItemData_Potion>(TargetSlot.ItemDataAsset.LoadSynchronous());
     
 	if (!PotionData)
@@ -99,10 +99,10 @@ bool URPGGA_Player_UsePotionHotBar::CanActivateAbility(const FGameplayAbilitySpe
 	const APlayerCharacterBase* Player = Cast<APlayerCharacterBase>(ActorInfo->AvatarActor.Get());
 	if (!Player) return false;
 
-	const UPlayerInventoryComponent* HotBar = Player->GetPlayerPotionHotBar();
+	const UInventoryComponent* HotBar = Player->GetPlayerPotionHotBar();
 	if (!Player->GetPlayerPotionHotBar() || !Player->GetPlayerPotionHotBar()->IsValidSlotIndex(SlotIndex)) return false;
 
-	const FInventorySlot& Slot = HotBar->ItemSlots[SlotIndex];
+	const FInventorySlot& Slot = HotBar->DefaultItemSlots[SlotIndex];
 	if (Slot.ItemDataAsset.IsNull()) return false;
 
 	const UDataAsset_RPGItemData* ItemData = Slot.ItemDataAsset.LoadSynchronous();

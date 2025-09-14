@@ -7,7 +7,7 @@
 #include "Character/Player/PlayerCharacter_Fighter.h"
 #include "Widget/ItemSlotContainer.h"
 #include "Widget/ItemSlotMaster.h"
-#include "Component/Player/PlayerInventoryComponent.h"
+#include "Component/InventoryComponent.h"
 #include "Components/Button.h"
 #include "Components/Overlay.h"
 #include "DataAsset/Item/DataAsset_RPGItemData.h"

@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Component/Player/PlayerInventoryComponent.h"
+#include "Component/InventoryComponent.h"
 #include "PlayerEquipmentComponent.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class RPGPORTFOLIO_API UPlayerEquipmentComponent : public UPlayerInventoryComponent
+class RPGPORTFOLIO_API UPlayerEquipmentComponent : public UInventoryComponent
 {
 	GENERATED_BODY()
 public:
@@ -40,5 +40,5 @@ private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
 	FInventorySlot BootsSlot;
 
-	UPlayerInventoryComponent* PlayerInventoryComponentRef;
+	UInventoryComponent* PlayerInventoryComponentRef;
 };

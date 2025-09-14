@@ -1,63 +1,23 @@
-// LJS
-
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Component/Player/PlayerInventoryComponent.h"
-#include "UObject/NoExportTypes.h"
+#include "UObject/Interface.h"
+#include "RPGStructTypes.h"
 #include "InventoryTypeStrategy.generated.h"
 
-/**
- * 
- */
-UCLASS()
-class RPGPORTFOLIO_API UInventoryTypeStrategy : public UObject
+class UInventoryComponent;
+
+UINTERFACE(Blueprintable)
+class RPGPORTFOLIO_API UInventoryStrategy : public UInterface
 {
-	GENERATED_BODY()
-	public:
-    virtual ~UInventoryTypeStrategy() = default;
-    
-    virtual bool CanAddItem(const FInventorySlot& ItemToAdd, UPlayerInventoryComponent* InventoryComponent) { return true; }
-    virtual bool CanEquipItem(const FInventorySlot& ItemSlot, UPlayerInventoryComponent* InventoryComponent) { return false; }
-    virtual bool CanUnEquipItem(const FInventorySlot& ItemSlot, UPlayerInventoryComponent* InventoryComponent) { return false; }
-    virtual void OnItemSet(const FInventorySlot& ItemSlot, UPlayerInventoryComponent* InventoryComponent) {}
-    virtual bool ShouldShowInUI(const FInventorySlot& ItemSlot) { return true; }
-    virtual EInventoryType GetInventoryType() const PURE_VIRTUAL(UInventoryStrategy::GetInventoryType, return EInventoryType::None;);
+    GENERATED_BODY()
 };
 
-UCLASS(BlueprintType)
-class RPGPORTFOLIO_API UPlayerInventoryStrategy : public UInventoryTypeStrategy
+class RPGPORTFOLIO_API IInventoryStrategy
 {
     GENERATED_BODY()
 public:
-    virtual bool CanEquipItem(const FInventorySlot& ItemSlot, UPlayerInventoryComponent* InventoryComponent) override;
-    virtual EInventoryType GetInventoryType() const override { return EInventoryType::PlayerInventory; }
+    virtual TArray<FInventorySlot>& GetSlots(UInventoryComponent* OwnerInventory) = 0;
+    virtual const TArray<FInventorySlot>& GetSlots(const UInventoryComponent* OwnerInventory) const = 0;
 };
 
-UCLASS(BlueprintType)
-class RPGPORTFOLIO_API UEquipmentInventoryStrategy : public UInventoryTypeStrategy
-{
-    GENERATED_BODY()
-public:
-    virtual bool CanUnEquipItem(const FInventorySlot& ItemSlot, UPlayerInventoryComponent* InventoryComponent) override;
-    virtual void OnItemSet(const FInventorySlot& ItemSlot, UPlayerInventoryComponent* InventoryComponent) override;
-    virtual EInventoryType GetInventoryType() const override { return EInventoryType::Equipment; }
-};
-
-UCLASS(BlueprintType) 
-class RPGPORTFOLIO_API UPotionInventoryStrategy : public UInventoryTypeStrategy
-{
-    GENERATED_BODY()
-public:
-    virtual void OnItemSet(const FInventorySlot& ItemSlot, UPlayerInventoryComponent* InventoryComponent) override;
-    virtual bool ShouldShowInUI(const FInventorySlot& ItemSlot) override;
-    virtual EInventoryType GetInventoryType() const override { return EInventoryType::Potion; }
-};
-
-UCLASS(BlueprintType)
-class RPGPORTFOLIO_API UStorageInventoryStrategy : public UInventoryTypeStrategy  
-{
-    GENERATED_BODY()
-public:
-    virtual EInventoryType GetInventoryType() const override { return EInventoryType::Storage; }
-};

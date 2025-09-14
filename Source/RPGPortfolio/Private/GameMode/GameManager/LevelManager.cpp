@@ -10,7 +10,7 @@
 #include "MoviePlayer.h"
 #include "Blueprint/UserWidget.h"
 #include "Character/Player/PlayerCharacterBase.h"
-#include "Component/Player/PlayerInventoryComponent.h"
+#include "Component/InventoryComponent.h"
 #include "DataAsset/DataAsset_RPGUIData.h"
 #include "GameMode/GameManager/GeneralGameManager.h"
 #include "GameMode/GameManager/UIManager.h"
@@ -116,12 +116,12 @@ void ULevelManager::SavePlayerInventoryData(URPGSaveGame* SaveGame)
 
 	if (Player->GetPlayerInventoryComponent())
 	{
-		SaveGame->SetPlayerInventorySlots(Player->GetPlayerInventoryComponent()->ItemSlots);
+		SaveGame->SetPlayerInventorySlots(Player->GetPlayerInventoryComponent()->DefaultItemSlots);
 	}
 
 	if (Player->GetPlayerPotionHotBar())
 	{
-		SaveGame->SetPlayerPotionSlots(Player->GetPlayerPotionHotBar()->ItemSlots);
+		SaveGame->SetPlayerPotionSlots(Player->GetPlayerPotionHotBar()->DefaultItemSlots);
 	}
 }
 
@@ -133,24 +133,24 @@ void ULevelManager::LoadPlayerInventoryData(URPGSaveGame* SaveGame)
 	if (Player && Player->GetPlayerInventoryComponent())
 	{
 		TArray<FInventorySlot> LoadedItemSlots = SaveGame->GetPlayerInventorySlots();
-		Player->GetPlayerInventoryComponent()->ItemSlots = LoadedItemSlots;
+		Player->GetPlayerInventoryComponent()->DefaultItemSlots = LoadedItemSlots;
 		
 		for (int32 i = 0; i < LoadedItemSlots.Num(); ++i)
 		{
-			Player->GetPlayerInventoryComponent()->ItemSlots[i].SlotIndex = i;
-			Player->GetPlayerInventoryComponent()->ItemSlots[i].InventoryRef = Player->GetPlayerInventoryComponent();
+			Player->GetPlayerInventoryComponent()->DefaultItemSlots[i].SlotIndex = i;
+			Player->GetPlayerInventoryComponent()->DefaultItemSlots[i].InventoryRef = Player->GetPlayerInventoryComponent();
 		}
 	}
 
 	if (Player->GetPlayerPotionHotBar())
 	{
 		TArray<FInventorySlot> LoadedPotionSlots = SaveGame->GetPlayerPotionSlots();
-		Player->GetPlayerPotionHotBar()->ItemSlots = LoadedPotionSlots;
+		Player->GetPlayerPotionHotBar()->DefaultItemSlots = LoadedPotionSlots;
 		
 		for (int32 i = 0; i < LoadedPotionSlots.Num(); ++i)
 		{
-			Player->GetPlayerPotionHotBar()->ItemSlots[i].SlotIndex = i;
-			Player->GetPlayerPotionHotBar()->ItemSlots[i].InventoryRef = Player->GetPlayerPotionHotBar();
+			Player->GetPlayerPotionHotBar()->DefaultItemSlots[i].SlotIndex = i;
+			Player->GetPlayerPotionHotBar()->DefaultItemSlots[i].InventoryRef = Player->GetPlayerPotionHotBar();
 		}
 		
 		Player->GetPlayerPotionHotBar()->OnPotionBarSlotChangedDelegate.Broadcast();

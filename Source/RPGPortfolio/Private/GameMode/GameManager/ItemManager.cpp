@@ -6,7 +6,7 @@
 #include "Character/NPC/NPC_HumanNPC.h"
 #include "Character/Player/PlayerCharacter_Fighter.h"
 #include "Component/Player/PlayerEquipmentComponent.h"
-#include "Component/Player/PlayerInventoryComponent.h"
+#include "Component/InventoryComponent.h"
 #include "DataAsset/Item/DataAsset_RPGItemData.h"
 
 UItemManager::UItemManager()
@@ -81,7 +81,7 @@ bool UItemManager::IsStackableAndIsEqualAndHaveSpace(FInventorySlot& TargetSlot,
 	return false;
 }
 
-void UItemManager::OnInventorySlotDrop(UPlayerInventoryComponent* FromContainerInventoryComponent, UPlayerInventoryComponent* ToInventoryComponent, int32 FromIndex, int32 ToIndex) const
+void UItemManager::OnInventorySlotDrop(UInventoryComponent* FromContainerInventoryComponent, UInventoryComponent* ToInventoryComponent, int32 FromIndex, int32 ToIndex) const
 {
     bool bIsPlayerToStore = false;
 	bool bToEquipment = false;
@@ -120,7 +120,7 @@ void UItemManager::OnInventorySlotDrop(UPlayerInventoryComponent* FromContainerI
     {
         if (FromContainerInventoryComponent->IsValidSlotIndex(FromIndex))
         {
-            FInventorySlot& ItemSlot = FromContainerInventoryComponent->ItemSlots[FromIndex];
+            FInventorySlot& ItemSlot = FromContainerInventoryComponent->DefaultItemSlots[FromIndex];
             
             if (ItemSlot.ItemDataAsset.IsValid())
             {

@@ -7,7 +7,7 @@
 #include "DataAsset/DataAsset_RPGUIData.h"
 #include "GameMode/GameManager/UIManager.h"
 #include "Widget/ItemSlotContainer.h"
-#include "Component/Player/PlayerInventoryComponent.h"
+#include "Component/InventoryComponent.h"
 
 void UItemPotionHotBar::NativeOnInitialized()
 {
@@ -16,7 +16,7 @@ void UItemPotionHotBar::NativeOnInitialized()
 	APlayerCharacter_Fighter* PC = Cast<APlayerCharacter_Fighter>(GetOwningPlayerPawn());
 	if (PC)
 	{
-		UPlayerInventoryComponent* PotionInventory = PC->GetPlayerPotionHotBar();
+		UInventoryComponent* PotionInventory = PC->GetPlayerPotionHotBar();
 
 		if (PotionInventory)
 		{

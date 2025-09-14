@@ -3,107 +3,73 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/ActorComponent.h"
-#include "RPGStructTypes.h" 
+#include "Component/InventoryComponent.h"
 #include "PlayerInventoryComponent.generated.h"
 
 UENUM(BlueprintType)
-enum class EInventoryType : uint8
+enum class EInventoryStrategy : uint8
 {
-	PlayerInventory,
-	Storage,
-	Potion,
+	Default,
 	Equipment,
+	Potion,
+	Material,
 	None
 };
 
-class UItemManager;
-class UPlayerInventoryComponent;
-class UDataAsset_RPGItemData;
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInventorySlotChangedDelegate, FInventorySlot, Slot);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGoldChangedDelegate, int32, GoldAmount);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPotionBarSlotChangedDelegate);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnEquipmentSlotChangedDelegate);
-
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class RPGPORTFOLIO_API UPlayerInventoryComponent : public UActorComponent
+/**
+ * 
+ */
+UCLASS()
+class RPGPORTFOLIO_API UPlayerInventoryComponent : public UInventoryComponent
 {
 	GENERATED_BODY()
-
 public:	
 	UPlayerInventoryComponent();
 
-	UFUNCTION(BlueprintPure)
-	int32 GetPlayerGold() const { return PlayerGold; }
-	
-	UFUNCTION(BlueprintCallable)
-	void SetupSlots(int32 SlotAmountstoSetup);
-
-	UFUNCTION(BlueprintCallable)
-	bool AddItem(FInventorySlot ItemToAdd);
-
-	UFUNCTION(BlueprintCallable)
-	bool AddItemToIndex(FInventorySlot ItemToAdd, int32 ToIndex, bool& OutAreAllItemAdded);
-
-	UFUNCTION(BlueprintCallable)
-	bool RemoveItemToIndex(int32 ToIndex);
-
-	UFUNCTION(BlueprintCallable)
-	void SetItem(FInventorySlot TargetSlot, FInventorySlot ItemToSet);
-
-	UFUNCTION(BlueprintCallable)
-	void SetGold(int32 GoldAmount);
-	
-	UFUNCTION(BlueprintCallable)
-	bool FindEmptySlot(FInventorySlot& OutEmptySlot);
-	
-	FOnInventorySlotChangedDelegate OnInventorySlotChangedDelegate;
-	FOnGoldChangedDelegate OnGoldChangedDelegate;
-	FOnPotionBarSlotChangedDelegate OnPotionBarSlotChangedDelegate;
-	FOnEquipmentSlotChangedDelegate OnEquipmentSlotChangedDelegate;
-	
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Size")
-	int32 SlotAmounts;
+	TArray<FInventorySlot> MaterialItemSlots;
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Size")
-	TArray<FInventorySlot> ItemSlots;
+	TArray<FInventorySlot> PotionItemSlots;
 
-	UPROPERTY(BlueprintReadWrite)
-	UItemManager* ItemManager;
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Size")
+	TArray<FInventorySlot> EquipmentItemSlots;
 	
-	UFUNCTION(BlueprintPure)
-	FInventorySlot SetQuantityAtSlot(FInventorySlot& TargetSlot, int32 QuantityToSet);
+	virtual void SetupSlots(int32 SlotAmountstoSetup) override;
 
 	UFUNCTION(BlueprintCallable)
-	bool TransferItem(UPlayerInventoryComponent* ToInventoryComponent, int32 FromIndex, int32 ToIndex);
-
-	UFUNCTION(BlueprintPure)
-	bool IsValidSlotIndex(int32 FindIndex);
-
-	UFUNCTION(BlueprintCallable)
-	bool StackItemOnTransfer(FInventorySlot TargetSlot, FInventorySlot FromSlot, bool& OutAreAllItemAdded);
-
-	UFUNCTION(BlueprintCallable)
-	void SwapIndex(FInventorySlot TargetSlot, FInventorySlot FromSlot);
-
-	UFUNCTION(BlueprintCallable)
-	void EquipItem(FInventorySlot FromSlot);
-
-	UFUNCTION(BlueprintCallable)
-	void UnEquipItem(FInventorySlot FromSlot);
-
-	UFUNCTION(BlueprintCallable)
-	EInventoryType GetInventoryType() const { return InventoryType;}
+	void SetCurrentInventoryStrategy(EInventoryStrategy InventoryStrategyToSet);
 	
 protected:
 	virtual void BeginPlay() override;
+};
 
-	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
-	EInventoryType InventoryType = EInventoryType::None;
+// 장비 전략
+UCLASS(BlueprintType)
+class RPGPORTFOLIO_API UEquipmentInventoryStrategy : public UObject, public IInventoryStrategy
+{
+	GENERATED_BODY()
+public:
+	virtual TArray<FInventorySlot>& GetSlots(UInventoryComponent* OwnerInventory);
+	virtual const TArray<FInventorySlot>& GetSlots(const UInventoryComponent* OwnerInventory) const;
+};
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, SaveGame)
-	int32 PlayerGold = 0;
+// 포션 전략
+UCLASS(BlueprintType)
+class RPGPORTFOLIO_API UPotionInventoryStrategy : public UInventoryStrategy, public IInventoryStrategy
+{
+	GENERATED_BODY()
+public:
+	virtual TArray<FInventorySlot>& GetSlots(UInventoryComponent* OwnerInventory);
+	virtual const TArray<FInventorySlot>& GetSlots(const UInventoryComponent* OwnerInventory) const;
+};
 
-	UPlayerEquipmentComponent* PlayerEquipmentComponentRef;
+// 재료 전략
+UCLASS(BlueprintType)
+class RPGPORTFOLIO_API UMaterialInventoryStrategy : public UInventoryStrategy, public IInventoryStrategy
+{
+	GENERATED_BODY()
+public:
+	virtual TArray<FInventorySlot>& GetSlots(UInventoryComponent* OwnerInventory);
+	virtual const TArray<FInventorySlot>& GetSlots(const UInventoryComponent* OwnerInventory) const;
 };

@@ -18,7 +18,7 @@
 #include "Components/WidgetSwitcher.h"
 #include "GameMode/GameManager/GASManager.h"
 #include "Materials/MaterialInterface.h"
-#include "Component/Player/PlayerInventoryComponent.h"
+#include "Component/InventoryComponent.h"
 #include "Character/RPGCharacterBase.h"
 #include "Character/Player/PlayerCharacterBase.h"
 #include "DataAsset/DataAsset_PlayerAbilitySet.h"
@@ -113,7 +113,7 @@ bool USpellGlobe::TryPurchaseSkill()
 		return false;
 	}
 
-	UPlayerInventoryComponent* PlayerInventory = PlayerFighter->GetPlayerInventoryComponent();
+	UInventoryComponent* PlayerInventory = PlayerFighter->GetPlayerInventoryComponent();
 
 
 	FGameplayAbilitySpec AbilitySpec(SkillSlotData.AbilityToGrant); 

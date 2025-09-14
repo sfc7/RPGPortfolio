@@ -9,7 +9,7 @@
 
 class UScrollBox;
 class UItemSlotMaster;
-class UPlayerInventoryComponent;
+class UInventoryComponent;
 class UUniformGridPanel;
 /**
  * 
@@ -40,10 +40,10 @@ public:
 	void ResizeSlot();
 
 	UFUNCTION(BlueprintCallable)
-	void SetInventoryRef(UPlayerInventoryComponent* InventoryRefToSet);
+	void SetInventoryRef(UInventoryComponent* InventoryRefToSet);
 
 	UFUNCTION(BlueprintCallable)
-	UPlayerInventoryComponent* GetInventoryRef(){ return InventoryRef; }
+	UInventoryComponent* GetInventoryRef(){ return InventoryRef; }
 
 	UFUNCTION(BlueprintCallable)
 	void RefreshSlots();
@@ -59,5 +59,5 @@ protected:
 	
 private:
 	UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = true))
-	UPlayerInventoryComponent* InventoryRef;
+	UInventoryComponent* InventoryRef;
 };

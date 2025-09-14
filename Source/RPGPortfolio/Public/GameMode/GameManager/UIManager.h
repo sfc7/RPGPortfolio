@@ -9,7 +9,7 @@
 #include "UIManager.generated.h"
 
 class UDataAsset_RPGUIData;
-class UPlayerInventoryComponent;
+class UInventoryComponent;
 
 /**
  * 

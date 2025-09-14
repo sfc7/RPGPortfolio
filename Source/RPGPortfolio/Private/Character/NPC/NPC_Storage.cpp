@@ -6,12 +6,12 @@
 #include "Blueprint/UserWidget.h"
 #include "GameMode/GameManager/UIManager.h"
 #include "Widget/StorageWidget.h"
-#include "Component/Player/PlayerInventoryComponent.h"
+#include "Component/InventoryComponent.h"
 
 ANPC_Storage::ANPC_Storage()
 {
 	NPCType = ENPCType::Storage;
-	StorageInventory = CreateDefaultSubobject<UPlayerInventoryComponent>(TEXT("StorageInventory"));
+	StorageInventory = CreateDefaultSubobject<UInventoryComponent>(TEXT("StorageInventory"));
 }
 
 UUserWidget* ANPC_Storage::GetStorageWidget()

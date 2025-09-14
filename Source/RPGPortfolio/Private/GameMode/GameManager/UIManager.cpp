@@ -6,7 +6,7 @@
 #include "RPGStructTypes.h"
 #include "Engine/AssetManager.h"
 #include "Blueprint/UserWidget.h"
-#include "Component/Player/PlayerInventoryComponent.h"
+#include "Component/InventoryComponent.h"
 #include "DataAsset/DataAsset_RPGUIData.h"
 #include "Engine/StreamableManager.h"
 

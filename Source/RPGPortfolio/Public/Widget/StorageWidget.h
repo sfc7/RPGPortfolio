@@ -6,7 +6,7 @@
 #include "Widget/InventoryWidget.h"
 #include "StorageWidget.generated.h"
 
-class UPlayerInventoryComponent;
+class UInventoryComponent;
 /**
  * 
  */
@@ -21,7 +21,7 @@ public:
 	UItemSlotContainer* StorageSlotContainer;
 
 	UPROPERTY(BlueprintReadWrite)
-	UPlayerInventoryComponent*  StorageInventoryRef;
+	UInventoryComponent*  StorageInventoryRef;
 
 
 protected:

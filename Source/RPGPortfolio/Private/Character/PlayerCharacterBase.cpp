@@ -21,12 +21,13 @@
 #include "DataAsset/DataAsset_RPGUIData.h"
 #include "GameMode/GameManager/GeneralGameManager.h"
 #include "GameMode/GameManager/UIManager.h"
-#include "Component/Player/PlayerInventoryComponent.h"
+#include "Component/InventoryComponent.h"
 #include "Component/Player/PlayerSkillComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameMode/RPGGameInstance.h"
 #include "GameMode/GameManager/InteractManager.h"
 #include "Component/Player/PlayerEquipmentComponent.h"
+#include "Component/Player/PlayerInventoryComponent.h"
 
 APlayerCharacterBase::APlayerCharacterBase()
 {
@@ -54,7 +55,7 @@ APlayerCharacterBase::APlayerCharacterBase()
 	PlayerCombatComponent = CreateDefaultSubobject<UPlayerCombatComponent>(TEXT("PlayerCombatComponent"));
 	PlayerUIComponent = CreateDefaultSubobject<UPlayerUIComponent>(TEXT("PlayerUIComponent"));
 	PlayerItemInventoryComponent = CreateDefaultSubobject<UPlayerInventoryComponent>(TEXT("PlayerItemInventoryComponent"));
-	PlayerPotionHotbar = CreateDefaultSubobject<UPlayerInventoryComponent>(TEXT("PlayerPotionHotbar"));
+	PlayerPotionHotbar = CreateDefaultSubobject<UInventoryComponent>(TEXT("PlayerPotionHotbar"));
 	PlayerEquipmentComponent = CreateDefaultSubobject<UPlayerEquipmentComponent>(TEXT("PlayerEquipmentComponent"));
 
 	ObjectPoolComponent = CreateDefaultSubobject<UObjectPoolComponent>(TEXT("ObjectPoolComponent"));
@@ -96,12 +97,12 @@ UPlayerUIComponent* APlayerCharacterBase::GetPlayerUIComponent() const
 	return PlayerUIComponent;
 }
 
-UPlayerInventoryComponent* APlayerCharacterBase::GetPlayerInventoryComponent() const
+UInventoryComponent* APlayerCharacterBase::GetPlayerInventoryComponent() const
 {
 	return PlayerItemInventoryComponent;
 }
 
-UPlayerInventoryComponent* APlayerCharacterBase::GetPlayerPotionHotBar() const
+UInventoryComponent* APlayerCharacterBase::GetPlayerPotionHotBar() const
 {
 	return PlayerPotionHotbar;
 }
