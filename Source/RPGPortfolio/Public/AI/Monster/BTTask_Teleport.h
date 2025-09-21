@@ -7,7 +7,9 @@
 #include "BTTask_Teleport.generated.h"
 
 /**
+ * UBTTask_Teleport
  * 
+ * 캐릭터 Teleport 사용에 대한 Task
  */
 UCLASS()
 class RPGPORTFOLIO_API UBTTask_Teleport : public UBTTaskMonsterBase

@@ -20,24 +20,23 @@ void UBTService_CheckMonsterDeath::TickNode(UBehaviorTreeComponent& OwnerComp, u
 	Super::TickNode(OwnerComp, NodeMemory, DeltaSeconds);
 
 	UBlackboardComponent* BlackboardComp = OwnerComp.GetBlackboardComponent();
-	if (!BlackboardComp) return;
+	if (!IsValid(BlackboardComp)) return;
 
 	AActor* Owner = OwnerComp.GetOwner();
-	if (!Owner) return;
+	if (!IsValid(Owner)) return;
 
-	if (AAIController* AIController = Cast<AAIController>(Owner))
+	AAIController* AIController = Cast<AAIController>(Owner);
+	if (!IsValid(AIController)) return;
+
+	APawn* ControlledPawn = AIController->GetPawn();
+	if (!IsValid(ControlledPawn)) return;
+
+	URPGAbilitySystemComponent* ASC = CastChecked<URPGAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(ControlledPawn));
+	if (!IsValid(ASC)) return;
+
+	// Dead Tag 체크
+	if (ASC->HasMatchingGameplayTag(RPGGameplayTag::Character_Status_Dead))
 	{
-		APawn* ControlledPawn = AIController->GetPawn();
-		if (ControlledPawn)
-		{
-			URPGAbilitySystemComponent* ASC = Cast<URPGAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(ControlledPawn));
-			if (ASC)
-			{
-				if (ASC->HasMatchingGameplayTag(RPGGameplayTag::Character_Status_Dead))
-				{
-					BlackboardComp->SetValueAsBool(DeathStatusTag.SelectedKeyName, true);
-				}
-			}
-		}
+		BlackboardComp->SetValueAsBool(DeathStatusTag.SelectedKeyName, true);
 	}
 }

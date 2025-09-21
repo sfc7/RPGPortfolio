@@ -15,5 +15,7 @@ void UBTTask_ActivateGameAbility::OnExecuteTask(UBehaviorTreeComponent& OwnerCom
 	Super::OnExecuteTask(OwnerComp, NodeMemory);
 
 	URPGAbilitySystemComponent* ASC = MonsterCharacter->GetRPGAbilitySystemComponent();
+	if (!IsValid(ASC)) return;
+	
 	ASC->ActivateGamePlayAbilityByTag(ActivateGameplayTag);
 }

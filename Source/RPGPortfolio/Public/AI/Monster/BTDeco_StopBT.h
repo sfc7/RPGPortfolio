@@ -7,7 +7,9 @@
 #include "BTDeco_StopBT.generated.h"
 
 /**
+ * UBTDeco_StopBT
  * 
+ * 특정 조건에서 Behavior Tree 실행 중지
  */
 UCLASS()
 class RPGPORTFOLIO_API UBTDeco_StopBT : public UBTDecorator
@@ -22,6 +24,7 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	FBlackboardKeySelector DistToTargetKey;
+	
 	mutable bool bTargetActorDead;
 	mutable bool bOwnerActorDead;
 	

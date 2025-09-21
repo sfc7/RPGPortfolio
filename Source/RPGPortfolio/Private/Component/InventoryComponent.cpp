@@ -11,6 +11,7 @@
 #include "GameMode/GameManager/UIManager.h"
 #include "Component/Player/PlayerEquipmentComponent.h"
 #include "Item/InventoryTypeStrategy.h"
+#include "Item/InventorySituationStrategy.h"
 
 UInventoryComponent::UInventoryComponent()
 {
@@ -22,11 +23,8 @@ void UInventoryComponent::BeginPlay()
 
 	ItemManager = GetWorld()->GetGameInstance()->GetSubsystem<UItemManager>();
 	
-	if(!CurrentInventoryStrategy)
-	{
-		UDefaultInventoryStrategy* DefaultStrategy = NewObject<UDefaultInventoryStrategy>(this);
-		CurrentInventoryStrategy = TScriptInterface<IInventoryStrategy>(DefaultStrategy);
-	}
+	SetDefaultInventoryTypeStrategy();
+	SetDefaultInventorySituationStrategy();
 	
 	SetupSlots(SlotAmounts);
 }
@@ -331,44 +329,50 @@ bool UInventoryComponent::FindEmptySlot(FInventorySlot& OutEmptySlot)
 
 TArray<FInventorySlot>& UInventoryComponent::GetCurrentItemSlots()
 {
-	if (CurrentInventoryStrategy)
+	if (CurrentInventoryTypeStrategy)
 	{
-		return CurrentInventoryStrategy->GetSlots(this);
+		return CurrentInventoryTypeStrategy->GetSlots(this);
 	}
 	return DefaultItemSlots;
 }
 
 const TArray<FInventorySlot>& UInventoryComponent::GetCurrentItemSlots() const
 {
-	if (CurrentInventoryStrategy)
+	if (CurrentInventoryTypeStrategy)
 	{
-		return CurrentInventoryStrategy->GetSlots(this);
+		return CurrentInventoryTypeStrategy->GetSlots(this);
 	}
 	return DefaultItemSlots;
 }
 
-void UInventoryComponent::SetDefaultInventoryStrategy()
+void UInventoryComponent::SetDefaultInventoryTypeStrategy()
 {
-	if(!CurrentInventoryStrategy)
+	if(!CurrentInventoryTypeStrategy)
 	{
-		UDefaultInventoryStrategy* DefaultInventoryStrategy = NewObject<UDefaultInventoryStrategy>(this);
-		CurrentInventoryStrategy = TScriptInterface<IInventoryStrategy>(DefaultInventoryStrategy);
+		UDefaultInventoryTypeStrategy* DefaultInventoryTypeStrategy = NewObject<UDefaultInventoryTypeStrategy>(this);
+		CurrentInventoryTypeStrategy = TScriptInterface<IInventoryTypeStrategy>(DefaultInventoryTypeStrategy);
+	}
+}
+
+void UInventoryComponent::SetDefaultInventorySituationStrategy()
+{
+	if(!CurrentInventorySituationStrategy)
+	{
+		UInventorySituationStrategy* DefaultInventorySituationStrategy = NewObject<UInventorySituationStrategy>(this);
+		CurrentInventorySituationStrategy = TScriptInterface<IInventorySituationStrategy>(DefaultInventorySituationStrategy);
 	}
 }
 
 
+///////// UDefaultInventoryTypeStrategy
 
 
-
-///////// UDefaultInventoryStrategy
-
-
-TArray<FInventorySlot>& UDefaultInventoryStrategy::GetSlots(UInventoryComponent* OwnerInventory)
+TArray<FInventorySlot>& UDefaultInventoryTypeStrategy::GetSlots(UInventoryComponent* OwnerInventory)
 {
 	check(OwnerInventory);
 	return OwnerInventory->DefaultItemSlots;
 }
-const TArray<FInventorySlot>& UDefaultInventoryStrategy::GetSlots(const UInventoryComponent* OwnerInventory) const
+const TArray<FInventorySlot>& UDefaultInventoryTypeStrategy::GetSlots(const UInventoryComponent* OwnerInventory) const
 {
 	check(OwnerInventory);
 	return OwnerInventory->DefaultItemSlots;

@@ -8,8 +8,8 @@ bool UBTDeco_RandomProbability::CalculateRawConditionValue(UBehaviorTreeComponen
 {
 	Super::CalculateRawConditionValue(OwnerComp, NodeMemory);
 
-	float RandomValue = FMath::RandRange(MinValue, MaxValue);
-	bool bSuccess = UKismetMathLibrary::RandomBoolWithWeight(RandomValue);
+	const float RandomValue = FMath::RandRange(MinValue, MaxValue);
+	const bool bSuccess = UKismetMathLibrary::RandomBoolWithWeight(RandomValue);
 	
 	return bSuccess;
 }

@@ -40,53 +40,53 @@ void UPlayerInventoryComponent::SetupSlots(int32 SlotAmountstoSetup)
 	}
 }
 
-void UPlayerInventoryComponent::SetCurrentInventoryStrategy(EInventoryStrategy InventoryStrategyToSet)
+void UPlayerInventoryComponent::SetCurrentInventoryTypeStrategy(EInventoryTypeStrategy InventoryTypeStrategyToSet)
 {
-	switch (InventoryStrategyToSet)
+	switch (InventoryTypeStrategyToSet)
 	{
-	case EInventoryStrategy::Default:
+	case EInventoryTypeStrategy::Default:
 		{
-			UDefaultInventoryStrategy* Strategy = NewObject<UDefaultInventoryStrategy>(this);
-			CurrentInventoryStrategy = TScriptInterface<IInventoryStrategy>(Strategy);
+			UDefaultInventoryTypeStrategy* Strategy = NewObject<UDefaultInventoryTypeStrategy>(this);
+			CurrentInventoryTypeStrategy = TScriptInterface<IInventoryTypeStrategy>(Strategy);
 		}
 		break;
 
-	case EInventoryStrategy::Equipment:
+	case EInventoryTypeStrategy::Equipment:
 		{
-			UEquipmentInventoryStrategy* Strategy = NewObject<UEquipmentInventoryStrategy>(this);
-			CurrentInventoryStrategy = TScriptInterface<IInventoryStrategy>(Strategy);
+			UEquipmentInventoryTypeStrategy* Strategy = NewObject<UEquipmentInventoryTypeStrategy>(this);
+			CurrentInventoryTypeStrategy = TScriptInterface<IInventoryTypeStrategy>(Strategy);
 		}
 		break;
 
-	case EInventoryStrategy::Potion:
+	case EInventoryTypeStrategy::Potion:
 		{
-			UPotionInventoryStrategy* Strategy = NewObject<UPotionInventoryStrategy>(this);
-			CurrentInventoryStrategy = TScriptInterface<IInventoryStrategy>(Strategy);
+			UPotionInventoryTypeStrategy* Strategy = NewObject<UPotionInventoryTypeStrategy>(this);
+			CurrentInventoryTypeStrategy = TScriptInterface<IInventoryTypeStrategy>(Strategy);
 		}
 		break;
 
-	case EInventoryStrategy::Material:
+	case EInventoryTypeStrategy::Material:
 		{
-			UMaterialInventoryStrategy* Strategy = NewObject<UMaterialInventoryStrategy>(this);
-			CurrentInventoryStrategy = TScriptInterface<IInventoryStrategy>(Strategy);
+			UMaterialInventoryTypeStrategy* Strategy = NewObject<UMaterialInventoryTypeStrategy>(this);
+			CurrentInventoryTypeStrategy = TScriptInterface<IInventoryTypeStrategy>(Strategy);
 		}
 		break;
 
-	case EInventoryStrategy::None:
-		CurrentInventoryStrategy = nullptr;
+	case EInventoryTypeStrategy::None:
+		CurrentInventoryTypeStrategy = nullptr;
 		break;
 
 	default:
 		{
-			UDefaultInventoryStrategy* Strategy = NewObject<UDefaultInventoryStrategy>(this);
-			CurrentInventoryStrategy = TScriptInterface<IInventoryStrategy>(Strategy);
+			UDefaultInventoryTypeStrategy* Strategy = NewObject<UDefaultInventoryTypeStrategy>(this);
+			CurrentInventoryTypeStrategy = TScriptInterface<IInventoryTypeStrategy>(Strategy);
 		}
 		break;
 	}
 }
 
 
-TArray<FInventorySlot>& UEquipmentInventoryStrategy::GetSlots(UInventoryComponent* OwnerInventory)
+TArray<FInventorySlot>& UEquipmentInventoryTypeStrategy::GetSlots(UInventoryComponent* OwnerInventory)
 {
 	UPlayerInventoryComponent* PlayerInventory = Cast<UPlayerInventoryComponent>(OwnerInventory);
 	if (PlayerInventory)
@@ -97,7 +97,7 @@ TArray<FInventorySlot>& UEquipmentInventoryStrategy::GetSlots(UInventoryComponen
 	return OwnerInventory->DefaultItemSlots;
 }
 
-const TArray<FInventorySlot>& UEquipmentInventoryStrategy::GetSlots(const UInventoryComponent* OwnerInventory) const
+const TArray<FInventorySlot>& UEquipmentInventoryTypeStrategy::GetSlots(const UInventoryComponent* OwnerInventory) const
 {
 	const UPlayerInventoryComponent* PlayerInventory = Cast<UPlayerInventoryComponent>(OwnerInventory);
 	if (PlayerInventory)
@@ -108,7 +108,7 @@ const TArray<FInventorySlot>& UEquipmentInventoryStrategy::GetSlots(const UInven
 	return OwnerInventory->DefaultItemSlots;
 }
 
-TArray<FInventorySlot>& UPotionInventoryStrategy::GetSlots(UInventoryComponent* OwnerInventory)
+TArray<FInventorySlot>& UPotionInventoryTypeStrategy::GetSlots(UInventoryComponent* OwnerInventory)
 {
 	UPlayerInventoryComponent* PlayerInventory = Cast<UPlayerInventoryComponent>(OwnerInventory);
 	if (PlayerInventory)
@@ -119,7 +119,7 @@ TArray<FInventorySlot>& UPotionInventoryStrategy::GetSlots(UInventoryComponent* 
 	return OwnerInventory->DefaultItemSlots;
 }
 
-const TArray<FInventorySlot>& UPotionInventoryStrategy::GetSlots(const UInventoryComponent* OwnerInventory) const
+const TArray<FInventorySlot>& UPotionInventoryTypeStrategy::GetSlots(const UInventoryComponent* OwnerInventory) const
 {
 	const UPlayerInventoryComponent* PlayerInventory = Cast<UPlayerInventoryComponent>(OwnerInventory);
 	if (PlayerInventory)
@@ -130,7 +130,7 @@ const TArray<FInventorySlot>& UPotionInventoryStrategy::GetSlots(const UInventor
 	return OwnerInventory->DefaultItemSlots;
 }
 
-TArray<FInventorySlot>& UMaterialInventoryStrategy::GetSlots(UInventoryComponent* OwnerInventory)
+TArray<FInventorySlot>& UMaterialInventoryTypeStrategy::GetSlots(UInventoryComponent* OwnerInventory)
 {
 	UPlayerInventoryComponent* PlayerInventory = Cast<UPlayerInventoryComponent>(OwnerInventory);
 	if (PlayerInventory)
@@ -141,7 +141,7 @@ TArray<FInventorySlot>& UMaterialInventoryStrategy::GetSlots(UInventoryComponent
 	return OwnerInventory->DefaultItemSlots;
 }
 
-const TArray<FInventorySlot>& UMaterialInventoryStrategy::GetSlots(const UInventoryComponent* OwnerInventory) const
+const TArray<FInventorySlot>& UMaterialInventoryTypeStrategy::GetSlots(const UInventoryComponent* OwnerInventory) const
 {
 	const UPlayerInventoryComponent* PlayerInventory = Cast<UPlayerInventoryComponent>(OwnerInventory);
 	if (PlayerInventory)

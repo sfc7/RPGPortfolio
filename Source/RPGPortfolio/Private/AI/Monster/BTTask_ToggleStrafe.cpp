@@ -16,11 +16,11 @@ EBTNodeResult::Type UBTTask_ToggleStrafe::ExecuteTask(UBehaviorTreeComponent& Ow
 
 void UBTTask_ToggleStrafe::OnExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
-	if (MonsterCharacter)
-	{
-		ASC = MonsterCharacter->GetRPGAbilitySystemComponent();
-	}
-	
+
+	URPGAbilitySystemComponent* ASC = MonsterCharacter->GetRPGAbilitySystemComponent();
+	if (!IsValid(ASC)) return;
+
+	// Strafe 활성화
 	if (ShouldEnable)
 	{
 		MonsterCharacter->GetCharacterMovement()->bOrientRotationToMovement = false;
@@ -30,29 +30,25 @@ void UBTTask_ToggleStrafe::OnExecuteTask(UBehaviorTreeComponent& OwnerComp, uint
 			MonsterCharacter->GetCharacterMovement()->MaxWalkSpeed = StrafeWalkSpeed;
 		}
 		
-		if (ASC)
+		if (!ASC->HasMatchingGameplayTag(RPGGameplayTag::Monster_Status_Strafe))
 		{
-			if (!ASC->HasMatchingGameplayTag(RPGGameplayTag::Monster_Status_Strafe))
-			{
-				ASC->AddLooseGameplayTag(RPGGameplayTag::Monster_Status_Strafe);	
-			}
+			ASC->AddLooseGameplayTag(RPGGameplayTag::Monster_Status_Strafe);	
 		}
 	}
+	// Strafe 비 활성화
 	else
 	{
 		MonsterCharacter->GetCharacterMovement()->bOrientRotationToMovement = true;
-		float BlackboardMaxSpeed = OwnerComp.GetBlackboardComponent()->GetValueAsFloat(MaxWalkSpeedKey.SelectedKeyName);
+		// MaxWalkSpeed는 블랙보드에 캐싱되어 있어서 그걸 가져옴
+		const float BlackboardMaxSpeed = OwnerComp.GetBlackboardComponent()->GetValueAsFloat(MaxWalkSpeedKey.SelectedKeyName);
 		if (MonsterCharacter->GetCharacterMovement()->MaxWalkSpeed != BlackboardMaxSpeed)
 		{
 			MonsterCharacter->GetCharacterMovement()->MaxWalkSpeed = BlackboardMaxSpeed;
 		}
-
-		if (ASC)
+		
+		if (ASC->HasMatchingGameplayTag(RPGGameplayTag::Monster_Status_Strafe))
 		{
-			if (ASC->HasMatchingGameplayTag(RPGGameplayTag::Monster_Status_Strafe))
-			{
-				ASC->RemoveLooseGameplayTag(RPGGameplayTag::Monster_Status_Strafe);
-			}
+			ASC->RemoveLooseGameplayTag(RPGGameplayTag::Monster_Status_Strafe);
 		}
 	}
 }

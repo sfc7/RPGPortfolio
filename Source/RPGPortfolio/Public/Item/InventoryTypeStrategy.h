@@ -8,12 +8,12 @@
 class UInventoryComponent;
 
 UINTERFACE(Blueprintable)
-class RPGPORTFOLIO_API UInventoryStrategy : public UInterface
+class RPGPORTFOLIO_API UInventoryTypeStrategy : public UInterface
 {
     GENERATED_BODY()
 };
 
-class RPGPORTFOLIO_API IInventoryStrategy
+class RPGPORTFOLIO_API IInventoryTypeStrategy
 {
     GENERATED_BODY()
 public:

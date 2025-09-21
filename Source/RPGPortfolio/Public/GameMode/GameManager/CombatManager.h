@@ -42,12 +42,15 @@ private:
 	
 	TCircularQueue<bool> TempParryResults{21};
 	
+	// 패링 타이밍 기본 값
 	UPROPERTY()
-	float BaseCanParryingStateDelayTime = 0.5f;
+	float BaseCanParryingStateTime = 0.5f;
 
+	// 최대로 늘어날 수 있는 패링 타이밍
 	UPROPERTY()
 	float AddCanParryingStateDelayTime = 0.25f;
-	
+
+	// 이전 로그의 성공률을 얼마나 반영할지 Alpha값
 	UPROPERTY()
-	float PreviousSessionAlpha = 1.0f;
+	float SuccessAlpha = 0.5f;
 };

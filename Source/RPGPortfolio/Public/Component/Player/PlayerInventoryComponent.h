@@ -7,7 +7,7 @@
 #include "PlayerInventoryComponent.generated.h"
 
 UENUM(BlueprintType)
-enum class EInventoryStrategy : uint8
+enum class EInventoryTypeStrategy : uint8
 {
 	Default,
 	Equipment,
@@ -25,7 +25,7 @@ class RPGPORTFOLIO_API UPlayerInventoryComponent : public UInventoryComponent
 	GENERATED_BODY()
 public:	
 	UPlayerInventoryComponent();
-
+	
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Size")
 	TArray<FInventorySlot> MaterialItemSlots;
 
@@ -38,7 +38,7 @@ public:
 	virtual void SetupSlots(int32 SlotAmountstoSetup) override;
 
 	UFUNCTION(BlueprintCallable)
-	void SetCurrentInventoryStrategy(EInventoryStrategy InventoryStrategyToSet);
+	void SetCurrentInventoryTypeStrategy(EInventoryTypeStrategy InventoryTypeStrategyToSet);
 	
 protected:
 	virtual void BeginPlay() override;
@@ -46,7 +46,7 @@ protected:
 
 // 장비 전략
 UCLASS(BlueprintType)
-class RPGPORTFOLIO_API UEquipmentInventoryStrategy : public UObject, public IInventoryStrategy
+class RPGPORTFOLIO_API UEquipmentInventoryTypeStrategy : public UObject, public IInventoryTypeStrategy
 {
 	GENERATED_BODY()
 public:
@@ -56,7 +56,7 @@ public:
 
 // 포션 전략
 UCLASS(BlueprintType)
-class RPGPORTFOLIO_API UPotionInventoryStrategy : public UInventoryStrategy, public IInventoryStrategy
+class RPGPORTFOLIO_API UPotionInventoryTypeStrategy : public UInventoryTypeStrategy, public IInventoryTypeStrategy
 {
 	GENERATED_BODY()
 public:
@@ -66,7 +66,7 @@ public:
 
 // 재료 전략
 UCLASS(BlueprintType)
-class RPGPORTFOLIO_API UMaterialInventoryStrategy : public UInventoryStrategy, public IInventoryStrategy
+class RPGPORTFOLIO_API UMaterialInventoryTypeStrategy : public UInventoryTypeStrategy, public IInventoryTypeStrategy
 {
 	GENERATED_BODY()
 public:

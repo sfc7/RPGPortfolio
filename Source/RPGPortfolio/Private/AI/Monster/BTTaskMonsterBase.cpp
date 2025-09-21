@@ -16,23 +16,14 @@ EBTNodeResult::Type UBTTaskMonsterBase::ExecuteTask(UBehaviorTreeComponent& Owne
 {
 	EBTNodeResult::Type Result = Super::ExecuteTask(OwnerComp, NodeMemory);
 
-	if (EBTNodeResult::Failed == Result) {
-		return Result;
-	}
-
+	if (EBTNodeResult::Failed == Result) return Result;
+	
 	MonsterCharacter = Cast<AMonsterCharacter>(OwnerComp.GetAIOwner()->GetPawn());
+	if (!IsValid(MonsterCharacter)) return EBTNodeResult::Failed;
 	
-	if (IsValid(MonsterCharacter))
-	{
-		OnExecuteTask(OwnerComp, NodeMemory);
-		return Result = EBTNodeResult::InProgress;
-	}
-	else
-	{
-		return Result = EBTNodeResult::Failed;
-	}
+	OnExecuteTask(OwnerComp, NodeMemory);
 	
-
+	return Result = EBTNodeResult::InProgress;
 }
 
 void UBTTaskMonsterBase::OnExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
@@ -43,16 +34,16 @@ void UBTTaskMonsterBase::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* Node
 {
 	Super::TickTask(OwnerComp, NodeMemory, DeltaSeconds);
 
-	if (URPGAbilitySystemComponent* ASC = MonsterCharacter->GetRPGAbilitySystemComponent())
+	URPGAbilitySystemComponent* ASC = MonsterCharacter->GetRPGAbilitySystemComponent();
+	if (!IsValid(ASC)) return;
+	
+	if (ASC->HasMatchingGameplayTag(RPGGameplayTag::Monster_Status_IsTasking))
 	{
-		if (ASC->HasMatchingGameplayTag(RPGGameplayTag::Monster_Status_IsTasking))
-		{
-			return;
-		}
-		else
-		{
-			FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
-		}
+		return;
+	}
+	else
+	{
+		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 	}
 }
 	

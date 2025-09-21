@@ -13,43 +13,47 @@ bool UBTDeco_CheckCurrentHp::CalculateRawConditionValue(UBehaviorTreeComponent& 
 {
 	Super::CalculateRawConditionValue(OwnerComp, NodeMemory);
 
-	APawn* ControlledPawn = OwnerComp.GetAIOwner()->GetPawn();
-	if (!ControlledPawn)
+	AAIController* AIController = OwnerComp.GetAIOwner();
+	if (!IsValid(AIController)) return false;
+
+	APawn* ControlledPawn = AIController->GetPawn();
+	if (!IsValid(ControlledPawn)) return false;
+
+	URPGAbilitySystemComponent* ASC = Cast<URPGAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(ControlledPawn));
+	if (!IsValid(ASC)) return false;
+	
+	bool bFoundCurrentHp = false;
+	const float CurrentHp = ASC->GetGameplayAttributeValue(URPGAttributeSet::GetCurrentHpAttribute(), bFoundCurrentHp);
+
+	bool bFoundMaxHp = false;
+	const float MaxHp = ASC->GetGameplayAttributeValue(URPGAttributeSet::GetMaxHpAttribute(), bFoundMaxHp);
+	
+	if (!(bFoundCurrentHp && bFoundMaxHp) || MaxHp <= 0.0f)
 	{
 		return false;
 	}
+	
+	const float HpRatio = CurrentHp / MaxHp;
 
-	URPGAbilitySystemComponent* ASC = Cast<URPGAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(ControlledPawn));
-	if (ASC)
+	// AI의 현재 체력 비율을 ERPGDecoratorComparisonOperator에 맞게 T/F 반환
+	switch (ComparisonOperator)
 	{
-		bool bFoundCurrentHp;
-		float CurrentHp = ASC->GetGameplayAttributeValue(URPGAttributeSet::GetCurrentHpAttribute(), bFoundCurrentHp);
+	case ERPGDecoratorComparisonOperator::LessThan:
+		return HpRatio < HpThreshHold;
 
-		bool bFoundCMaxHp;
-		float MaXHp = ASC->GetGameplayAttributeValue(URPGAttributeSet::GetCurrentHpAttribute(), bFoundCMaxHp);
+	case ERPGDecoratorComparisonOperator::LessThanOrEqualTo:
+		return HpRatio <= HpThreshHold;
 
-		if (bFoundCurrentHp && bFoundCMaxHp)
-		{
-			float Hpratio = CurrentHp / MaXHp;
+	case ERPGDecoratorComparisonOperator::EqualTo:
+		return FMath::IsNearlyEqual(HpRatio, HpThreshHold);
 
-			switch (ComparisonOperator)
-			{
-			case ERPGDecoratorComparisonOperator::LessThan:
-				return Hpratio < HpThreshHold;
-			case ERPGDecoratorComparisonOperator::LessThanOrEqualTo:
-				return Hpratio <= HpThreshHold;
-			case ERPGDecoratorComparisonOperator::EqualTo:
-				return FMath::IsNearlyEqual(Hpratio, HpThreshHold);
-			case ERPGDecoratorComparisonOperator::GreaterThanOrEqualTo:
-				return Hpratio >= HpThreshHold;
-			case ERPGDecoratorComparisonOperator::GreaterThan:
-				return Hpratio > HpThreshHold;
-			default:
-				return false;
-			}
-		}
+	case ERPGDecoratorComparisonOperator::GreaterThanOrEqualTo:
+		return HpRatio >= HpThreshHold;
+
+	case ERPGDecoratorComparisonOperator::GreaterThan:
+		return HpRatio > HpThreshHold;
+
+	default:
+		return false;
 	}
-
-
-	return false;
 }

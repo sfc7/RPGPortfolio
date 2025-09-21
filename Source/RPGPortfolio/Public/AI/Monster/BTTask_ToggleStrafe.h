@@ -8,7 +8,10 @@
 
 class URPGAbilitySystemComponent;
 /**
+ * UBTTask_ToggleStrafe
  * 
+ * AI의 Strafe 모드 토글
+ *   
  */
 UCLASS()
 class RPGPORTFOLIO_API UBTTask_ToggleStrafe : public UBTTaskMonsterBase
@@ -23,6 +26,7 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	FBlackboardKeySelector MaxWalkSpeedKey;
 
+	// Strafe 토글
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	bool ShouldEnable;
 
@@ -31,6 +35,4 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	float StrafeWalkSpeed;
-
-	URPGAbilitySystemComponent* ASC;
 };

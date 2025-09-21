@@ -13,21 +13,24 @@ bool UBTDeco_CheckGamePlayTag::CalculateRawConditionValue(UBehaviorTreeComponent
 	Super::CalculateRawConditionValue(OwnerComp, NodeMemory);
 	
 	UBlackboardComponent* BlackboardComp = OwnerComp.GetBlackboardComponent();
-	if (!BlackboardComp) return false;
-	
+	if (!IsValid(BlackboardComp)) return false;
+
 	AActor* OwnerActor = Cast<AActor>(BlackboardComp->GetValueAsObject(OwnerActorKey.SelectedKeyName));
-	if (IsValid(OwnerActor))
+	if (!IsValid(OwnerActor)) return false;
+	
+	URPGAbilitySystemComponent* ASC = Cast<URPGAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OwnerActor));
+	if (!IsValid(ASC)) return false;
+
+	// bool 반전에 따라 Tag 체크
+	if (ASC->HasMatchingGameplayTag(CheckGamePlayTag))
 	{
-		URPGAbilitySystemComponent* ASC = CastChecked<URPGAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OwnerActor));
-		if (ASC->HasMatchingGameplayTag(CheckGamePlayTag))
-		{
-			if (!bInverse) return true;
-		}
-		else
-		{
-			if (bInverse) return true;
-		}
+		if (!bInverse) return true;
 	}
+	else
+	{
+		if (bInverse) return true;
+	}
+	
 
 	return false;
 }

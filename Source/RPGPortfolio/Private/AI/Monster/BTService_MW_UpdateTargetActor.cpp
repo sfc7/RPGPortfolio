@@ -17,23 +17,21 @@ void UBTService_MW_UpdateTargetActor::TickNode(UBehaviorTreeComponent& OwnerComp
 	Super::TickNode(OwnerComp, NodeMemory, DeltaSeconds);
 
 	UBlackboardComponent* BlackboardComp = OwnerComp.GetBlackboardComponent();
-	if (!BlackboardComp) return;
+	if (!IsValid(BlackboardComp)) return;
 
 	AActor* Target = Cast<AActor>(BlackboardComp->GetValueAsObject(TargetActorKey.SelectedKeyName));
-	
+	if (!IsValid(Target)) return;
+
+	AAIController* AIController = OwnerComp.GetAIOwner();
+	if (!IsValid(AIController)) return;
+
+	// AttackTarget으로 WarpTarget 업데이트
 	if (IsValid(MonsterCharacter))
 	{
-		if (Target)
-		{
-			MonsterCharacter->GetMotionWarpingComponent()->AddOrUpdateWarpTargetFromLocation(FName("AttackTarget"), Target->GetActorLocation());
-		}
+		MonsterCharacter->GetMotionWarpingComponent()->AddOrUpdateWarpTargetFromLocation(FName("AttackTarget"), Target->GetActorLocation());
 	}		
 	else
 	{
-		AAIController* AIController = OwnerComp.GetAIOwner();
-		if (AIController)
-		{
-			MonsterCharacter = Cast<AMonsterCharacter>(AIController->GetPawn());
-		}
+		MonsterCharacter = Cast<AMonsterCharacter>(AIController->GetPawn());
 	}
 }

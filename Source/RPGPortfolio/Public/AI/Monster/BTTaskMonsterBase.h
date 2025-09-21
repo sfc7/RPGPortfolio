@@ -8,7 +8,10 @@
 
 class AMonsterCharacter;
 /**
+* UBTTaskMonsterBase
  * 
+ * 모든 Monster용 BTTask의 기본 구조, MonsterCharacter 캐싱, Tick시 ASC 상태 확인
+ *    
  */
 UCLASS()
 class RPGPORTFOLIO_API UBTTaskMonsterBase : public UBTTaskNode

@@ -16,34 +16,28 @@ void UCombatManager::Initialize(FSubsystemCollectionBase& Collection)
 void UCombatManager::Deinitialize()
 {
 	Super::Deinitialize();
-
-	if (CurrentParryingData)
-	{
-		SaveParryingData();
-	}
 }
 
 void UCombatManager::RecordParryAttempt(bool bSuccess)
 {
 	if (TempParryResults.IsFull())
 	{
-		bool OldValue;
-		TempParryResults.Dequeue(OldValue);
+		TempParryResults.Dequeue();
 	}
 	
-	bool bEnqueued = TempParryResults.Enqueue(bSuccess);
+	TempParryResults.Enqueue(bSuccess);
 
 	SaveParryingData();
 }
 
 float UCombatManager::GetAdjustedCanParryingStateDelay() const
 {
-	if (!CurrentParryingData) return BaseCanParryingStateDelayTime;
+	if (!CurrentParryingData) return BaseCanParryingStateTime;
 	
 	float SuccessRate = FMath::Clamp(CurrentParryingData->SuccessfulRate, 0.0f, 1.0f);
 	float BonusTime = AddCanParryingStateDelayTime * (1.0f - SuccessRate);
     
-	float AdjustedDelay = BaseCanParryingStateDelayTime + BonusTime;
+	float AdjustedDelay = BaseCanParryingStateTime + BonusTime;
 
 	return AdjustedDelay;
 }
@@ -62,7 +56,7 @@ void UCombatManager::SaveParryingData()
 	
 	uint32 TotalAttempts = TempParryResults.Count();
 	uint32 SuccessCount = 0;
-	
+
 	for (uint32 i = 0; i < TotalAttempts; ++i)
 	{
 		const bool* bSuccess = TempParryResults.AtIndex(i);
@@ -74,12 +68,19 @@ void UCombatManager::SaveParryingData()
     
 	if (TotalAttempts > 0)
 	{
-		float CurrentSessionRate = (float)SuccessCount / (float)TotalAttempts;
+		const float CurrentSessionRate = (float)SuccessCount / (float)TotalAttempts;
 		
-		//PreviousSessionAlpha : 이전 성공률을 반영할지(옵션)
-		CurrentParryingData->SuccessfulRate = (PreviousSessionAlpha * CurrentSessionRate) + ((1.0f - PreviousSessionAlpha) * CurrentParryingData->SuccessfulRate);
+		CurrentParryingData->SuccessfulRate = (SuccessAlpha * CurrentSessionRate) + ((1.0f - SuccessAlpha) * CurrentParryingData->TotalSuccessfulRate);
+
+		// 기록 횟수가 ResetCount가 되면 누적 성공률 갱신	
+		CurrentParryingData->RecordCount++;
+		if (CurrentParryingData->ResetCount == CurrentParryingData->RecordCount)
+		{
+			CurrentParryingData->RecordCount = 0;
+			CurrentParryingData->TotalSuccessfulRate = CurrentParryingData->SuccessfulRate;
+		}
 	}
-	
+
 	UGameplayStatics::SaveGameToSlot(CurrentParryingData, CurrentParryingData->SaveSlotName, CurrentParryingData->UserIndex);
 }
 

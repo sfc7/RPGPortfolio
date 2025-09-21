@@ -57,12 +57,12 @@ void UItemSlotMaster::UpdateSlotData(FInventorySlot UpdateSlotData)
 			TooltipWidget->UpdateSlotData(SlotData);
 		}
 
-		if (Cast<UDefaultInventoryStrategy>(InventoryRef->CurrentInventoryStrategy.GetObject()))
+		if (Cast<UDefaultInventoryTypeStrategy>(InventoryRef->CurrentInventoryTypeStrategy.GetObject()))
 		{
 			PlusInfoText->SetText(FText::GetEmpty());
 			PlusInfoText2->SetText(FText::GetEmpty());
 		}
-		else if (Cast<UEquipmentInventoryStrategy>(InventoryRef->CurrentInventoryStrategy.GetObject()))
+		else if (Cast<UEquipmentInventoryTypeStrategy>(InventoryRef->CurrentInventoryTypeStrategy.GetObject()))
 		{
 			UDataAsset_RPGItemData_Equipment* Equipment = Cast<UDataAsset_RPGItemData_Equipment>(ItemDataAssetObject);
 			
@@ -72,7 +72,7 @@ void UItemSlotMaster::UpdateSlotData(FInventorySlot UpdateSlotData)
 			PlusInfoText2->SetText(FText::Format(FText::FromString(TEXT("+{0}")), Equipment->Defense));
 			PlusInfoText2->SetColorAndOpacity(FSlateColor(FLinearColor::Blue));
 		}
-		else if (Cast<UPotionInventoryStrategy>(InventoryRef->CurrentInventoryStrategy.GetObject()))
+		else if (Cast<UPotionInventoryTypeStrategy>(InventoryRef->CurrentInventoryTypeStrategy.GetObject()))
 		{
 			UDataAsset_RPGItemData_Potion* Potion = Cast<UDataAsset_RPGItemData_Potion>(ItemDataAssetObject);
 			
@@ -81,7 +81,7 @@ void UItemSlotMaster::UpdateSlotData(FInventorySlot UpdateSlotData)
 
 			PlusInfoText2->SetText(FText::GetEmpty());
 		}
-		else if (Cast<UMaterialInventoryStrategy>(InventoryRef->CurrentInventoryStrategy.GetObject()))
+		else if (Cast<UMaterialInventoryTypeStrategy>(InventoryRef->CurrentInventoryTypeStrategy.GetObject()))
 		{
 		}
 	}

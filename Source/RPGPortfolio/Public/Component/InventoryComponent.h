@@ -6,6 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "RPGStructTypes.h"
 #include "Item/InventoryTypeStrategy.h"
+#include "Item/InventorySituationStrategy.h"
 #include "InventoryComponent.generated.h"
 
 UENUM(BlueprintType)
@@ -21,7 +22,8 @@ enum class EInventoryType : uint8
 class UItemManager;
 class UInventoryComponent;
 class UDataAsset_RPGItemData;
-class UInventoryStrategy;
+class UInventoryTypeStrategy;
+class UInventorySituationStrategy;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInventorySlotChangedDelegate, FInventorySlot, Slot);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGoldChangedDelegate, int32, GoldAmount);
@@ -99,13 +101,18 @@ public:
 	EInventoryType GetInventoryType() const { return InventoryType;}
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TScriptInterface<IInventoryStrategy> CurrentInventoryStrategy;
+	TScriptInterface<IInventoryTypeStrategy> CurrentInventoryTypeStrategy;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TScriptInterface<IInventorySituationStrategy> CurrentInventorySituationStrategy;
 	
 	TArray<FInventorySlot>& GetCurrentItemSlots();
 	
 	const TArray<FInventorySlot>& GetCurrentItemSlots() const;
 
-	void SetDefaultInventoryStrategy();
+	void SetDefaultInventoryTypeStrategy();
+
+	void SetDefaultInventorySituationStrategy();
 	
 protected:
 	virtual void BeginPlay() override;
@@ -123,7 +130,7 @@ protected:
 
 // 기본 전략
 UCLASS(BlueprintType)
-class RPGPORTFOLIO_API UDefaultInventoryStrategy : public UObject, public IInventoryStrategy
+class RPGPORTFOLIO_API UDefaultInventoryTypeStrategy : public UObject, public IInventoryTypeStrategy
 {
 	GENERATED_BODY()
 public:

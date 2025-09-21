@@ -71,4 +71,5 @@ protected:
 	float ParryingSuccessCheckTime = 1.0f;
 	float CanParryingAttackStateDelayTime = 0.5f;
 	float ParryingAttackASCActiveTime = 1.0f;
+	float GlobalTimeDilation = 0.2f;
 };

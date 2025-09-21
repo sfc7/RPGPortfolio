@@ -17,8 +17,10 @@ UBTTask_RotateToTarget::UBTTask_RotateToTarget()
 	bNotifyTaskFinished = true;
 	bCreateNodeInstance = false;
 
+	// Notify 플래그 초기화
 	INIT_TASK_NODE_NOTIFY_FLAGS();
 
+	//BT 에디터에서 TargetActorKey를 Actor 타입만 선택 가능하게
 	TargetActorKey.AddObjectFilter(this, GET_MEMBER_NAME_CHECKED(ThisClass, TargetActorKey), AActor::StaticClass());
 }
 
@@ -28,6 +30,7 @@ void UBTTask_RotateToTarget::InitializeFromAsset(UBehaviorTree& Asset)
 
 	if (UBlackboardData* BlackboardData = GetBlackboardAsset())
 	{
+		// TickTask에서 쓸 Key ID 가져오기
 		TargetActorKey.ResolveSelectedKey(*BlackboardData);
 	}
 }
@@ -46,10 +49,10 @@ FString UBTTask_RotateToTarget::GetStaticDescription() const
 
 bool UBTTask_RotateToTarget::HasReachedAnglePercision(APawn* OwningPawn, AActor* TargetActor)
 {
-	FVector ForwardVector = OwningPawn->GetActorForwardVector();
-	FVector NormalizedVector = (TargetActor->GetActorLocation() - OwningPawn->GetActorLocation()).GetSafeNormal();
+	const FVector ForwardVector = OwningPawn->GetActorForwardVector();
+	const FVector NormalizedVector = (TargetActor->GetActorLocation() - OwningPawn->GetActorLocation()).GetSafeNormal();
 
-	float DotResult = FVector::DotProduct(ForwardVector, NormalizedVector);
+	const float DotResult = FVector::DotProduct(ForwardVector, NormalizedVector);
 	const float Angle = UKismetMathLibrary::DegAcos(DotResult);
 
 	return Angle < AnglePrecision;
@@ -58,21 +61,23 @@ bool UBTTask_RotateToTarget::HasReachedAnglePercision(APawn* OwningPawn, AActor*
 EBTNodeResult::Type UBTTask_RotateToTarget::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
 	UObject* ActorObject = OwnerComp.GetBlackboardComponent()->GetValueAsObject(TargetActorKey.SelectedKeyName);
+	if (!IsValid(ActorObject)) return EBTNodeResult::Failed;
+	
 	AActor* TargetActor = Cast<AActor>(ActorObject);
-
+	if (!IsValid(TargetActor)) return EBTNodeResult::Failed;
+	
 	APawn* OwningPawn = OwnerComp.GetAIOwner()->GetPawn();
-
+	if (!IsValid(OwningPawn)) return EBTNodeResult::Failed;
+	
 	FRotateToTargetTaskInstance* CachedNodeMemory =CastInstanceNodeMemory<FRotateToTargetTaskInstance>(NodeMemory);
 	check(CachedNodeMemory);
 
 	CachedNodeMemory->OwningPawn = OwningPawn;
 	CachedNodeMemory->TargetActor = TargetActor;
 
-	if (!CachedNodeMemory->IsValid())
-	{
-		return EBTNodeResult::Failed;
-	}
-
+	if (!CachedNodeMemory->IsValid()) return EBTNodeResult::Failed;
+	
+	// 현재 회전이 목표 각도에 도달했는지 확인 후 임시 메모리는 리셋하고 Task 성공 리턴
 	if (HasReachedAnglePercision(OwningPawn, TargetActor))
 	{
 		CachedNodeMemory->Reset();
@@ -92,6 +97,7 @@ void UBTTask_RotateToTarget::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* 
 		FinishLatentTask(OwnerComp, EBTNodeResult::Failed);
 	}
 
+	// 현재 회전이 목표 각도에 도달했는지 확인 후 임시 메모리는 리셋하고 Task Finish, 안했으면 회전 보간
 	if (HasReachedAnglePercision(CachedNodeMemory->OwningPawn.Get(), CachedNodeMemory->TargetActor.Get()))
 	{
 		CachedNodeMemory->Reset();
@@ -104,5 +110,4 @@ void UBTTask_RotateToTarget::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* 
 
 		CachedNodeMemory->OwningPawn->SetActorRotation(TargetRotation);
 	}
-	
 }

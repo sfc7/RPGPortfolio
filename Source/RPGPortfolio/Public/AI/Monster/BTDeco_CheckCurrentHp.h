@@ -9,7 +9,9 @@
 
 
 /**
+ * UBTDeco_CheckCurrentHp
  * 
+ * 현재 AI의 HP 비율을 체크하고 설정된 조건(ComparisonOperator, HpThreshHold)에 따라 true/false 반환
  */
 UCLASS()
 class RPGPORTFOLIO_API UBTDeco_CheckCurrentHp : public UBTDecorator
@@ -19,6 +21,7 @@ class RPGPORTFOLIO_API UBTDeco_CheckCurrentHp : public UBTDecorator
 	virtual bool CalculateRawConditionValue(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) const override;
 private:
 
+	// HpThreshHold를 비교하는 기준 Enum
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	ERPGDecoratorComparisonOperator ComparisonOperator = ERPGDecoratorComparisonOperator::None;
 	

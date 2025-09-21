@@ -7,7 +7,9 @@
 #include "BTService_DistanceFromTarget.generated.h"
 
 /**
+ * UBTService_DistanceFromTarget
  * 
+ * 0.2초마다 타겟까지 거리 계산 후 Blackboard에 기록
  */
 UCLASS()
 class RPGPORTFOLIO_API UBTService_DistanceFromTarget : public UBTService

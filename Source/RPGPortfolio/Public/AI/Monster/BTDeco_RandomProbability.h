@@ -7,7 +7,9 @@
 #include "BTDeco_RandomProbability.generated.h"
 
 /**
+ * UBTDeco_RandomProbability
  * 
+ * 호출될 때마다 랜덤값 생성
  */
 UCLASS()
 class RPGPORTFOLIO_API UBTDeco_RandomProbability : public UBTDecorator

@@ -26,6 +26,7 @@ void UBTService_RotateToTarget::InitializeFromAsset(UBehaviorTree& Asset)
 
 	if (UBlackboardData* BlackboardData = GetBlackboardAsset())
 	{
+		// TickNode에서 쓸 Key ID 가져오기
 		TargetActorKey.ResolveSelectedKey(*BlackboardData);
 	}
 }
@@ -35,22 +36,22 @@ void UBTService_RotateToTarget::TickNode(UBehaviorTreeComponent& OwnerComp, uint
 	Super::TickNode(OwnerComp, NodeMemory, DeltaSeconds);
 
 	UBlackboardComponent* BlackboardComp = OwnerComp.GetBlackboardComponent();
-	if (!BlackboardComp) return;
+	if (!IsValid(BlackboardComp)) return;
 
 	AActor* Target = Cast<AActor>(BlackboardComp->GetValueAsObject(TargetActorKey.SelectedKeyName));
-	AAIController* AIController = OwnerComp.GetAIOwner();
-	
-	if (AIController)
-	{
-		APawn* OwnerPawn = AIController->GetPawn();
-		if (OwnerPawn && Target)
-		{
-			FRotator LookRotation = UKismetMathLibrary::FindLookAtRotation(OwnerPawn->GetActorLocation(), Target->GetActorLocation());
-			FRotator InterpRotation = FMath::RInterpTo(OwnerPawn->GetActorRotation(), LookRotation, DeltaSeconds, RotationSpeed);
+	if (!IsValid(Target)) return;
 
-			OwnerPawn->SetActorRotation(InterpRotation);
-		}
-	}
+	AAIController* AIController = OwnerComp.GetAIOwner();
+	if (!IsValid(AIController)) return;
+
+	APawn* OwnerPawn = AIController->GetPawn();
+	if (!IsValid(OwnerPawn)) return;
+
+	// 타겟을 바라보도록 회전 보간
+	FRotator LookRotation = UKismetMathLibrary::FindLookAtRotation(OwnerPawn->GetActorLocation(), Target->GetActorLocation());
+	FRotator InterpRotation = FMath::RInterpTo(OwnerPawn->GetActorRotation(), LookRotation, DeltaSeconds, RotationSpeed);
+
+	OwnerPawn->SetActorRotation(InterpRotation);
 }
 
 FString UBTService_RotateToTarget::GetStaticDescription() const

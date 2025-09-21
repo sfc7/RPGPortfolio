@@ -26,7 +26,6 @@ void URPGGA_Player_Defense::ActivateAbility(const FGameplayAbilitySpecHandle Han
 
 	CachedCombatManager = GetWorld()->GetGameInstance()->GetSubsystem<UCombatManager>();
 	CanParryingAttackStateDelayTime = CachedCombatManager->GetAdjustedCanParryingStateDelay();
-	
 	ParryingAttackASCActiveTime = CachedCombatManager->GetAdjustedParryingASCActiveTime();
 	ParryingSuccessCheckTime = CachedCombatManager->GetAdjustedParryingASCActiveTime() * 2;
 	DefenseActivateTime = GetWorld()->GetTimeSeconds();
@@ -86,9 +85,11 @@ void URPGGA_Player_Defense::SuccessDefenseCallback(FGameplayEventData PayloadDat
 		ERootMotionFinishVelocityMode::MaintainLastRootMotionVelocity,
 		FVector::ZeroVector,         
 		0.0f, false);
-	
-	bool bIsParrying = (GetWorld()->GetTimeSeconds() - DefenseActivateTime) <= 0.5f;
-	
+
+	// 패링이 가능한 시간을 넘었는지에 관한 체크
+	const bool bIsParrying = (GetWorld()->GetTimeSeconds() - DefenseActivateTime) <= CanParryingAttackStateDelayTime;
+
+	// 패링 성공 시
 	if(bIsParrying)
 	{
 		if (HasMatchingGameplayTag(RPGGameplayTag::Player_Status_ParryingSuccessCheck))
@@ -96,13 +97,14 @@ void URPGGA_Player_Defense::SuccessDefenseCallback(FGameplayEventData PayloadDat
 			CachedCombatManager->RecordParryAttempt(true);
 		}
 
-		SetParryingAttackReady();
-		
+		// 패링 이펙트 및 연출
 		FGameplayCueParameters DefenseParryingGCParam;
 		DefenseParryingGCParam.TargetAttachComponent = GetOwningComponentFromActorInfo();
 		GetPlayerCharacterFromActorInfo()->GetRPGAbilitySystemComponent()->ExecuteGameplayCue(DefenseParryingGamePlayCue, DefenseParryingGCParam);
-		UGameplayStatics::SetGlobalTimeDilation(GetWorld(), 0.2f);
+		UGameplayStatics::SetGlobalTimeDilation(GetWorld(), GlobalTimeDilation);
 
+		// 패링 어택 관련 로직
+		SetParryingAttackReady();
 		RemoveParryingAttackReady();
 		GetWorld()->GetTimerManager().SetTimer(ParryingInputTimerHandle, [this]()
 		{
@@ -111,10 +113,12 @@ void URPGGA_Player_Defense::SuccessDefenseCallback(FGameplayEventData PayloadDat
 	}
 	else
 	{
+		// 로그에 실패 기록
 		if (HasMatchingGameplayTag(RPGGameplayTag::Player_Status_ParryingSuccessCheck))
 		{
 			CachedCombatManager->RecordParryAttempt(false);
 		}
+		// 패링이 실패했음으로 디펜스에 관한 연출 
 		FGameplayCueParameters DefenseSucessGCParam;
 		DefenseSucessGCParam.TargetAttachComponent = GetOwningComponentFromActorInfo();
 		GetPlayerCharacterFromActorInfo()->GetRPGAbilitySystemComponent()->ExecuteGameplayCue(DefenseSuccessGamePlayCue, DefenseSucessGCParam);
