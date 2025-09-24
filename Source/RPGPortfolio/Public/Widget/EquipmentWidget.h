@@ -7,6 +7,8 @@
 #include "EquipmentWidget.generated.h"
 
 class UPlayerEquipmentComponent;
+class UOverlay;
+class UItemSlotMaster;
 /**
  * 
  */
@@ -19,10 +21,10 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UItemSlotContainer* EquipmentSlotContainer;
-
+	
 protected:
 	virtual void NativeConstruct() override;
-
+	
 	UFUNCTION()
 	void OnEquipmentChanged();
 };

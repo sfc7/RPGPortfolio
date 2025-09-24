@@ -14,6 +14,7 @@
 #include "Interface/UInteractionInterface.h"
 #include "AbilitySystemComponent.h"
 #include "Character/NPC/NPC_HumanNPC.h"
+#include "Component/Player/PlayerInventoryComponent.h"
 #include "Component/Player/QuestNPCComponent.h"
 
 UInteractManager::UInteractManager()
@@ -28,14 +29,15 @@ void UInteractManager::StartInteract(AActor* TargetActor, APlayerCharacterBase* 
 		{
 			if (NPC->GetNPCType() == ENPCType::Storage)
 			{
-				if (ANPC_Storage* Storage = Cast<ANPC_Storage>(NPC))
+				if (ANPC_Storage* StorageNPC = Cast<ANPC_Storage>(NPC))
 				{
-					UUserWidget* StorageWidget = Storage->GetStorageWidget();
+					UUserWidget* StorageWidget = StorageNPC->GetStorageWidget();
 
 					if (APlayerController* PlayerController = Player->GetController<APlayerController>())
 					{
 						StorageWidget->SetOwningPlayer(PlayerController);
-					} 
+						Player->GetPlayerInventoryComponent()->SetCurrentInventorySituationStrategy(EInventorySituationStrategy::InOpenStorage);
+					}
 					StorageWidget->AddToViewport();
 				}
 			}
@@ -52,7 +54,7 @@ void UInteractManager::StartInteract(AActor* TargetActor, APlayerCharacterBase* 
 			}
 			else if (NPC->GetNPCType() == ENPCType::Quest)
 			{
-				UE_LOG(LogTemp, Warning, TEXT("NPC Quest"));
+
 				if (ANPC_HumanNPC* HumanNPC = Cast<ANPC_HumanNPC>(NPC))
 				{
 					FString ObjectiveName = HumanNPC->GetObjectiveName();
@@ -70,6 +72,7 @@ void UInteractManager::StartInteract(AActor* TargetActor, APlayerCharacterBase* 
 					if (APlayerController* PlayerController = Player->GetController<APlayerController>())
 					{
 						StoreWidget->SetOwningPlayer(PlayerController);
+						Player->GetPlayerInventoryComponent()->SetCurrentInventorySituationStrategy(EInventorySituationStrategy::InOpenStore);
 					}
 					StoreWidget->AddToViewport();
 				}

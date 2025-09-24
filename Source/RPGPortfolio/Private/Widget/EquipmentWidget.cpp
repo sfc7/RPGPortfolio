@@ -26,7 +26,6 @@ void UEquipmentWidget::NativeConstruct()
 		}
 	}
 }
-
 void UEquipmentWidget::OnEquipmentChanged()
 {
 	if (EquipmentSlotContainer)

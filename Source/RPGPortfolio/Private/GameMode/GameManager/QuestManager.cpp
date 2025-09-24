@@ -8,6 +8,7 @@
 #include "Component/InventoryComponent.h"
 #include "GameMode/GameManager/ItemManager.h"
 #include "DataAsset/Item/DataAsset_RPGItemData.h"
+#include "Component/Player/PlayerInventoryComponent.h"
 
 void UQuestManager::Initialize(FSubsystemCollectionBase& Collection)
 {

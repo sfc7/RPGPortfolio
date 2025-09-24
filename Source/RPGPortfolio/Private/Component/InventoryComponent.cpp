@@ -345,11 +345,157 @@ const TArray<FInventorySlot>& UInventoryComponent::GetCurrentItemSlots() const
 	return DefaultItemSlots;
 }
 
+void UInventoryComponent::HandleSlotDoubleClick(FInventorySlot& SlotData)
+{	
+	if (CurrentInventorySituationStrategy)
+	{
+		CurrentInventorySituationStrategy->HandleItemDoubleClick(this, SlotData);
+	}
+}
+
+void UInventoryComponent::HandleSlotRightClick(FInventorySlot& SlotData)
+{
+	if (CurrentInventorySituationStrategy)
+	{
+		CurrentInventorySituationStrategy->HandleItemRightClick(this, SlotData);
+	}
+}
+
+bool UInventoryComponent::TrySellItem(const FInventorySlot& SlotToSell)
+{
+	if (InventoryType != EInventoryType::PlayerInventory)
+	{
+		return false;
+	}
+
+	if (!SlotToSell.ItemDataAsset.IsValid() || SlotToSell.Quantity <= 0)
+	{
+		return false;
+	}
+
+	if (!IsValidSlotIndex(SlotToSell.SlotIndex))
+	{
+		return false;
+	}
+
+	UDataAsset_RPGItemData* ItemData = SlotToSell.ItemDataAsset.LoadSynchronous();
+	if (!ItemData)
+	{
+		return false;
+	}
+
+	// 판매 가격 계산 및 골드 추가
+	int32 SellPrice = ItemData->GoldValue;
+	SetGold(SellPrice);
+
+	// 아이템 수량에 따른 처리
+	TArray<FInventorySlot>& Slots = GetCurrentItemSlots();
+	FInventorySlot& CurrentSlot = Slots[SlotToSell.SlotIndex];
+    
+	if (CurrentSlot.Quantity > 1)
+	{
+		// 수량이 1보다 크면 수량만 감소
+		SetQuantityAtSlot(CurrentSlot, CurrentSlot.Quantity - 1);
+	}
+	else
+	{
+		// 수량이 1이면 슬롯에서 아이템 완전 제거
+		RemoveItemToIndex(SlotToSell.SlotIndex);
+	}
+
+	return true;
+}
+
+bool UInventoryComponent::TryPurchaseFromStore(const FInventorySlot& StoreSlot, UInventoryComponent* StoreInventory)
+{
+	if (InventoryType != EInventoryType::PlayerInventory)
+	{
+		return false;
+	}
+
+	if (!StoreInventory)
+	{
+		return false;
+	}
+
+	if (!CanPurchaseFromStore(StoreSlot))
+	{
+		return false;
+	}
+
+	if (!StoreInventory->IsValidSlotIndex(StoreSlot.SlotIndex))
+	{
+		return false;
+	}
+
+	UDataAsset_RPGItemData* ItemData = StoreSlot.ItemDataAsset.LoadSynchronous();
+	if (!ItemData)
+	{
+		return false;
+	}
+
+	// 구매할 아이템 생성 (수량 1개)
+	FInventorySlot ItemToBuy = StoreSlot;
+	ItemToBuy.Quantity = 1;
+	ItemToBuy.InventoryRef = this;
+
+	// 플레이어 인벤토리에 아이템 추가 시도
+	bool bItemAdded = AddItem(ItemToBuy);
+	if (!bItemAdded)
+	{
+		return false; 
+	}
+
+	// 골드 차감
+	int32 ItemPrice = ItemData->GoldValue;
+	SetGold(-ItemPrice);
+
+	// 상점 인벤토리에서 아이템 수량 감소 또는 제거
+	TArray<FInventorySlot>& StoreSlots = StoreInventory->GetCurrentItemSlots();
+	FInventorySlot& StoreSlotRef = StoreSlots[StoreSlot.SlotIndex];
+    
+	if (StoreSlotRef.Quantity > 1)
+	{
+		// 수량이 1보다 크면 수량만 감소
+		StoreInventory->SetQuantityAtSlot(StoreSlotRef, StoreSlotRef.Quantity - 1);
+	}
+	else
+	{
+		// 수량이 1이면 슬롯에서 아이템 완전 제거
+		StoreInventory->RemoveItemToIndex(StoreSlot.SlotIndex);
+	}
+
+	return true;
+}
+
+bool UInventoryComponent::CanPurchaseFromStore(const FInventorySlot& StoreSlot) const
+{
+	if (InventoryType != EInventoryType::PlayerInventory)
+	{
+		return false;
+	}
+
+	if (!StoreSlot.ItemDataAsset.IsValid() || StoreSlot.Quantity <= 0)
+	{
+		return false;
+	}
+
+	UDataAsset_RPGItemData* ItemData = StoreSlot.ItemDataAsset.LoadSynchronous();
+	if (!ItemData)
+	{
+		return false;
+	}
+
+	// 골드가 충분한지 확인
+	int32 ItemPrice = ItemData->GoldValue;
+	return Gold >= ItemPrice;
+}
+
 void UInventoryComponent::SetDefaultInventoryTypeStrategy()
 {
 	if(!CurrentInventoryTypeStrategy)
 	{
-		UDefaultInventoryTypeStrategy* DefaultInventoryTypeStrategy = NewObject<UDefaultInventoryTypeStrategy>(this);
+		UDefaultTypeStrategy* DefaultInventoryTypeStrategy = NewObject<UDefaultTypeStrategy>(this);
 		CurrentInventoryTypeStrategy = TScriptInterface<IInventoryTypeStrategy>(DefaultInventoryTypeStrategy);
 	}
 }
@@ -367,13 +513,29 @@ void UInventoryComponent::SetDefaultInventorySituationStrategy()
 ///////// UDefaultInventoryTypeStrategy
 
 
-TArray<FInventorySlot>& UDefaultInventoryTypeStrategy::GetSlots(UInventoryComponent* OwnerInventory)
+TArray<FInventorySlot>& UDefaultTypeStrategy::GetSlots(UInventoryComponent* OwnerInventory)
 {
 	check(OwnerInventory);
 	return OwnerInventory->DefaultItemSlots;
 }
-const TArray<FInventorySlot>& UDefaultInventoryTypeStrategy::GetSlots(const UInventoryComponent* OwnerInventory) const
+const TArray<FInventorySlot>& UDefaultTypeStrategy::GetSlots(const UInventoryComponent* OwnerInventory) const
 {
 	check(OwnerInventory);
 	return OwnerInventory->DefaultItemSlots;
+}
+
+
+
+
+
+
+
+///////// UDefaultInventorySituationStrategy
+
+void UDefaultSituationStrategy::HandleItemDoubleClick(UInventoryComponent* Inventory, FInventorySlot& SlotData)
+{
+}
+
+void UDefaultSituationStrategy::HandleItemRightClick(UInventoryComponent* Inventory, FInventorySlot& SlotData)
+{
 }

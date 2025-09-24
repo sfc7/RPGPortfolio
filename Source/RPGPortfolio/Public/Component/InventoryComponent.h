@@ -38,6 +38,16 @@ class RPGPORTFOLIO_API UInventoryComponent : public UActorComponent
 public:	
 	UInventoryComponent();
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TScriptInterface<IInventoryTypeStrategy> CurrentInventoryTypeStrategy;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TScriptInterface<IInventorySituationStrategy> CurrentInventorySituationStrategy;
+
+	void SetDefaultInventoryTypeStrategy();
+
+	void SetDefaultInventorySituationStrategy();
+	
 	UFUNCTION(BlueprintPure)
 	int32 GetPlayerGold() const { return Gold; }
 	
@@ -100,19 +110,22 @@ public:
 	UFUNCTION(BlueprintCallable)
 	EInventoryType GetInventoryType() const { return InventoryType;}
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TScriptInterface<IInventoryTypeStrategy> CurrentInventoryTypeStrategy;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TScriptInterface<IInventorySituationStrategy> CurrentInventorySituationStrategy;
-	
 	TArray<FInventorySlot>& GetCurrentItemSlots();
 	
 	const TArray<FInventorySlot>& GetCurrentItemSlots() const;
 
-	void SetDefaultInventoryTypeStrategy();
+	void HandleSlotDoubleClick(FInventorySlot& SlotData);
 
-	void SetDefaultInventorySituationStrategy();
+	void HandleSlotRightClick(FInventorySlot& SlotData);
+
+	UFUNCTION(BlueprintCallable, Category = "Store")
+	bool TrySellItem(const FInventorySlot& SlotToSell);
+    
+	UFUNCTION(BlueprintCallable, Category = "Store")
+	bool TryPurchaseFromStore(const FInventorySlot& StoreSlot, UInventoryComponent* StoreInventory);
+    
+	UFUNCTION(BlueprintCallable, Category = "Store")
+	bool CanPurchaseFromStore(const FInventorySlot& StoreSlot) const;
 	
 protected:
 	virtual void BeginPlay() override;
@@ -130,7 +143,7 @@ protected:
 
 // 기본 전략
 UCLASS(BlueprintType)
-class RPGPORTFOLIO_API UDefaultInventoryTypeStrategy : public UObject, public IInventoryTypeStrategy
+class RPGPORTFOLIO_API UDefaultTypeStrategy : public UObject, public IInventoryTypeStrategy
 {
 	GENERATED_BODY()
 public:
@@ -138,3 +151,13 @@ public:
 	virtual const TArray<FInventorySlot>& GetSlots(const UInventoryComponent* OwnerInventory) const;
 };
 
+
+UCLASS()
+class RPGPORTFOLIO_API UDefaultSituationStrategy : public UObject, public IInventorySituationStrategy
+{
+	GENERATED_BODY()
+
+public:
+	virtual void HandleItemDoubleClick(UInventoryComponent* Inventory, FInventorySlot& SlotData) override;
+	virtual void HandleItemRightClick(UInventoryComponent* Inventory, FInventorySlot& SlotData) override;
+};

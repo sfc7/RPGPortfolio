@@ -17,5 +17,8 @@ class RPGPORTFOLIO_API IInventorySituationStrategy
 {
 	GENERATED_BODY()
 public:
+	virtual void HandleItemDoubleClick(class UInventoryComponent* Inventory, FInventorySlot& SlotData) = 0;
+	virtual void HandleItemRightClick(class UInventoryComponent* Inventory, FInventorySlot& SlotData) = 0;
 };
+
 

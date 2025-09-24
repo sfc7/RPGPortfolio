@@ -97,7 +97,7 @@ UPlayerUIComponent* APlayerCharacterBase::GetPlayerUIComponent() const
 	return PlayerUIComponent;
 }
 
-UInventoryComponent* APlayerCharacterBase::GetPlayerInventoryComponent() const
+UPlayerInventoryComponent* APlayerCharacterBase::GetPlayerInventoryComponent() const
 {
 	return PlayerItemInventoryComponent;
 }
@@ -353,6 +353,8 @@ void APlayerCharacterBase::Input_CallPauseMenu()
 void APlayerCharacterBase::Input_CallInventoryUI()
 {
 	GetGameInstance()->GetSubsystem<UGeneralGameManager>()->GetUIManager()->ShowUIAsync(EUICategory::InventoryUI, GetWorld());
+	
+	GetPlayerInventoryComponent()->SetCurrentInventorySituationStrategy(EInventorySituationStrategy::InOpenEquipment);
 }
 
 void APlayerCharacterBase::Input_CallQuestUI()

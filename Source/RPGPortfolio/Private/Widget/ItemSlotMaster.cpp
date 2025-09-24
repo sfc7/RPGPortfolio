@@ -57,31 +57,31 @@ void UItemSlotMaster::UpdateSlotData(FInventorySlot UpdateSlotData)
 			TooltipWidget->UpdateSlotData(SlotData);
 		}
 
-		if (Cast<UDefaultInventoryTypeStrategy>(InventoryRef->CurrentInventoryTypeStrategy.GetObject()))
+		if (Cast<UDefaultTypeStrategy>(InventoryRef->CurrentInventoryTypeStrategy.GetObject()))
 		{
 			PlusInfoText->SetText(FText::GetEmpty());
 			PlusInfoText2->SetText(FText::GetEmpty());
 		}
-		else if (Cast<UEquipmentInventoryTypeStrategy>(InventoryRef->CurrentInventoryTypeStrategy.GetObject()))
+		else if (Cast<UEquipmentTypeStrategy>(InventoryRef->CurrentInventoryTypeStrategy.GetObject()))
 		{
 			UDataAsset_RPGItemData_Equipment* Equipment = Cast<UDataAsset_RPGItemData_Equipment>(ItemDataAssetObject);
 			
 			PlusInfoText->SetText(FText::Format(FText::FromString(TEXT("+{0}")), Equipment->AttackRate));
 			PlusInfoText->SetColorAndOpacity(FSlateColor(FLinearColor::Red));
-
+		
 			PlusInfoText2->SetText(FText::Format(FText::FromString(TEXT("+{0}")), Equipment->Defense));
 			PlusInfoText2->SetColorAndOpacity(FSlateColor(FLinearColor::Blue));
 		}
-		else if (Cast<UPotionInventoryTypeStrategy>(InventoryRef->CurrentInventoryTypeStrategy.GetObject()))
+		else if (Cast<UPotionTypeStrategy>(InventoryRef->CurrentInventoryTypeStrategy.GetObject()))
 		{
 			UDataAsset_RPGItemData_Potion* Potion = Cast<UDataAsset_RPGItemData_Potion>(ItemDataAssetObject);
 			
 			PlusInfoText->SetText(FText::Format(FText::FromString(TEXT("+{0}")), Potion->HealAmount));
 			PlusInfoText->SetColorAndOpacity(FSlateColor(FLinearColor::Green));
-
+		
 			PlusInfoText2->SetText(FText::GetEmpty());
 		}
-		else if (Cast<UMaterialInventoryTypeStrategy>(InventoryRef->CurrentInventoryTypeStrategy.GetObject()))
+		else if (Cast<UMaterialTypeStrategy>(InventoryRef->CurrentInventoryTypeStrategy.GetObject()))
 		{
 		}
 	}
@@ -193,95 +193,6 @@ bool UItemSlotMaster::CheckDropTargetIsStoreInventory(UItemSlotMaster* TargetSlo
 	return TargetSlot->CheckIsStoreInventory();
 }
 
-bool UItemSlotMaster::TryPurchaseItem()
-{
-	 if (!CheckInventoryOwnerAndNPCType())
-    {
-        return false;
-    }
-
-    if (!SlotHasItem || !SlotData.ItemDataAsset.IsValid())
-    {
-        return false;
-    }
-
-    APlayerCharacter_Fighter* Player = Cast<APlayerCharacter_Fighter>(GetOwningPlayerPawn());
-    if (!Player || !Player->GetPlayerInventoryComponent())
-    {
-        return false;
-    }
-
-    UInventoryComponent* PlayerInventory = Player->GetPlayerInventoryComponent();
-	
-    UDataAsset_RPGItemData* ItemData = SlotData.ItemDataAsset.LoadSynchronous();
-    if (!ItemData)
-    {
-        return false;
-    }
-
-    int32 ItemPrice = ItemData->GoldValue;
-    int32 PlayerGold = PlayerInventory->GetPlayerGold();
-    
-    if (PlayerGold < ItemPrice)
-    {
-        return false;
-    }
-	
-    FInventorySlot ItemToBuy = SlotData;
-    ItemToBuy.Quantity = 1;
-    ItemToBuy.InventoryRef = PlayerInventory;
-
-    bool bItemAdded = PlayerInventory->AddItem(ItemToBuy);
-    if (!bItemAdded)
-    {
-        return false;
-    }
-
-    PlayerInventory->SetGold(-ItemPrice); 
-    
-    if (SlotData.Quantity > 1)
-    {
-        FInventorySlot ModifiedSlot = SlotData;
-        InventoryRef->SetQuantityAtSlot(ModifiedSlot, SlotData.Quantity - 1);
-    }
-    else
-    {
-        InventoryRef->RemoveItemToIndex(SlotData.SlotIndex);
-    }
-    
-    return true;
-}
-
-bool UItemSlotMaster::CanPurchaseItem()
-{
-	if (!CheckInventoryOwnerAndNPCType())
-	{
-		return false;
-	}
-
-	if (!SlotHasItem || !SlotData.ItemDataAsset.IsValid())
-	{
-		return false;
-	}
-
-	APlayerCharacter_Fighter* Player = Cast<APlayerCharacter_Fighter>(GetOwningPlayerPawn());
-	if (!Player || !Player->GetPlayerInventoryComponent())
-	{
-		return false;
-	}
-
-	UDataAsset_RPGItemData* ItemData = SlotData.ItemDataAsset.LoadSynchronous();
-	if (!ItemData)
-	{
-		return false;
-	}
-
-	int32 ItemPrice = ItemData->GoldValue;
-	int32 PlayerGold = Player->GetPlayerInventoryComponent()->GetPlayerGold();
-    
-	return PlayerGold >= ItemPrice;
-}
-
 bool UItemSlotMaster::TrySellItem()
 {
 	if (!CheckIsPlayerInventory())
@@ -294,35 +205,12 @@ bool UItemSlotMaster::TrySellItem()
 		return false;
 	}
 
-	APlayerCharacter_Fighter* Player = Cast<APlayerCharacter_Fighter>(GetOwningPlayerPawn());
-	if (!Player || !Player->GetPlayerInventoryComponent())
+	if (!InventoryRef)
 	{
 		return false;
 	}
-
-	UInventoryComponent* PlayerInventory = Player->GetPlayerInventoryComponent();
-    
-	UDataAsset_RPGItemData* ItemData = SlotData.ItemDataAsset.LoadSynchronous();
-	if (!ItemData)
-	{
-		return false;
-	}
-
-	int32 SellPrice = ItemData->GoldValue;
-    
-	PlayerInventory->SetGold(SellPrice);
-    
-	if (SlotData.Quantity > 1)
-	{
-		FInventorySlot ModifiedSlot = SlotData;
-		InventoryRef->SetQuantityAtSlot(ModifiedSlot, SlotData.Quantity - 1);
-	}
-	else
-	{
-		InventoryRef->RemoveItemToIndex(SlotData.SlotIndex);
-	}
-    
-	return true;
+	
+	return InventoryRef->TrySellItem(SlotData);
 }
 
 void UItemSlotMaster::OnItemButtonClickedInStore()
@@ -342,37 +230,31 @@ void UItemSlotMaster::OnItemButtonClickedInStore()
 	{
 		return;
 	}
-
 	
 	UStoreWidget* StoreWidget = Cast<UStoreWidget>(StoreNPC->GetStoreWidget());
 	if (StoreWidget)
 	{
 		StoreWidget->OnStoreItemPurchase(this);
+		// StoreWidget->OnSellItem(this);
 	}
 }
 
-void UItemSlotMaster::OnEquipmentItemButtonDoubleClicked()
+void UItemSlotMaster::OnItemDoubleClicked()
 {
+	APlayerCharacterBase* PlayerCharacter = Cast<APlayerCharacterBase>(InventoryRef->GetOwner());
+	if (!PlayerCharacter)
+	{
+		return;
+	}
+	
 	if (SlotData.ItemDataAsset->ItemType == EItemType::Equipment)
 	{
 		if (InventoryRef->GetInventoryType() == EInventoryType::PlayerInventory)
 		{
-			APlayerCharacterBase* PlayerCharacter = Cast<APlayerCharacterBase>(InventoryRef->GetOwner());
-			if (!PlayerCharacter)
-			{
-				return;
-			}
-
-			InventoryRef->EquipItem(SlotData);
+			InventoryRef->HandleSlotDoubleClick(SlotData);
 		}
 		else if (InventoryRef->GetInventoryType() == EInventoryType::Equipment)
 		{
-			APlayerCharacterBase* PlayerCharacter = Cast<APlayerCharacterBase>(InventoryRef->GetOwner());
-			if (!PlayerCharacter)
-			{
-				return;
-			}
-
 			InventoryRef->UnEquipItem(SlotData);
 		}
 	}

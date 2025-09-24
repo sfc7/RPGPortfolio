@@ -46,28 +46,28 @@ void UPlayerInventoryComponent::SetCurrentInventoryTypeStrategy(EInventoryTypeSt
 	{
 	case EInventoryTypeStrategy::Default:
 		{
-			UDefaultInventoryTypeStrategy* Strategy = NewObject<UDefaultInventoryTypeStrategy>(this);
+			UDefaultTypeStrategy* Strategy = NewObject<UDefaultTypeStrategy>(this);
 			CurrentInventoryTypeStrategy = TScriptInterface<IInventoryTypeStrategy>(Strategy);
 		}
 		break;
 
 	case EInventoryTypeStrategy::Equipment:
 		{
-			UEquipmentInventoryTypeStrategy* Strategy = NewObject<UEquipmentInventoryTypeStrategy>(this);
+			UEquipmentTypeStrategy* Strategy = NewObject<UEquipmentTypeStrategy>(this);
 			CurrentInventoryTypeStrategy = TScriptInterface<IInventoryTypeStrategy>(Strategy);
 		}
 		break;
 
 	case EInventoryTypeStrategy::Potion:
 		{
-			UPotionInventoryTypeStrategy* Strategy = NewObject<UPotionInventoryTypeStrategy>(this);
+			UPotionTypeStrategy* Strategy = NewObject<UPotionTypeStrategy>(this);
 			CurrentInventoryTypeStrategy = TScriptInterface<IInventoryTypeStrategy>(Strategy);
 		}
 		break;
 
 	case EInventoryTypeStrategy::Material:
 		{
-			UMaterialInventoryTypeStrategy* Strategy = NewObject<UMaterialInventoryTypeStrategy>(this);
+			UMaterialTypeStrategy* Strategy = NewObject<UMaterialTypeStrategy>(this);
 			CurrentInventoryTypeStrategy = TScriptInterface<IInventoryTypeStrategy>(Strategy);
 		}
 		break;
@@ -78,15 +78,57 @@ void UPlayerInventoryComponent::SetCurrentInventoryTypeStrategy(EInventoryTypeSt
 
 	default:
 		{
-			UDefaultInventoryTypeStrategy* Strategy = NewObject<UDefaultInventoryTypeStrategy>(this);
+			UDefaultTypeStrategy* Strategy = NewObject<UDefaultTypeStrategy>(this);
 			CurrentInventoryTypeStrategy = TScriptInterface<IInventoryTypeStrategy>(Strategy);
 		}
 		break;
 	}
 }
 
+void UPlayerInventoryComponent::SetCurrentInventorySituationStrategy(EInventorySituationStrategy InventorySituationStrategyToSet)
+{
+	switch (InventorySituationStrategyToSet)
+	{
+	case EInventorySituationStrategy::Default:
+		{
+			UDefaultSituationStrategy* Strategy = NewObject<UDefaultSituationStrategy>(this);
+			CurrentInventorySituationStrategy = TScriptInterface<IInventorySituationStrategy>(Strategy);
+		}
+		break;
 
-TArray<FInventorySlot>& UEquipmentInventoryTypeStrategy::GetSlots(UInventoryComponent* OwnerInventory)
+	case EInventorySituationStrategy::InOpenEquipment:
+		{
+			UInOpenEquipmentStrategy* Strategy = NewObject<UInOpenEquipmentStrategy>(this);
+			CurrentInventorySituationStrategy = TScriptInterface<IInventorySituationStrategy>(Strategy);
+		}
+		break;
+
+	case EInventorySituationStrategy::InOpenStore:
+		{
+			UInOpenStoreStrategy* Strategy = NewObject<UInOpenStoreStrategy>(this);
+			CurrentInventorySituationStrategy = TScriptInterface<IInventorySituationStrategy>(Strategy);
+		}
+		break;
+
+	case EInventorySituationStrategy::None:
+		{
+			CurrentInventorySituationStrategy = nullptr;
+		}
+		break;
+		
+	default:
+		{
+			UDefaultSituationStrategy* Strategy = NewObject<UDefaultSituationStrategy>(this);
+			CurrentInventorySituationStrategy = TScriptInterface<IInventorySituationStrategy>(Strategy);
+		}
+		break;
+	}
+}
+
+
+/* UInventoryTypeStrategy */
+
+TArray<FInventorySlot>& UEquipmentTypeStrategy::GetSlots(UInventoryComponent* OwnerInventory)
 {
 	UPlayerInventoryComponent* PlayerInventory = Cast<UPlayerInventoryComponent>(OwnerInventory);
 	if (PlayerInventory)
@@ -97,7 +139,7 @@ TArray<FInventorySlot>& UEquipmentInventoryTypeStrategy::GetSlots(UInventoryComp
 	return OwnerInventory->DefaultItemSlots;
 }
 
-const TArray<FInventorySlot>& UEquipmentInventoryTypeStrategy::GetSlots(const UInventoryComponent* OwnerInventory) const
+const TArray<FInventorySlot>& UEquipmentTypeStrategy::GetSlots(const UInventoryComponent* OwnerInventory) const
 {
 	const UPlayerInventoryComponent* PlayerInventory = Cast<UPlayerInventoryComponent>(OwnerInventory);
 	if (PlayerInventory)
@@ -108,7 +150,7 @@ const TArray<FInventorySlot>& UEquipmentInventoryTypeStrategy::GetSlots(const UI
 	return OwnerInventory->DefaultItemSlots;
 }
 
-TArray<FInventorySlot>& UPotionInventoryTypeStrategy::GetSlots(UInventoryComponent* OwnerInventory)
+TArray<FInventorySlot>& UPotionTypeStrategy::GetSlots(UInventoryComponent* OwnerInventory)
 {
 	UPlayerInventoryComponent* PlayerInventory = Cast<UPlayerInventoryComponent>(OwnerInventory);
 	if (PlayerInventory)
@@ -119,7 +161,7 @@ TArray<FInventorySlot>& UPotionInventoryTypeStrategy::GetSlots(UInventoryCompone
 	return OwnerInventory->DefaultItemSlots;
 }
 
-const TArray<FInventorySlot>& UPotionInventoryTypeStrategy::GetSlots(const UInventoryComponent* OwnerInventory) const
+const TArray<FInventorySlot>& UPotionTypeStrategy::GetSlots(const UInventoryComponent* OwnerInventory) const
 {
 	const UPlayerInventoryComponent* PlayerInventory = Cast<UPlayerInventoryComponent>(OwnerInventory);
 	if (PlayerInventory)
@@ -130,7 +172,7 @@ const TArray<FInventorySlot>& UPotionInventoryTypeStrategy::GetSlots(const UInve
 	return OwnerInventory->DefaultItemSlots;
 }
 
-TArray<FInventorySlot>& UMaterialInventoryTypeStrategy::GetSlots(UInventoryComponent* OwnerInventory)
+TArray<FInventorySlot>& UMaterialTypeStrategy::GetSlots(UInventoryComponent* OwnerInventory)
 {
 	UPlayerInventoryComponent* PlayerInventory = Cast<UPlayerInventoryComponent>(OwnerInventory);
 	if (PlayerInventory)
@@ -141,7 +183,7 @@ TArray<FInventorySlot>& UMaterialInventoryTypeStrategy::GetSlots(UInventoryCompo
 	return OwnerInventory->DefaultItemSlots;
 }
 
-const TArray<FInventorySlot>& UMaterialInventoryTypeStrategy::GetSlots(const UInventoryComponent* OwnerInventory) const
+const TArray<FInventorySlot>& UMaterialTypeStrategy::GetSlots(const UInventoryComponent* OwnerInventory) const
 {
 	const UPlayerInventoryComponent* PlayerInventory = Cast<UPlayerInventoryComponent>(OwnerInventory);
 	if (PlayerInventory)
@@ -150,4 +192,45 @@ const TArray<FInventorySlot>& UMaterialInventoryTypeStrategy::GetSlots(const UIn
 	}
 
 	return OwnerInventory->DefaultItemSlots;
+}
+
+/* UEquipmentInventorySituationStrategy */
+
+
+void UInOpenStoreStrategy::HandleItemDoubleClick(UInventoryComponent* Inventory, FInventorySlot& SlotData)
+{	
+	if (SlotData.ItemDataAsset->ItemType == EItemType::Equipment)
+	{
+		if (Inventory->GetInventoryType() == EInventoryType::PlayerInventory)
+		{
+			Inventory->TrySellItem(SlotData);
+		}
+	}
+}
+
+void UInOpenEquipmentStrategy::HandleItemDoubleClick(UInventoryComponent* Inventory, FInventorySlot& SlotData)
+{
+	if (SlotData.ItemDataAsset->ItemType == EItemType::Equipment)
+	{
+		if (Inventory->GetInventoryType() == EInventoryType::PlayerInventory)
+		{
+			Inventory->EquipItem(SlotData);
+		}
+	}
+}
+
+void UInOpenEquipmentStrategy::HandleItemRightClick(UInventoryComponent* Inventory, FInventorySlot& SlotData)
+{
+	if (SlotData.ItemDataAsset->ItemType == EItemType::Equipment)
+	{
+		if (Inventory->GetInventoryType() == EInventoryType::PlayerInventory)
+		{
+			Inventory->EquipItem(SlotData);
+		}
+	}
+}
+
+void UInOpenStoreStrategy::HandleItemRightClick(UInventoryComponent* Inventory, FInventorySlot& SlotData)
+{
+	
 }

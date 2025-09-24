@@ -31,6 +31,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void OnStoreItemPurchase(UItemSlotMaster* ClickedSlot);
 
+	UFUNCTION(BlueprintCallable)
+	void OnSellItem(UItemSlotMaster* ClickedSlot);
+
 	
 protected:
 	virtual void NativeConstruct() override;
@@ -45,7 +48,19 @@ protected:
 	UButton* PurchaseCancelButton;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	UTextBlock* ItemText;
+	UOverlay* SellConfirmOverlay;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UButton* SellConfirmButton;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UButton* SellCancelButton;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UTextBlock* PurchaseItemText;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UTextBlock* SellItemText;
 
 private:
 	UFUNCTION()
@@ -53,6 +68,12 @@ private:
 
 	UFUNCTION()
 	void OnPurchaseCancelClicked();
+
+	UFUNCTION()
+	void OnSellConfirmClicked();
+
+	UFUNCTION()
+	void OnSellCancelClicked();
 
 	UPROPERTY()
 	UItemSlotMaster* CurrentSelectedItem;

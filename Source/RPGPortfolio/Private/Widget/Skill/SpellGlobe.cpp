@@ -24,6 +24,7 @@
 #include "DataAsset/DataAsset_PlayerAbilitySet.h"
 #include "GameMode/GameManager/GASManager.h"
 #include "GameAbilitySystem/GamePlayAbility/RPGGameplayAbility.h"
+#include "Component/Player/PlayerInventoryComponent.h"
 #include "GameAbilitySystem/RPGAbilitySystemComponent.h"
 #include "Widget/Skill/SkillImageMaster.h"
 

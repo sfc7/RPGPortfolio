@@ -2,7 +2,7 @@
 
 
 #include "Component/Player/PlayerEquipmentComponent.h"
-
+#include "Component/Player/PlayerInventoryComponent.h"
 #include "Character/Player/PlayerCharacterBase.h"
 #include "GameAbilitySystem/RPGAttributeSet.h"
 

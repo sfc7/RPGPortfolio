@@ -8,6 +8,7 @@
 #include "GameplayTagContainer.h"
 #include "PlayerCharacterBase.generated.h"
 
+class UPlayerInventoryComponent;
 class UInventoryComponent;
 class UCameraComponent;
 class USpringArmComponent;
@@ -47,7 +48,7 @@ public:
 
 	virtual UPlayerUIComponent* GetPlayerUIComponent() const override;
 
-	virtual UInventoryComponent* GetPlayerInventoryComponent() const;
+	virtual UPlayerInventoryComponent* GetPlayerInventoryComponent() const;
 
 	virtual UInventoryComponent* GetPlayerPotionHotBar() const;
 
@@ -105,7 +106,7 @@ private:
 		UPlayerUIComponent* PlayerUIComponent;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", meta = (AllowPrivateAccess = "true"))
-		UInventoryComponent* PlayerItemInventoryComponent;
+		UPlayerInventoryComponent* PlayerItemInventoryComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", meta = (AllowPrivateAccess = "true"))
 		UInventoryComponent* PlayerPotionHotbar;

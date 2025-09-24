@@ -11,6 +11,7 @@
 #include "Blueprint/UserWidget.h"
 #include "Character/Player/PlayerCharacterBase.h"
 #include "Component/InventoryComponent.h"
+#include "Component/Player/PlayerInventoryComponent.h"
 #include "DataAsset/DataAsset_RPGUIData.h"
 #include "GameMode/GameManager/GeneralGameManager.h"
 #include "GameMode/GameManager/UIManager.h"

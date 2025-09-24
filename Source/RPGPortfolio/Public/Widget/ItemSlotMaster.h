@@ -56,19 +56,15 @@ public:
 	bool CheckDropTargetIsStoreInventory(UItemSlotMaster* TargetSlot);
 
 	UFUNCTION(BlueprintCallable, Category = "Store")
-	bool TryPurchaseItem();
-
-	UFUNCTION(BlueprintCallable, Category = "Store")
-	bool CanPurchaseItem();
-
-	UFUNCTION(BlueprintCallable, Category = "Store")
 	bool TrySellItem();
 
 	UFUNCTION()
 	void OnItemButtonClickedInStore();
 
 	UFUNCTION(BlueprintCallable)
-	void OnEquipmentItemButtonDoubleClicked();
+	void OnItemDoubleClicked();
+
+	UInventoryComponent* GetInventoryRef() const { return InventoryRef;}
 protected:
 	virtual void NativeOnInitialized() override;
 	
