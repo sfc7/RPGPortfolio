@@ -9,14 +9,12 @@
 bool UAnimInstanceBase::DoesOwnerHaveTag(FGameplayTag TagToCheck) const
 {
 	APawn* OwningPawn = TryGetPawnOwner();
-	if (OwningPawn)
-	{
-		URPGAbilitySystemComponent* ASC = Cast<URPGAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OwningPawn));
-		if (ASC)
-		{
-			if (ASC->HasMatchingGameplayTag(TagToCheck)) return true;
-		}
-	}
+	if (!OwningPawn) return false;
+
+	URPGAbilitySystemComponent* ASC = Cast<URPGAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OwningPawn));
+	if (ASC) return false;
+
+	if (ASC->HasMatchingGameplayTag(TagToCheck)) return true;
 
 	return false;	
 }

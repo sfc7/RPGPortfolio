@@ -57,33 +57,33 @@ void UItemSlotMaster::UpdateSlotData(FInventorySlot UpdateSlotData)
 			TooltipWidget->UpdateSlotData(SlotData);
 		}
 
-		if (Cast<UDefaultTypeStrategy>(InventoryRef->CurrentInventoryTypeStrategy.GetObject()))
-		{
-			PlusInfoText->SetText(FText::GetEmpty());
-			PlusInfoText2->SetText(FText::GetEmpty());
-		}
-		else if (Cast<UEquipmentTypeStrategy>(InventoryRef->CurrentInventoryTypeStrategy.GetObject()))
-		{
-			UDataAsset_RPGItemData_Equipment* Equipment = Cast<UDataAsset_RPGItemData_Equipment>(ItemDataAssetObject);
-			
-			PlusInfoText->SetText(FText::Format(FText::FromString(TEXT("+{0}")), Equipment->AttackRate));
-			PlusInfoText->SetColorAndOpacity(FSlateColor(FLinearColor::Red));
-		
-			PlusInfoText2->SetText(FText::Format(FText::FromString(TEXT("+{0}")), Equipment->Defense));
-			PlusInfoText2->SetColorAndOpacity(FSlateColor(FLinearColor::Blue));
-		}
-		else if (Cast<UPotionTypeStrategy>(InventoryRef->CurrentInventoryTypeStrategy.GetObject()))
-		{
-			UDataAsset_RPGItemData_Potion* Potion = Cast<UDataAsset_RPGItemData_Potion>(ItemDataAssetObject);
-			
-			PlusInfoText->SetText(FText::Format(FText::FromString(TEXT("+{0}")), Potion->HealAmount));
-			PlusInfoText->SetColorAndOpacity(FSlateColor(FLinearColor::Green));
-		
-			PlusInfoText2->SetText(FText::GetEmpty());
-		}
-		else if (Cast<UMaterialTypeStrategy>(InventoryRef->CurrentInventoryTypeStrategy.GetObject()))
-		{
-		}
+		// if (Cast<UDefaultTypeStrategy>(InventoryRef->CurrentInventoryTypeStrategy.GetObject()))
+		// {
+		// 	PlusInfoText->SetText(FText::GetEmpty());
+		// 	PlusInfoText2->SetText(FText::GetEmpty());
+		// }
+		// else if (Cast<UEquipmentTypeStrategy>(InventoryRef->CurrentInventoryTypeStrategy.GetObject()))
+		// {
+		// 	UDataAsset_RPGItemData_Equipment* Equipment = Cast<UDataAsset_RPGItemData_Equipment>(ItemDataAssetObject);
+		// 	
+		// 	PlusInfoText->SetText(FText::Format(FText::FromString(TEXT("+{0}")), Equipment->AttackRate));
+		// 	PlusInfoText->SetColorAndOpacity(FSlateColor(FLinearColor::Red));
+		//
+		// 	PlusInfoText2->SetText(FText::Format(FText::FromString(TEXT("+{0}")), Equipment->Defense));
+		// 	PlusInfoText2->SetColorAndOpacity(FSlateColor(FLinearColor::Blue));
+		// }
+		// else if (Cast<UPotionTypeStrategy>(InventoryRef->CurrentInventoryTypeStrategy.GetObject()))
+		// {
+		// 	UDataAsset_RPGItemData_Potion* Potion = Cast<UDataAsset_RPGItemData_Potion>(ItemDataAssetObject);
+		// 	
+		// 	PlusInfoText->SetText(FText::Format(FText::FromString(TEXT("+{0}")), Potion->HealAmount));
+		// 	PlusInfoText->SetColorAndOpacity(FSlateColor(FLinearColor::Green));
+		//
+		// 	PlusInfoText2->SetText(FText::GetEmpty());
+		// }
+		// else if (Cast<UMaterialTypeStrategy>(InventoryRef->CurrentInventoryTypeStrategy.GetObject()))
+		// {
+		// }
 	}
 }
 

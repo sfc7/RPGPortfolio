@@ -8,7 +8,9 @@
 #include "AnimInstanceBase.generated.h"
 
 /**
+ * UAnimInstanceBase
  * 
+ * 모든 AnimInstance의 Base 클래스 
  */
 UCLASS()
 class RPGPORTFOLIO_API UAnimInstanceBase : public UAnimInstance

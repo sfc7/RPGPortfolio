@@ -345,6 +345,7 @@ const TArray<FInventorySlot>& UInventoryComponent::GetCurrentItemSlots() const
 	return DefaultItemSlots;
 }
 
+
 void UInventoryComponent::HandleSlotDoubleClick(FInventorySlot& SlotData)
 {	
 	if (CurrentInventorySituationStrategy)

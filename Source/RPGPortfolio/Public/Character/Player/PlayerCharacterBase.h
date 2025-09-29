@@ -24,9 +24,13 @@ class UPlayerSkillComponent;
 class URPGSaveGame;
 class UPlayerEquipmentComponent;
 
+// 퀘스트 상호작용 델리게이트
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInteractQuest, FString, ObjectiveID);
+
 /**
+ * ARPGCharacterBase
  * 
+ * 플레이어 Character의 Base 클래스 
  */
 UCLASS()
 class RPGPORTFOLIO_API APlayerCharacterBase : public ARPGCharacterBase
@@ -49,15 +53,16 @@ public:
 	virtual UPlayerUIComponent* GetPlayerUIComponent() const override;
 
 	virtual UPlayerInventoryComponent* GetPlayerInventoryComponent() const;
-
+	
 	virtual UInventoryComponent* GetPlayerPotionHotBar() const;
-
+	
 	virtual UObjectPoolComponent* GetObjectPoolComponent() const;
-
+	
 	virtual UPlayerSkillComponent* GetPlayerSkillComponent() const;
-
+	
 	virtual UPlayerEquipmentComponent* GetPlayerEquipmentComponent() const;
 
+	// 퀘스트 상호작용 델리게이트
 	FOnInteractQuest OnInteractQuest;
 	
 	UFUNCTION()
@@ -66,12 +71,14 @@ public:
 	UFUNCTION()
 	virtual void OnCollisionBoxEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
+	//@ GAS 어빌리티 관련 SaveGame용 함수
 	UFUNCTION(BlueprintCallable, Category = "Save System")
 	void SaveAllPlayerData(URPGSaveGame* SaveGame);
 
+	//@ GAS 어빌리티 관련 SaveGame용 함수
 	UFUNCTION(BlueprintCallable, Category = "Save System")
-	
 	void LoadAllPlayerData(URPGSaveGame* SaveGame);
+	
 protected:
 	virtual void PossessedBy(AController* NewController) override;
 	
@@ -82,7 +89,8 @@ protected:
 	virtual void CreateDefaultAttributeSet() override;
 
 	virtual void Tick(float DeltaSeconds) override;
-	
+
+	//@ 추후 캐릭터 클래스용 열거형
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Class", meta = (AllowPrivateAccess = "true"))
 	EPlayerCharacterClass PlayerCharacterClass;
 
@@ -98,7 +106,8 @@ private:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", meta = (AllowPrivateAccess = "true"))
 		UPlayerCombatComponent* PlayerCombatComponent;
-			
+
+	//@ GAS 형태로 처리할 플레이어 InputAction관련 DataAsset
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "CharacterData", meta = (AllowPrivateAccess = "true"))
 		UDataAsset_InputConfig* InputConfigDataAsset;
 	
@@ -108,26 +117,33 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", meta = (AllowPrivateAccess = "true"))
 		UPlayerInventoryComponent* PlayerItemInventoryComponent;
 
+	//@ 포션 퀵슬롯용 인벤토리
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", meta = (AllowPrivateAccess = "true"))
 		UInventoryComponent* PlayerPotionHotbar;
 
+	//@ 충돌체 스킬용 오브젝트 풀
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", meta = (AllowPrivateAccess = "true"))
 		UObjectPoolComponent* ObjectPoolComponent;
 
+	//@ 스킬을 GameAbility단위로 관리하는 컴포넌트
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", meta = (AllowPrivateAccess = "true"))
 		UPlayerSkillComponent* PlayerSkillComponent;
 
+	//@ 장비용 인벤토리
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", meta = (AllowPrivateAccess = "true"))
 		UPlayerEquipmentComponent* PlayerEquipmentComponent;
 
+	//@ 상호작용 대상 및 관련 데이터 캐싱
 	FInteractionData InteractionTargetData;
 
+	//@ 상호작용 매니저 캐싱
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	UInteractManager* InteractManager;
 
+	//@ 락온 대상 변경 벡터
 	FVector2D SwitchDirection = FVector2D::ZeroVector;
 
-
+	//@ 빈도마다 사용할 상호작용 함수
 	void PerformInteractionCheck();
 	
 	void Input_Move(const FInputActionValue& InputActionValue);

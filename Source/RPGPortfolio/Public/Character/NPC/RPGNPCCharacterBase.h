@@ -11,8 +11,11 @@ class APlayerCharacterBase;
 class UBoxComponent;
 class UWidgetComponent;
 class UQuestNPCComponent;
+
 /**
+ * ARPGNPCCharacterBase
  * 
+ * NPC Character의 Base 클래스 
  */
 UCLASS()
 class RPGPORTFOLIO_API ARPGNPCCharacterBase : public ARPGCharacterBase
@@ -21,9 +24,11 @@ class RPGPORTFOLIO_API ARPGNPCCharacterBase : public ARPGCharacterBase
 public:
 	ARPGNPCCharacterBase();
 
+	//@ 상호작용 당할 때 플레이어 캐싱
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	APlayerCharacterBase* AccessPlayerCharacter;
 
+	//@ 상호작용용 충돌 박스
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UBoxComponent* InteractCollisionBox;
 	

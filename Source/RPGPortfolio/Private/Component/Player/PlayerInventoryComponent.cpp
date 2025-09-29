@@ -197,6 +197,7 @@ const TArray<FInventorySlot>& UMaterialTypeStrategy::GetSlots(const UInventoryCo
 /* UEquipmentInventorySituationStrategy */
 
 
+// 상점이 열린 상태에서의 DoubleClick
 void UInOpenStoreStrategy::HandleItemDoubleClick(UInventoryComponent* Inventory, FInventorySlot& SlotData)
 {	
 	if (SlotData.ItemDataAsset->ItemType == EItemType::Equipment)
@@ -208,6 +209,7 @@ void UInOpenStoreStrategy::HandleItemDoubleClick(UInventoryComponent* Inventory,
 	}
 }
 
+// 장비창이 열린 상태에서의 DoubleClick
 void UInOpenEquipmentStrategy::HandleItemDoubleClick(UInventoryComponent* Inventory, FInventorySlot& SlotData)
 {
 	if (SlotData.ItemDataAsset->ItemType == EItemType::Equipment)

@@ -19,12 +19,14 @@ void UPlayerCharacterAnimInstance::NativeThreadSafeUpdateAnimation(float DeltaSe
 	Super::NativeThreadSafeUpdateAnimation(DeltaSeconds);
 
 	Super::NativeThreadSafeUpdateAnimation(DeltaSeconds);
- 
+
+	// 이동 중이면 Idle 시간 초기화
 	if (bHasAcceleration)
 	{
 		IdleElpasedTime = 0.f;
 		bShouldEnterRelaxState = false;
 	}
+	// 멈춰 있으면 Idle 시간 누적
 	else
 	{
 		IdleElpasedTime += DeltaSeconds;

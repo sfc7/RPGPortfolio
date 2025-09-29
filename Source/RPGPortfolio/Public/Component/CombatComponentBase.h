@@ -19,6 +19,13 @@ enum class EToggleDamageType : uint8
 	LeftHand,
 	RightHand
 };
+
+/**
+ * UCombatComponentBase
+ * 
+ * 전투에 사용할 컴포넌트의 Base
+ */
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class RPGPORTFOLIO_API UCombatComponentBase : public UActorComponent
 {

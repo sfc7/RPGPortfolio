@@ -17,15 +17,16 @@ ANPC_Storage::ANPC_Storage()
 UUserWidget* ANPC_Storage::GetStorageWidget()
 {
 	TSubclassOf<UUserWidget> StorageWidgetClass = GetGameInstance()->GetSubsystem<UUIManager>()->GetInteractWidgetClass(EInteractUICategory::Storage);
-	if (!IsValid(StorageWidgetClass))
-	{
-		return nullptr;
-	}
+	if (!IsValid(StorageWidgetClass)) return nullptr;
 	
 	UUserWidget* Widget = CreateWidget<UUserWidget>(GetWorld(), StorageWidgetClass);
-	UStorageWidget* StorageWidget = Cast<UStorageWidget>(Widget);
+	if (!IsValid(Widget)) return nullptr;
 	
+	UStorageWidget* StorageWidget = Cast<UStorageWidget>(Widget);
 	if (!IsValid(StorageWidget)) return nullptr;
+
+	
 	StorageWidget->StorageInventoryRef = StorageInventory;
+	
 	return StorageWidget;
 }

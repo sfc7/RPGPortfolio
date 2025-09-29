@@ -10,7 +10,9 @@ class ARPGCharacterBase;
 class UCharacterMovementComponent;
 
 /**
+ * UCharacterAnimInstance
  * 
+ * Character를 위한 Base AnimInstance
  */
 UCLASS()
 class RPGPORTFOLIO_API UCharacterAnimInstance : public UAnimInstanceBase
@@ -21,9 +23,11 @@ public:
 	virtual void NativeInitializeAnimation() override;
 	virtual void NativeThreadSafeUpdateAnimation(float DeltaSeconds);
 
+	// 무기 표시 여부 설정 (무기가 있는 캐릭터를 위함)
 	UFUNCTION(BlueprintCallable)
 	void SetbShowWeapon(bool flag);
 
+	// 첫 무기 해제 여부 설정
 	UFUNCTION(BlueprintCallable)
 	void SetbFirstUnEquipWeapon(bool flag);
 protected:

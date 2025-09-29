@@ -18,24 +18,16 @@ ANPC_HumanNPC::ANPC_HumanNPC()
 
 UUserWidget* ANPC_HumanNPC::GetStoreWidget()
 {
-	if (CachedStoreWidget && IsValid(CachedStoreWidget))
-	{
-		return CachedStoreWidget;
-	}
-
 	TSubclassOf<UUserWidget> StoreWidgetClass = GetGameInstance()->GetSubsystem<UUIManager>()->GetInteractWidgetClass(EInteractUICategory::Store);
-	if (!IsValid(StoreWidgetClass))
-	{
-		return nullptr;
-	}
+	if (!IsValid(StoreWidgetClass)) return nullptr;
 	
 	UUserWidget* Widget = CreateWidget<UUserWidget>(GetWorld(), StoreWidgetClass);
+	if (!IsValid(Widget)) return nullptr;
+	
 	UStoreWidget* StoreWidget = Cast<UStoreWidget>(Widget);
-	
 	if (!IsValid(StoreWidget)) return nullptr;
-	StoreWidget->StoreInventoryRef = StoreInventory;
 	
-	CachedStoreWidget = StoreWidget;
+	StoreWidget->StoreInventoryRef = StoreInventory;
 	
 	return StoreWidget;
 }

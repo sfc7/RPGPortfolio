@@ -22,7 +22,6 @@ ARPGNPCCharacterBase::ARPGNPCCharacterBase()
 	InteractWidgetComponent->SetVisibility(false);
 
 	QuestNPCComponent = CreateDefaultSubobject<UQuestNPCComponent>("QuestNPCComponent");
-	
 }
 
 void ARPGNPCCharacterBase::OnCollisionBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)

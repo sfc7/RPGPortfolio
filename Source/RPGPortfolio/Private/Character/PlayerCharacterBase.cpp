@@ -31,6 +31,7 @@
 
 APlayerCharacterBase::APlayerCharacterBase()
 {
+	// 기본 컴포넌트
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.bStartWithTickEnabled = true;
 	
@@ -52,18 +53,19 @@ APlayerCharacterBase::APlayerCharacterBase()
 	CameraComponent->SetupAttachment(SpringArmComponent);
 	CameraComponent->bUsePawnControlRotation = true;
 
+	// 커스텀 컴포넌트
 	PlayerCombatComponent = CreateDefaultSubobject<UPlayerCombatComponent>(TEXT("PlayerCombatComponent"));
 	PlayerUIComponent = CreateDefaultSubobject<UPlayerUIComponent>(TEXT("PlayerUIComponent"));
 	PlayerItemInventoryComponent = CreateDefaultSubobject<UPlayerInventoryComponent>(TEXT("PlayerItemInventoryComponent"));
 	PlayerPotionHotbar = CreateDefaultSubobject<UInventoryComponent>(TEXT("PlayerPotionHotbar"));
 	PlayerEquipmentComponent = CreateDefaultSubobject<UPlayerEquipmentComponent>(TEXT("PlayerEquipmentComponent"));
-
 	ObjectPoolComponent = CreateDefaultSubobject<UObjectPoolComponent>(TEXT("ObjectPoolComponent"));
 	PlayerSkillComponent = CreateDefaultSubobject<UPlayerSkillComponent>(TEXT("PlayerSkillComponent"));
 	
 	GetCapsuleComponent()->OnComponentBeginOverlap.AddUniqueDynamic(this, &APlayerCharacterBase::OnCollisionBoxBeginOverlap);
 	GetCapsuleComponent()->OnComponentEndOverlap.AddUniqueDynamic(this, &APlayerCharacterBase::OnCollisionBoxEndOverlap);
-	
+
+	// ASC
 	CreateDefaultAttributeSet();
 }
 
@@ -71,6 +73,7 @@ void APlayerCharacterBase::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
+	// 상호작용 체크 빈도를 확인하고 상호작용 검사 수행
 	if (InteractManager->CheckIneractionFrequency(InteractionTargetData))
 	{
 		PerformInteractionCheck();
@@ -126,11 +129,14 @@ void APlayerCharacterBase::OnCollisionBoxBeginOverlap(UPrimitiveComponent* Overl
 {
 	Super::OnCollisionBoxBeginOverlap(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult);
 
+	// 대상이 상호작용 인터페이스 상속했는지 확인
 	if (Cast<IUInteractionInterface>(OtherActor))
 	{
 		if (ARPGNPCCharacterBase* TargetNPC = Cast<ARPGNPCCharacterBase>(OtherActor))
 		{
+			// 상호작용 가능 게임플레이 태그 적용
 			InteractManager->ApplyCanInteractGamePlayTag(this);
+			// 상호작용 대상 설정
 			InteractManager->SetInteractTarget(TargetNPC, this, EInteractType::NPC);
 		}
 	}
@@ -140,11 +146,14 @@ void APlayerCharacterBase::OnCollisionBoxEndOverlap(UPrimitiveComponent* Overlap
 {
 	Super::OnCollisionBoxEndOverlap(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex);
 
+	// 대상이 상호작용 인터페이스 상속했는지 확인
 	if (Cast<IUInteractionInterface>(OtherActor))
 	{
 		if (ARPGNPCCharacterBase* TargetNPC = Cast<ARPGNPCCharacterBase>(OtherActor))
 		{
+			// 상호작용 가능 게임플레이 태그 제거
 			InteractManager->RemoveCanInteractGamePlayTag(this);
+			// 상호작용 대상 제거
 			InteractManager->RemoveInteractTarget(TargetNPC, this, EInteractType::NPC);
 		}
 	}
@@ -154,30 +163,32 @@ void APlayerCharacterBase::SaveAllPlayerData(URPGSaveGame* SaveGame)
 {
 	if (!SaveGame) return;
     
-	if (URPGAbilitySystemComponent* ASC = GetRPGAbilitySystemComponent())
-	{
-		ASC->SaveDynamicAbilitiesToSaveGame(SaveGame);
-	}
-    
-	if (UPlayerSkillComponent* SkillComp = GetComponentByClass<UPlayerSkillComponent>())
-	{
-		SkillComp->SaveSkillQuickSlotsToSaveGame(SaveGame);
-	}
+	URPGAbilitySystemComponent* ASC = GetRPGAbilitySystemComponent();
+	if (!IsValid(ASC)) return;
+
+	UPlayerSkillComponent* SkillComp = GetComponentByClass<UPlayerSkillComponent>();
+	if (!IsValid(SkillComp)) return;
+
+	// 동적 어빌리티 속성 부여한 어빌리티들 세이브
+	ASC->SaveDynamicAbilitiesToSaveGame(SaveGame);
+	// 스킬 퀵슬롯 세이브
+	SkillComp->SaveSkillQuickSlotsToSaveGame(SaveGame);	
 }
 
 void APlayerCharacterBase::LoadAllPlayerData(URPGSaveGame* SaveGame)
 {
 	if (!SaveGame) return;
-    
-	if (UPlayerSkillComponent* SkillComp = GetComponentByClass<UPlayerSkillComponent>())
-	{
-		SkillComp->LoadSkillQuickSlotsFromSaveGame(SaveGame);
-	}
-    
-	if (URPGAbilitySystemComponent* ASC = GetRPGAbilitySystemComponent())
-	{
-		ASC->LoadDynamicAbilitiesFromSaveGame(SaveGame);
-	}
+
+	URPGAbilitySystemComponent* ASC = GetRPGAbilitySystemComponent();
+	if (!IsValid(ASC)) return;
+
+	UPlayerSkillComponent* SkillComp = GetComponentByClass<UPlayerSkillComponent>();
+	if (!IsValid(SkillComp)) return;
+
+	// 동적 어빌리티 속성 부여한 어빌리티들 로드
+	ASC->LoadDynamicAbilitiesFromSaveGame(SaveGame);
+	// 스킬 퀵슬롯 로드
+	SkillComp->LoadSkillQuickSlotsFromSaveGame(SaveGame);
 }
 
 void APlayerCharacterBase::PossessedBy(AController* NewController)
@@ -185,7 +196,8 @@ void APlayerCharacterBase::PossessedBy(AController* NewController)
 	Super::PossessedBy(NewController);
 
 	URPGGameInstance* RPGGameInstance = Cast<URPGGameInstance>(GetGameInstance());
-	
+	if (!IsValid(RPGGameInstance)) return;
+
 	if (!CharacterStartUpData.IsNull())
 	{
 		if (UDataAsset_AbilitySetBase* LoadedData = CharacterStartUpData.LoadSynchronous())
@@ -193,27 +205,6 @@ void APlayerCharacterBase::PossessedBy(AController* NewController)
 			LoadedData->GiveAbilitySystemComponent(RPGAbilitySystemComponent);
 		}
 	}
-
-	// URPGGameInstance* RPGGameInstance = Cast<URPGGameInstance>(GetGameInstance());
-	// UE_LOG(LogTemp,Log,TEXT("poss  %d"), RPGGameInstance->bFirstTimeLoadIn);
-	// if (RPGGameInstance)
-	// {
-	// 	if (RPGGameInstance->bFirstTimeLoadIn)
-	// 	{
-	// 		if (!CharacterStartUpData.IsNull())
-	// 		{
-	// 			if (UDataAsset_AbilitySetBase* LoadedData = CharacterStartUpData.LoadSynchronous())
-	// 			{
-	// 				LoadedData->GiveAbilitySystemComponent(RPGAbilitySystemComponent);
-	// 			}
-	// 		}
-	//
-	// 		if (IsValid(PlayerSkillComponent))
-	// 		{
-	// 			PlayerSkillComponent->GiveAbilitySystemComponent(RPGAbilitySystemComponent);
-	// 		}
-	// 	}
-	// }
 	
 	if (IsValid(PlayerSkillComponent))
 	{
@@ -225,35 +216,35 @@ void APlayerCharacterBase::PossessedBy(AController* NewController)
 		PlayerUIComponent->OnInitPlayerUIbyClassDelegate.Broadcast(PlayerCharacterClass);
 	}
 
-	InteractManager = GetGameInstance()->GetSubsystem<UInteractManager>();
+	if (IsValid(InteractManager))
+	{
+		InteractManager = GetGameInstance()->GetSubsystem<UInteractManager>();
+	}
 }
 
 auto APlayerCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) -> void
 {
 	ULocalPlayer* LocalPlayer = GetController<APlayerController>()->GetLocalPlayer();
+	if (!IsValid(LocalPlayer)) return;
 	
 	UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(LocalPlayer);
+	if (!IsValid(Subsystem)) return;
 
-	if (IsValid(Subsystem))
-	{
-		Subsystem->AddMappingContext(InputConfigDataAsset->DefaultInputMappingContext, 0);
+	UPlayerEnhancedInputComponent* PlayerEnhancedInputComponent = Cast<UPlayerEnhancedInputComponent>(PlayerInputComponent);
+	if (!IsValid(PlayerEnhancedInputComponent)) return;
+	
+	Subsystem->AddMappingContext(InputConfigDataAsset->DefaultInputMappingContext, 0);
 
-		UPlayerEnhancedInputComponent* PlayerEnhancedInputComponent = Cast<UPlayerEnhancedInputComponent>(PlayerInputComponent);
-
-		if (IsValid(PlayerEnhancedInputComponent))
-		{
-			PlayerEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, RPGGameplayTag::InputTag_Move_Keyboard, ETriggerEvent::Triggered, this, &ThisClass::Input_Move);
-			PlayerEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, RPGGameplayTag::InputTag_Look_Mouse, ETriggerEvent::Triggered, this, &ThisClass::Input_Look);
-			PlayerEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, RPGGameplayTag::InputTag_SwitchTarget, ETriggerEvent::Triggered, this, &ThisClass::Input_SwitchTargetTriggered);
-			PlayerEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, RPGGameplayTag::InputTag_SwitchTarget, ETriggerEvent::Completed, this, &ThisClass::Input_SwitchTargetCompleted);
-			PlayerEnhancedInputComponent->BindAbilityInputAction(InputConfigDataAsset, this, &ThisClass::Input_AbilityInputPressed, &ThisClass::Input_AbilityInputReleased);
-			PlayerEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, RPGGameplayTag::InputTag_ShowDebug_Keyboard, ETriggerEvent::Started, this, &ThisClass::Input_ShowDebug);
-			PlayerEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, RPGGameplayTag::InputTag_CallPauseMenu_Keyboard, ETriggerEvent::Started, this, &ThisClass::Input_CallPauseMenu);
-			PlayerEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, RPGGameplayTag::InputTag_CallInventory_Keyboard, ETriggerEvent::Started, this, &ThisClass::Input_CallInventoryUI);
-			PlayerEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, RPGGameplayTag::InputTag_CallQuestUI_Keyboard, ETriggerEvent::Started, this, &ThisClass::Input_CallQuestUI);
-			PlayerEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, RPGGameplayTag::InputTag_CallSkillUI_Keyboard, ETriggerEvent::Started, this, &ThisClass::Input_CallSkillUI);
-		}
-	}
+	PlayerEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, RPGGameplayTag::InputTag_Move_Keyboard, ETriggerEvent::Triggered, this, &ThisClass::Input_Move);
+	PlayerEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, RPGGameplayTag::InputTag_Look_Mouse, ETriggerEvent::Triggered, this, &ThisClass::Input_Look);
+	PlayerEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, RPGGameplayTag::InputTag_SwitchTarget, ETriggerEvent::Triggered, this, &ThisClass::Input_SwitchTargetTriggered);
+	PlayerEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, RPGGameplayTag::InputTag_SwitchTarget, ETriggerEvent::Completed, this, &ThisClass::Input_SwitchTargetCompleted);
+	PlayerEnhancedInputComponent->BindAbilityInputAction(InputConfigDataAsset, this, &ThisClass::Input_AbilityInputPressed, &ThisClass::Input_AbilityInputReleased);
+	PlayerEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, RPGGameplayTag::InputTag_ShowDebug_Keyboard, ETriggerEvent::Started, this, &ThisClass::Input_ShowDebug);
+	PlayerEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, RPGGameplayTag::InputTag_CallPauseMenu_Keyboard, ETriggerEvent::Started, this, &ThisClass::Input_CallPauseMenu);
+	PlayerEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, RPGGameplayTag::InputTag_CallInventory_Keyboard, ETriggerEvent::Started, this, &ThisClass::Input_CallInventoryUI);
+	PlayerEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, RPGGameplayTag::InputTag_CallQuestUI_Keyboard, ETriggerEvent::Started, this, &ThisClass::Input_CallQuestUI);
+	PlayerEnhancedInputComponent->BindNativeInputAction(InputConfigDataAsset, RPGGameplayTag::InputTag_CallSkillUI_Keyboard, ETriggerEvent::Started, this, &ThisClass::Input_CallSkillUI);
 }
 
 void APlayerCharacterBase::CreateDefaultAttributeSet()
@@ -296,7 +287,6 @@ void APlayerCharacterBase::Input_Move(const FInputActionValue& InputActionValue)
 
 void APlayerCharacterBase::Input_Look(const FInputActionValue& InputActionValue)
 {
-	
 	const FVector2D LookAxisVector = InputActionValue.Get<FVector2D>();
  	
 	if (LookAxisVector.X != 0.f)
@@ -339,10 +329,10 @@ void APlayerCharacterBase::Input_AbilityInputReleased(FGameplayTag _InputTag)
 void APlayerCharacterBase::Input_ShowDebug()
 {
 	APlayerController* PC = GetWorld()->GetFirstPlayerController();
-	if (PC)
-	{
-		PC->ConsoleCommand(TEXT("showdebug abilitysystem"), true);
-	}
+	if (!IsValid(PC)) return;
+
+	// GAS용 콘솔 커맨드 
+	PC->ConsoleCommand(TEXT("showdebug abilitysystem"), true);
 }
 
 void APlayerCharacterBase::Input_CallPauseMenu()
