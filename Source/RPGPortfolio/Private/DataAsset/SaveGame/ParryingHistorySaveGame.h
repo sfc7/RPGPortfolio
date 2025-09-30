@@ -33,7 +33,8 @@ public:
 	
 	UPROPERTY(VisibleAnywhere)
 	FString SaveSlotName = TEXT("ParryingSuccessData");
-    
+
+	//@ Save할 유저 인덱스
 	UPROPERTY(VisibleAnywhere)
 	uint32 UserIndex = 0;
 };

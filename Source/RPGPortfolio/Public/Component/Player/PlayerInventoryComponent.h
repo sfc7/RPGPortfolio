@@ -30,7 +30,9 @@ enum class EInventorySituationStrategy : uint8
 };
 
 /**
+ * UPlayerEquipmentComponent
  * 
+ * 플레이어 인벤토리에 사용할 컴포넌트
  */
 UCLASS()
 class RPGPORTFOLIO_API UPlayerInventoryComponent : public UInventoryComponent
@@ -38,13 +40,16 @@ class RPGPORTFOLIO_API UPlayerInventoryComponent : public UInventoryComponent
 	GENERATED_BODY()
 public:	
 	UPlayerInventoryComponent();
-	
+
+	//@ 재료 아이템 슬롯
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Size")
 	TArray<FInventorySlot> MaterialItemSlots;
 
+	//@ 물약 아이템 슬롯
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Size")
 	TArray<FInventorySlot> PotionItemSlots;
 
+	//@ 장비 아이템 슬롯
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Size")
 	TArray<FInventorySlot> EquipmentItemSlots;
 	
@@ -97,6 +102,7 @@ class RPGPORTFOLIO_API UInOpenStoreStrategy : public UObject, public IInventoryS
 	GENERATED_BODY()
 
 public:
+	// 상점이 열린 상태에서의 DoubleClick
 	virtual void HandleItemDoubleClick(UInventoryComponent* Inventory, FInventorySlot& SlotData) override;
 	virtual void HandleItemRightClick(UInventoryComponent* Inventory, FInventorySlot& SlotData) override;
 };
@@ -108,6 +114,7 @@ class RPGPORTFOLIO_API UInOpenEquipmentStrategy : public UObject, public IInvent
 	GENERATED_BODY()
 
 public:
+	// 장비창이 열린 상태에서의 DoubleClick
 	virtual void HandleItemDoubleClick(UInventoryComponent* Inventory, FInventorySlot& SlotData) override;
 	virtual void HandleItemRightClick(UInventoryComponent* Inventory, FInventorySlot& SlotData) override;
 };

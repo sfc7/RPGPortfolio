@@ -15,7 +15,8 @@ void UMonsterUIComponent::RegisterMonsterDrawnWidget(URPGWidgetBase* WidgetToReg
 void UMonsterUIComponent::RemoveMonsterDrawnWidget()
 {
 	if (MonsterDrawnWidgetArray.IsEmpty()) return;
-	
+
+	// 그려진 위젯 모두 삭제
 	for (URPGWidgetBase* DrawnWidget : MonsterDrawnWidgetArray)
 	{
 		if (DrawnWidget)

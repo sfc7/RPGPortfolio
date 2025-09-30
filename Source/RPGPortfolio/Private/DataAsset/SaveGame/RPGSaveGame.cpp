@@ -14,6 +14,7 @@ void URPGSaveGame::SaveQuestDetails(ARPGQuestSystemActor* Quest)
 	FQuestSaveData SaveData;
 	SaveData.QuestProgress = Quest->GetCurrentObjectiveProgress();
 	SaveData.CurrentStage = Quest->GetCurrentStage();
+	// 퀘스트 진행 상황 맵에 추가
 	QuestProgress.Add(Quest->GetQuestID(),SaveData);
 }
 

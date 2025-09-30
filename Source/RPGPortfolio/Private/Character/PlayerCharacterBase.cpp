@@ -72,7 +72,7 @@ APlayerCharacterBase::APlayerCharacterBase()
 void APlayerCharacterBase::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
-
+	
 	// 상호작용 체크 빈도를 확인하고 상호작용 검사 수행
 	if (InteractManager->CheckIneractionFrequency(InteractionTargetData))
 	{
@@ -216,10 +216,7 @@ void APlayerCharacterBase::PossessedBy(AController* NewController)
 		PlayerUIComponent->OnInitPlayerUIbyClassDelegate.Broadcast(PlayerCharacterClass);
 	}
 
-	if (IsValid(InteractManager))
-	{
-		InteractManager = GetGameInstance()->GetSubsystem<UInteractManager>();
-	}
+	InteractManager = GetGameInstance()->GetSubsystem<UInteractManager>();	
 }
 
 auto APlayerCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) -> void

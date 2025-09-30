@@ -29,6 +29,7 @@ public:
 	UFUNCTION(BlueprintPure)
 	static bool IsValidDefense(AActor* Attacker, AActor* Defender);
 
+	// 스킬 쿨타임 아이콘으로 나타내기 위해 만듬, 커스텀한 카운트다운 함수 사용
 	UFUNCTION(BlueprintCallable, meta = (Latent, WorldContext = "WorldContextObject", LatentInfo = "LatentInfo", ExpandEnumAsExecs = "CountDownInput|CountDownOutput",TotalTime = "1.0",UpdateInterval = "0.1"))
 	static void CountDown(const UObject* WorldContextObject, float TotalTime, float UpdateInterval, float& OutRemainingTime, ERPGCountDownActionInput CountDownInput,  UPARAM(DisplayName = "Output") ERPGCountDownActionOutput& CountDownOutput, FLatentActionInfo LatentInfo);
 

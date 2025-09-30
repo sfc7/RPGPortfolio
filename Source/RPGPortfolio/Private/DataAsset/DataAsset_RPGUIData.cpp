@@ -11,6 +11,7 @@ UDataAsset_RPGUIData::UDataAsset_RPGUIData(const FObjectInitializer& ObjectIniti
 
 TSoftClassPtr<UUserWidget> UDataAsset_RPGUIData::GetUIWidgetClass(const EUICategory& UICategory) const
 {
+	// 카테고리 열거형에 따라 소프트레퍼런스 반환
 	switch (UICategory)
 	{
 	case EUICategory::GameOverUI:
@@ -34,6 +35,7 @@ TSoftClassPtr<UUserWidget> UDataAsset_RPGUIData::GetUIWidgetClass(const EUICateg
 
 TSubclassOf<UUserWidget> UDataAsset_RPGUIData::GetLoadingScreen(const ELoadingCategory& LoadingCategory) const
 {
+	// 로딩 열거형에 따라 소프트레퍼런스 반환
 	switch (LoadingCategory)
 	{
 	case ELoadingCategory::Town:
@@ -47,6 +49,7 @@ TSubclassOf<UUserWidget> UDataAsset_RPGUIData::GetLoadingScreen(const ELoadingCa
 
 TSubclassOf<UUserWidget> UDataAsset_RPGUIData::GetInventoryUIWidgetClass(const EInventoryUICategory& InventoryUICategory) const
 {
+	// 인벤토리 열거형에 따라 소프트레퍼런스 반환
 	switch (InventoryUICategory)
 	{
 	case EInventoryUICategory::ItemSlot:
@@ -60,6 +63,7 @@ TSubclassOf<UUserWidget> UDataAsset_RPGUIData::GetInventoryUIWidgetClass(const E
 
 TSubclassOf<UUserWidget> UDataAsset_RPGUIData::GetInteractUIWidgetClass(const EInteractUICategory& InteractUICategory) const
 {
+	// 상호작용 열거형에 따라 소프트레퍼런스 반환
 	switch (InteractUICategory)
 	{
 	case EInteractUICategory::Storage:
@@ -73,6 +77,7 @@ TSubclassOf<UUserWidget> UDataAsset_RPGUIData::GetInteractUIWidgetClass(const EI
 
 TSubclassOf<UUserWidget> UDataAsset_RPGUIData::GetQuestUIWidgetClass(const EQuestUICategory& QuestUICategory) const
 {
+	// 퀘스트 UI 열거형에 따라 소프트레퍼런스 반환
 	switch (QuestUICategory)
 	{
 	case EQuestUICategory::NPC:

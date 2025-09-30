@@ -10,28 +10,68 @@
 #include "GameAbilitySystem/GamePlayAbility/RPGGamePlayTag.h"
 
 
+// 생성된 무기를 캐릭터에 등록하고 이벤트 바인딩
 void UCombatComponentBase::RegisterSpawnedWeapon(FGameplayTag _WeaponTagToRegister, AWeaponBase* _WeaponToRegister, bool bEquippedWeaponState)
 {
-	if (_WeaponToRegister && !CharacterWeapons.Contains(_WeaponTagToRegister)) CharacterWeapons.Emplace(_WeaponTagToRegister, _WeaponToRegister);
-
-	_WeaponToRegister->OnWeaponHitBegin.BindUObject(this, &ThisClass::OnHitTargetActor);
-	_WeaponToRegister->OnWeaponHitEnd.BindUObject(this, &ThisClass::OnWeaponPulledFromTargetActor);
-	
-	if (bEquippedWeaponState) CurrentEquippedWeaponTag = _WeaponTagToRegister;
-}
-
-AWeaponBase* UCombatComponentBase::GetCharacterCarriedWeaponByTag(FGameplayTag _WeaponTagToGet) const
-{
-	if (CharacterWeapons.Contains(_WeaponTagToGet))
+	// 무기 유효성 검사 - 조기 리턴
+	if (!IsValid(_WeaponToRegister))
 	{
-		AWeaponBase* const* FoundWeapon = CharacterWeapons.Find(_WeaponTagToGet);
-		if (FoundWeapon)
-		{
-			return *FoundWeapon;
-		}
+		UE_LOG(LogTemp, Warning, TEXT("RegisterSpawnedWeapon: Invalid weapon"));
+		return;
 	}
 
-	return nullptr;
+	// 태그 유효성 검사 - 조기 리턴
+	if (!_WeaponTagToRegister.IsValid())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("RegisterSpawnedWeapon: Invalid weapon tag"));
+		return;
+	}
+
+	// 이미 등록된 무기인지 확인 - 조기 리턴
+	if (CharacterWeapons.Contains(_WeaponTagToRegister))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("RegisterSpawnedWeapon: Weapon already registered"));
+		return;
+	}
+
+	// 무기 등록
+	CharacterWeapons.Emplace(_WeaponTagToRegister, _WeaponToRegister);
+
+	// 무기 히트 이벤트 바인딩
+	_WeaponToRegister->OnWeaponHitBegin.BindUObject(this, &ThisClass::OnHitTargetActor);
+	_WeaponToRegister->OnWeaponHitEnd.BindUObject(this, &ThisClass::OnWeaponPulledFromTargetActor);
+
+	// 장착 상태라면 현재 장착 무기로 설정
+	if (bEquippedWeaponState)
+	{
+		CurrentEquippedWeaponTag = _WeaponTagToRegister;
+	}
+}
+
+// 태그로 소지 중인 무기 조회
+AWeaponBase* UCombatComponentBase::GetCharacterCarriedWeaponByTag(FGameplayTag _WeaponTagToGet) const
+{
+	// 태그 유효성 검사 - 조기 리턴
+	if (!_WeaponTagToGet.IsValid())
+	{
+		return nullptr;
+	}
+	
+	// 무기 맵에서 해당 태그 존재 확인 - 조기 리턴
+	if (!CharacterWeapons.Contains(_WeaponTagToGet))
+	{
+		return nullptr;
+	}
+
+	// const 지역변수로 무기 포인터 조회
+	AWeaponBase* const* const FoundWeaponPtr = CharacterWeapons.Find(_WeaponTagToGet);
+	if (!FoundWeaponPtr)
+	{
+		return nullptr;
+	}
+
+	// 실제 무기 반환
+	return *FoundWeaponPtr;
 }
 
 
@@ -51,7 +91,18 @@ AWeaponBase* UCombatComponentBase::GetCharacterEquippedWeaponByTag(FGameplayTag 
 
 void UCombatComponentBase::SetWeaponCollision(AWeaponBase* _Weapon, bool _bShouldEnable)
 {
-	if (_Weapon && _bShouldEnable)
+	if (!IsValid(_Weapon))
+	{
+		return;
+	}
+
+	UBoxComponent* const WeaponCollisionBox = _Weapon->GetWeaponCollisionBox();
+	if (!IsValid(WeaponCollisionBox))
+	{
+		return;
+	}
+	
+	if (_bShouldEnable)
 	{
 		_Weapon->GetWeaponCollisionBox()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	}
@@ -65,6 +116,7 @@ void UCombatComponentBase::SetWeaponCollision(AWeaponBase* _Weapon, bool _bShoul
 
 void UCombatComponentBase::ToggleCurrentWeaponCollision(bool _bShouldEnable, EToggleDamageType _ToggleDamageType)
 {
+	// 토글 타입이 무기라면 SetWeaponCollision으로, 몸부위라면 ToggleBodyCollisionBoxCollsion으로
 	if (_ToggleDamageType == EToggleDamageType::CurrentEquippedWeapon)
 	{
 		AWeaponBase* CurrentWeapon = GetCharacterCurrentEquippedWeapon();
@@ -73,7 +125,7 @@ void UCombatComponentBase::ToggleCurrentWeaponCollision(bool _bShouldEnable, ETo
 	}
 	else
 	{
-		ToggleBodyCollisionBoxCollsion(_bShouldEnable, _ToggleDamageType); // 현재는 Monster에서만 구현 
+		ToggleBodyCollisionBoxCollsion(_bShouldEnable, _ToggleDamageType); 
 	}
 }
 
@@ -102,6 +154,12 @@ void UCombatComponentBase::ToggleBodyCollisionBoxCollsion(bool _bShouldEnable, E
 
 URPGAbilitySystemComponent* UCombatComponentBase::GetRPGAbilitySystemComponent() const
 {
-	APlayerCharacterBase* PlayerCharacter = Cast<APlayerCharacterBase>(GetOwner());
+	const APlayerCharacterBase* const PlayerCharacter = Cast<APlayerCharacterBase>(GetOwner());
+	
+	if (!IsValid(PlayerCharacter))
+	{
+		return nullptr;
+	}
+
 	return PlayerCharacter->GetRPGAbilitySystemComponent();
 }

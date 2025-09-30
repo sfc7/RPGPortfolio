@@ -7,6 +7,7 @@
 #include "Engine/DataAsset.h"
 #include "DataAsset_RPGUIData.generated.h"
 
+//@ UI 타입들
 UENUM(BlueprintType)
 enum class EUICategory : uint8
 {
@@ -20,6 +21,7 @@ enum class EUICategory : uint8
 	None,
 };
 
+//@ 로딩 화면 카테고리 - 레벨별 로딩 화면 구분
 UENUM(BlueprintType)
 enum class ELoadingCategory : uint8
 {
@@ -28,6 +30,7 @@ enum class ELoadingCategory : uint8
 	None,
 };
 
+//@ 인벤토리 슬롯 UI 
 UENUM(BlueprintType)
 enum class EInventoryUICategory : uint8
 {
@@ -36,6 +39,7 @@ enum class EInventoryUICategory : uint8
 	None,
 };
 
+//@ 상호작용 UI 카테고리
 UENUM(BlueprintType)
 enum class EInteractUICategory : uint8
 {
@@ -44,6 +48,7 @@ enum class EInteractUICategory : uint8
 	None,
 };
 
+//@ 퀘스트 UI 카테고리
 UENUM(BlueprintType)
 enum class EQuestUICategory : uint8
 {
@@ -52,6 +57,7 @@ enum class EQuestUICategory : uint8
 	None
 };
 
+//@ UI 데이터 구조체 - UI 타입과 위젯 클래스 매핑
 USTRUCT(BlueprintType)
 struct FUIData
 {
@@ -65,6 +71,7 @@ public:
 	TSoftClassPtr<UUserWidget> UIWidgetClass;
 };
 
+//@ 로딩 화면 데이터 구조체 - 로딩 화면에 따라 UI,FGameplayTag 매핑
 USTRUCT(BlueprintType)
 struct FLoadingScreenData
 {
@@ -81,6 +88,7 @@ public:
 		FGameplayTag MapTag;
 };
 
+//@ 인벤토리 UI 데이터 구조체 - 인벤토리 타입에 따라 UI 매핑
 USTRUCT(BlueprintType)
 struct FInventoryUI
 {
@@ -94,6 +102,7 @@ public:
 	TSubclassOf<UUserWidget> InventoryUIWidgetClass;
 };
 
+//@ 상호작용 UI 데이터 구조체 - NPC 상호작용에 따라 UI 매핑
 USTRUCT(BlueprintType)
 struct FInteractUI
 {
@@ -107,6 +116,7 @@ public:
 	TSubclassOf<UUserWidget> InteractUIWidgetClass;
 };
 
+//@ 퀘스트 UI 데이터 구조체 - 퀘스트 타입에 따라 UI 매핑
 USTRUCT(BlueprintType)
 struct FQuestUI
 {
@@ -120,7 +130,10 @@ public:
 	TSubclassOf<UUserWidget> InteractUIWidgetClass;
 };
 /**
+ * UDataAsset_RPGUIData
  * 
+ * UI 관리 데이터 애셋
+ * 모든 게임 UI 위젯 클래스들의 중앙 집중식 관리, UI 매니저 시스템과 연동
  */
 UCLASS()
 class RPGPORTFOLIO_API UDataAsset_RPGUIData : public UDataAsset
@@ -129,18 +142,23 @@ class RPGPORTFOLIO_API UDataAsset_RPGUIData : public UDataAsset
 public:
 	UDataAsset_RPGUIData(const FObjectInitializer& ObjectInitializer);
 
+	//@ UI 카테고리로 해당 위젯 클래스 검색
 	UFUNCTION(BlueprintCallable)
 	TSoftClassPtr<UUserWidget> GetUIWidgetClass(const EUICategory& UICategory) const;
 
+	//@ 로딩 카테고리로 해당 로딩 화면 검색
 	UFUNCTION(BlueprintCallable)
 	TSubclassOf<UUserWidget> GetLoadingScreen(const ELoadingCategory& LoadingCategory) const;
 
+	//@ 인벤토리 UI 카테고리로 해당 위젯 클래스 검색
 	UFUNCTION(BlueprintCallable)
 	TSubclassOf<UUserWidget> GetInventoryUIWidgetClass(const EInventoryUICategory& InventoryUICategory) const;
 
+	//@ 상호작용 UI 카테고리로 해당 위젯 클래스 검색
 	UFUNCTION(BlueprintCallable)
 	TSubclassOf<UUserWidget> GetInteractUIWidgetClass(const EInteractUICategory& InteractUICategory) const;
 
+	//@ 퀘스트 UI 카테고리로 해당 위젯 클래스 검색
 	UFUNCTION(BlueprintCallable)
 	TSubclassOf<UUserWidget> GetQuestUIWidgetClass(const EQuestUICategory& QuestUICategory) const;
 	

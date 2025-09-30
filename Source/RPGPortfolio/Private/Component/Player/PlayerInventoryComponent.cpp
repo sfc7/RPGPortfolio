@@ -31,6 +31,7 @@ void UPlayerInventoryComponent::SetupSlots(int32 SlotAmountstoSetup)
 	
 	for (int Index = 0; Index<SlotAmountstoSetup; Index++)
 	{
+		//@ 모든 아이템 타입 슬롯들 생성
 		FInventorySlot InventorySlot;
 		InventorySlot.SlotIndex = Index;
 		InventorySlot.InventoryRef = this;
@@ -42,6 +43,10 @@ void UPlayerInventoryComponent::SetupSlots(int32 SlotAmountstoSetup)
 
 void UPlayerInventoryComponent::SetCurrentInventoryTypeStrategy(EInventoryTypeStrategy InventoryTypeStrategyToSet)
 {
+	// 기본 전략 UObject 생성 (GC 때문에)
+	// UObject를 인터페이스 래핑해서 보관
+	// 모두 전략 타입 동일 적용
+	
 	switch (InventoryTypeStrategyToSet)
 	{
 	case EInventoryTypeStrategy::Default:
@@ -87,10 +92,14 @@ void UPlayerInventoryComponent::SetCurrentInventoryTypeStrategy(EInventoryTypeSt
 
 void UPlayerInventoryComponent::SetCurrentInventorySituationStrategy(EInventorySituationStrategy InventorySituationStrategyToSet)
 {
+	// 기본 전략 UObject 생성 (GC 때문에)
+	// UObject를 인터페이스 래핑해서 보관
+	// 모두 전략 타입 동일 적용 
 	switch (InventorySituationStrategyToSet)
 	{
 	case EInventorySituationStrategy::Default:
 		{
+
 			UDefaultSituationStrategy* Strategy = NewObject<UDefaultSituationStrategy>(this);
 			CurrentInventorySituationStrategy = TScriptInterface<IInventorySituationStrategy>(Strategy);
 		}
@@ -196,10 +205,9 @@ const TArray<FInventorySlot>& UMaterialTypeStrategy::GetSlots(const UInventoryCo
 
 /* UEquipmentInventorySituationStrategy */
 
-
-// 상점이 열린 상태에서의 DoubleClick
 void UInOpenStoreStrategy::HandleItemDoubleClick(UInventoryComponent* Inventory, FInventorySlot& SlotData)
-{	
+{
+	//@ 상점이 열린 상태에서는 우클릭은 아이템 판매
 	if (SlotData.ItemDataAsset->ItemType == EItemType::Equipment)
 	{
 		if (Inventory->GetInventoryType() == EInventoryType::PlayerInventory)
@@ -209,9 +217,9 @@ void UInOpenStoreStrategy::HandleItemDoubleClick(UInventoryComponent* Inventory,
 	}
 }
 
-// 장비창이 열린 상태에서의 DoubleClick
 void UInOpenEquipmentStrategy::HandleItemDoubleClick(UInventoryComponent* Inventory, FInventorySlot& SlotData)
 {
+	//@ 장비창이 열린 상태에서는 더블클릭은 아이템 장착 
 	if (SlotData.ItemDataAsset->ItemType == EItemType::Equipment)
 	{
 		if (Inventory->GetInventoryType() == EInventoryType::PlayerInventory)
@@ -223,6 +231,7 @@ void UInOpenEquipmentStrategy::HandleItemDoubleClick(UInventoryComponent* Invent
 
 void UInOpenEquipmentStrategy::HandleItemRightClick(UInventoryComponent* Inventory, FInventorySlot& SlotData)
 {
+	//@ 장비창이 열린 상태에서는 우클릭은 아이템 장착 
 	if (SlotData.ItemDataAsset->ItemType == EItemType::Equipment)
 	{
 		if (Inventory->GetInventoryType() == EInventoryType::PlayerInventory)
