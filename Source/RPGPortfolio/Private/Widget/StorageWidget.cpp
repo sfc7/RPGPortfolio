@@ -15,7 +15,7 @@ void UStorageWidget::NativeConstruct()
 	Super::NativeConstruct();
 
 	APlayerCharacter_Fighter* PC = Cast<APlayerCharacter_Fighter>(GetOwningPlayerPawn());
-	if (PC)
+	if (IsValid(PC))
 	{
 		StorageSlotContainer->SetInventoryRef(StorageInventoryRef);
 	}

@@ -12,12 +12,14 @@ void URPGGameInstance::Init()
 {
 	Super::Init();
 
+	// 맵 로딩 전후 델리게이트 바인딩
 	FCoreUObjectDelegates::PreLoadMap.AddUObject(this,&ThisClass::OnPreLoadMap);
 	FCoreUObjectDelegates::PostLoadMapWithWorld.AddUObject(this,&ThisClass::OnDestinationWorldLoaded);
 }
 
 void URPGGameInstance::OnPreLoadMap(const FString& MapName)
 {
+	// 로딩 스크린 속성 설정
 	FLoadingScreenAttributes LoadingScreenAttributes;
 	LoadingScreenAttributes.bAutoCompleteWhenLoadingCompletes = true;
 	LoadingScreenAttributes.MinimumLoadingScreenDisplayTime = 2.f;
@@ -25,7 +27,9 @@ void URPGGameInstance::OnPreLoadMap(const FString& MapName)
 
 	GetMoviePlayer()->SetupLoadingScreen(LoadingScreenAttributes);
 
-	if (ULevelManager* LevelManager = GetSubsystem<ULevelManager>())
+	// 레벨 매니저를 통한 게임 저장
+	ULevelManager* const LevelManager = GetSubsystem<ULevelManager>();
+	if (IsValid(LevelManager))
 	{
 		LevelManager->SaveRPGGame();
 		bFirstTimeLoadIn = false;
@@ -34,17 +38,23 @@ void URPGGameInstance::OnPreLoadMap(const FString& MapName)
 
 void URPGGameInstance::OnDestinationWorldLoaded(UWorld* LoadedWorld)
 {
-	// 플레이어가 완전히 초기화될 때까지 잠시 대기
+	if (!IsValid(LoadedWorld)) return;
+
+	// 플레이어 초기화 대기 타이머 설정
 	FTimerHandle TimerHandle;
+	
 	LoadedWorld->GetTimerManager().SetTimer(TimerHandle, 
 		[this]()
 		{
-			if (ULevelManager* LevelManager = GetSubsystem<ULevelManager>())
+			// 레벨 매니저를 통한 게임 로드
+			ULevelManager* const LevelManager = GetSubsystem<ULevelManager>();
+			if (IsValid(LevelManager))
 			{
 				LevelManager->LoadRPGGame();
 			}
 		}, 
-		0.3f, false); // 0.3초 후 로드
+		DelayTime, false);
 	
+	// 로딩 스크린 종료
 	GetMoviePlayer()->StopMovie();
 }

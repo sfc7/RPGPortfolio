@@ -15,7 +15,9 @@ class UInteractManager;
 class UQuestManager;
 class UGASManager;
 /**
+ * UGeneralGameManager
  * 
+ * 단순히 모든 게임매니저 접근 및 확인 용
  */
 UCLASS()
 class RPGPORTFOLIO_API UGeneralGameManager : public UGameInstanceSubsystem

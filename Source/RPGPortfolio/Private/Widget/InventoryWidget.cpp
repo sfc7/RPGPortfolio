@@ -25,8 +25,9 @@ void UInventoryWidget::NativeConstruct()
 	Super::NativeConstruct();
 	
 	APlayerCharacter_Fighter* PC = Cast<APlayerCharacter_Fighter>(GetOwningPlayerPawn());
-	if (PC)
+	if (IsValid(PC))
 	{
+		// 아이템 슬롯 컨테이너에 인벤토리 참조 설정, 골드 설정
 		ItemSlotContainer->SetInventoryRef(	PC->GetPlayerInventoryComponent());
 		OnPlayerGoldChanged(PC->GetPlayerInventoryComponent()->GetPlayerGold());
 	}

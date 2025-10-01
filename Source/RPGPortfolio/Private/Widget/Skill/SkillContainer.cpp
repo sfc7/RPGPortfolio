@@ -18,14 +18,16 @@ void USkillContainer::NativeOnInitialized()
 
 void USkillContainer::RefreshSlots()
 {
+	// 기존 슬롯 정리
 	GridForSlots->ClearChildren();
 	SlotWidgets.Empty();
 	
 	TArray<FPlayerAbilitySkillSet> AllSkills = GetWorld()->GetGameInstance()->GetSubsystem<UGASManager>()->GetPlayerAbilitySkillSet();
 	int32 TotalSkillCount = AllSkills.Num();
-	
+
+	// 각 스킬에 대해 글로브 생성해서 슬롯 배열에 추가후 그리드 패널에 추가하기
 	for (int32 Index = 0; Index < TotalSkillCount; Index++)
-	{
+	{	
 		USpellGlobe* SpellGlobe = CreateWidget<USpellGlobe>(GetWorld()->GetFirstPlayerController(), SkillGloberWidgetClass);
 		SpellGlobe->SetSkillComponentRef(SkillComponentRef);
 		SpellGlobe->UpdateSkillData(AllSkills[Index]);
@@ -46,6 +48,4 @@ void USkillContainer::SetSkillComponentRef(UPlayerSkillComponent* SkillComponent
 	SkillComponentRef = SkillComponentRefToSet;
 	
 	RefreshSlots();
-
-	// SkillComponentRefToSet->OnInventorySlotChangedDelegate.AddDynamic(this, &USkillContainer::UpdateSlotWidgetData);
 }

@@ -6,6 +6,7 @@
 #include "UObject/Interface.h"
 #include "UInteractionInterface.generated.h"
 
+//@ 상호작용 가능한 타입 열거형
 UENUM()
 enum class EInteractableType : uint8
 {
@@ -15,6 +16,7 @@ enum class EInteractableType : uint8
 	Toggle UMETA(DisplayName = "Toggle"),
 };
 
+//@ 상호작용 가능한 데이터 구조체
 USTRUCT()
 struct FInteractableData
 {
@@ -26,6 +28,7 @@ struct FInteractableData
 		InteractionDuration(0.0f) {
 	};
 
+	//@ 상호작용 타입
 	UPROPERTY(EditAnywhere)
 	EInteractableType InteractableType;
 
@@ -36,6 +39,7 @@ struct FInteractableData
 	float InteractionDuration;
 };
 
+//@ 상호작용 인터페이스 UObject 래퍼 클래스 - 언리얼 엔진 인터페이스 시스템용
 UINTERFACE(MinimalAPI)
 class UUInteractionInterface : public UInterface
 {
@@ -43,14 +47,18 @@ class UUInteractionInterface : public UInterface
 };
 
 /**
+ * IUInteractionInterface
  * 
+ * 상호작용 가능한 오브젝트 인터페이스
  */
 class RPGPORTFOLIO_API IUInteractionInterface
 {
 	GENERATED_BODY()
 public:
+	//@ 상호작용 가능한 데이터
 	FInteractableData InteractableData;
 
+	//@ 목표 이름 
 	FString ObjectiveName;
 	
 	UFUNCTION()

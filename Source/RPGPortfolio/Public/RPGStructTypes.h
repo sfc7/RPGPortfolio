@@ -13,6 +13,7 @@ class UInventoryComponent;
 class UMaterialInterface;
 class UPlayerEquipmentComponent;
 
+//@ 플레이어 Ability 구조체
 USTRUCT(BlueprintType)
 struct FPlayerAbilitySet
 {
@@ -27,6 +28,7 @@ struct FPlayerAbilitySet
 	bool IsValid() const;
 };
 
+//@ 플레이어 스킬 Ability 구조체
 USTRUCT(BlueprintType)
 struct FPlayerAbilitySkillSet : public FPlayerAbilitySet
 {
@@ -49,6 +51,7 @@ struct FPlayerAbilitySkillSet : public FPlayerAbilitySet
 
 };
 
+//@ 무기 기본 데이터 구조체
 USTRUCT(BlueprintType)
 struct FWeaponDefaultData
 {
@@ -64,6 +67,7 @@ struct FWeaponDefaultData
 	FName EquipSocketName;
 };
 
+//@ 무기 타입 열거형
 UENUM(BlueprintType)
 enum class EWeaponType : uint8
 {
@@ -73,6 +77,7 @@ enum class EWeaponType : uint8
 	None
 };
 
+//@ 공격 타입 열거형
 UENUM(BlueprintType)
 enum class EWeaponAttackType : uint8
 {
@@ -83,6 +88,7 @@ enum class EWeaponAttackType : uint8
 	None
 };
 
+//@ 플레이어 캐릭터 클래스 열거형
 UENUM(BlueprintType)
 enum class EPlayerCharacterClass : uint8
 {
@@ -91,6 +97,7 @@ enum class EPlayerCharacterClass : uint8
 	None
 };
 
+//@ BT 데코레이터용 비교 연산자 열거형
 UENUM(BlueprintType)
 enum class ERPGDecoratorComparisonOperator : uint8
 {
@@ -102,6 +109,7 @@ enum class ERPGDecoratorComparisonOperator : uint8
 	None
 };	
 
+//@ 커스텀 카운트다운 함수 액션 입력 열거형
 UENUM(BlueprintType)
 enum class ERPGCountDownActionInput : uint8
 {
@@ -109,6 +117,7 @@ enum class ERPGCountDownActionInput : uint8
 	Cancel
 };
 
+//@ 커스텀 카운트다운 함수 액션 출력 열거형
 UENUM(BlueprintType)
 enum class ERPGCountDownActionOutput : uint8
 {
@@ -117,6 +126,7 @@ enum class ERPGCountDownActionOutput : uint8
 	Cancelled
 };
 
+//@ UI 입력 모드 열거형
 UENUM(BlueprintType)
 enum class ERPGInputMode : uint8
 {
@@ -124,6 +134,7 @@ enum class ERPGInputMode : uint8
 	UIMode,
 };
 
+//@ 인벤토리 슬롯 구조체, 인벤토리 시스템에서 쓸 가장 기본적인 아이템 데이터 단위
 USTRUCT(BlueprintType)
 struct FInventorySlot
 {
@@ -145,6 +156,7 @@ struct FInventorySlot
 	TObjectPtr<UInventoryComponent> InventoryRef;
 };
 
+//@ 상호작용 타입 열거형
 UENUM(BlueprintType)
 enum class EInteractType : uint8
 {
@@ -152,6 +164,7 @@ enum class EInteractType : uint8
 	None,
 };
 
+//@ NPC 타입 열거형
 UENUM(BlueprintType)
 enum class ENPCType : uint8
 {
@@ -162,6 +175,7 @@ enum class ENPCType : uint8
 	None,
 };
 
+//@ 상호작용 데이터 구조체  
 USTRUCT(BlueprintType)
 struct FInteractionData {
 	GENERATED_USTRUCT_BODY()

@@ -15,11 +15,11 @@ void UEquipmentWidget::NativeConstruct()
 	Super::NativeConstruct();
 
 	APlayerCharacter_Fighter* PC = Cast<APlayerCharacter_Fighter>(GetOwningPlayerPawn());
-	if (PC)
+	if (IsValid(PC))
 	{
 		UPlayerEquipmentComponent* EquipmentInventory = PC->GetPlayerEquipmentComponent();
-
-		if (EquipmentInventory)
+		
+		if (IsValid(EquipmentInventory))
 		{
 			EquipmentSlotContainer->SetInventoryRef(EquipmentInventory);
 			EquipmentInventory->OnEquipmentSlotChangedDelegate.AddDynamic(this, &UEquipmentWidget::OnEquipmentChanged);
@@ -28,7 +28,8 @@ void UEquipmentWidget::NativeConstruct()
 }
 void UEquipmentWidget::OnEquipmentChanged()
 {
-	if (EquipmentSlotContainer)
+	//@ 장비 변경시 슬롯들 재설정
+	if (IsValid(EquipmentSlotContainer))
 	{
 		EquipmentSlotContainer->RefreshSlots();
 	}

@@ -10,33 +10,24 @@ void URPGWidgetBase::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 
-	IUIInterface* UIInterface = Cast<IUIInterface>(GetOwningPlayerPawn());
-	
-	if (UIInterface)
-	{
-		UPlayerUIComponent* PlayerUIComponent = UIInterface->GetPlayerUIComponent();
-		if (PlayerUIComponent)
-		{
-			BP_PlayerUIComponentInitialized(PlayerUIComponent);
-		}
-	}
+	const IUIInterface* UIInterface = Cast<IUIInterface>(GetOwningPlayerPawn());
+	if (UIInterface) return;
 
-	
+	const UPlayerUIComponent* PlayerUIComponent = UIInterface->GetPlayerUIComponent();
+	if (!IsValid(PlayerUIComponent)) return;
+
+	BP_PlayerUIComponentInitialized(const_cast<UPlayerUIComponent*>(PlayerUIComponent));	
 }
 
 void URPGWidgetBase::InitMonsterCreatedWidget(AActor* OwningMonster)
 {
-	IUIInterface* UIInterface = Cast<IUIInterface>(OwningMonster);
-
-	if (UIInterface)
-	{
-		UMonsterUIComponent* MonsterUIComponent = UIInterface->GetMonsterUIComponent();
-		if (MonsterUIComponent)
-		{
-			BP_MonsterUIComponentInitialized(MonsterUIComponent);
-		}
-	}
-		
+	const IUIInterface* UIInterface = Cast<IUIInterface>(OwningMonster);
+	if (UIInterface) return;
+	
+	const UMonsterUIComponent* MonsterUIComponent = UIInterface->GetMonsterUIComponent();
+	if (!IsValid(MonsterUIComponent)) return;
+	
+	BP_MonsterUIComponentInitialized(const_cast<UMonsterUIComponent*>(MonsterUIComponent));
 }
 
 

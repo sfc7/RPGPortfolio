@@ -42,48 +42,23 @@ void UItemSlotMaster::UpdateSlotData(FInventorySlot UpdateSlotData)
 
 	SetWidgetVisibility(InfoLayer, SlotHasItem);
 
+	// 아이템이 있는 경우 UI 업데이트
 	if (SlotHasItem)
 	{
 		UDataAsset_RPGItemData* ItemDataAssetObject = SlotData.ItemDataAsset.LoadSynchronous();
 		IconImage->SetBrushFromSoftTexture(ItemDataAssetObject->ItemIcon);
 		QuantityText->SetText(FText::AsNumber(SlotData.Quantity));
 
+		// 스택 가능 여부에 따른 수량 레이어 가시성
 		bool VisibleFlag = ItemDataAssetObject->IsStackable();
 		SetWidgetVisibility(QuantityLayer, VisibleFlag);
 
+		// 툴팁 위젯 업데이트
 		UItemInfomation* TooltipWidget = Cast<UItemInfomation>(GetToolTip());
 		if (TooltipWidget)
 		{
 			TooltipWidget->UpdateSlotData(SlotData);
 		}
-
-		// if (Cast<UDefaultTypeStrategy>(InventoryRef->CurrentInventoryTypeStrategy.GetObject()))
-		// {
-		// 	PlusInfoText->SetText(FText::GetEmpty());
-		// 	PlusInfoText2->SetText(FText::GetEmpty());
-		// }
-		// else if (Cast<UEquipmentTypeStrategy>(InventoryRef->CurrentInventoryTypeStrategy.GetObject()))
-		// {
-		// 	UDataAsset_RPGItemData_Equipment* Equipment = Cast<UDataAsset_RPGItemData_Equipment>(ItemDataAssetObject);
-		// 	
-		// 	PlusInfoText->SetText(FText::Format(FText::FromString(TEXT("+{0}")), Equipment->AttackRate));
-		// 	PlusInfoText->SetColorAndOpacity(FSlateColor(FLinearColor::Red));
-		//
-		// 	PlusInfoText2->SetText(FText::Format(FText::FromString(TEXT("+{0}")), Equipment->Defense));
-		// 	PlusInfoText2->SetColorAndOpacity(FSlateColor(FLinearColor::Blue));
-		// }
-		// else if (Cast<UPotionTypeStrategy>(InventoryRef->CurrentInventoryTypeStrategy.GetObject()))
-		// {
-		// 	UDataAsset_RPGItemData_Potion* Potion = Cast<UDataAsset_RPGItemData_Potion>(ItemDataAssetObject);
-		// 	
-		// 	PlusInfoText->SetText(FText::Format(FText::FromString(TEXT("+{0}")), Potion->HealAmount));
-		// 	PlusInfoText->SetColorAndOpacity(FSlateColor(FLinearColor::Green));
-		//
-		// 	PlusInfoText2->SetText(FText::GetEmpty());
-		// }
-		// else if (Cast<UMaterialTypeStrategy>(InventoryRef->CurrentInventoryTypeStrategy.GetObject()))
-		// {
-		// }
 	}
 }
 
@@ -112,16 +87,10 @@ void UItemSlotMaster::SetSlotSizeBox(float Size)
 
 bool UItemSlotMaster::CheckInventoryOwnerAndNPCType()
 {
-	if (!InventoryRef)
-	{
-		return false;
-	}
+	if (!IsValid(InventoryRef)) return false;
 
 	AActor* Owner = InventoryRef->GetOwner();
-	if (!Owner)
-	{
-		return false;
-	}
+	if (!Owner) return false;
 	
 	if (ANPC_HumanNPC* HumanNPC = Cast<ANPC_HumanNPC>(Owner))
 	{
@@ -138,17 +107,11 @@ bool UItemSlotMaster::CheckInventoryOwnerAndNPCType()
 
 bool UItemSlotMaster::CheckIsPlayerInventory()
 {
-	if (!InventoryRef)
-	{
-		return false;
-	}
-
+	if (!InventoryRef) return false;
+	
 	AActor* Owner = InventoryRef->GetOwner();
-	if (!Owner)
-	{
-		return false;
-	}
-    
+	if (!Owner) return false;
+	    
 	if (APlayerCharacter_Fighter* PlayerCharacter = Cast<APlayerCharacter_Fighter>(Owner))
 	{
 		return true;
@@ -159,17 +122,11 @@ bool UItemSlotMaster::CheckIsPlayerInventory()
 
 bool UItemSlotMaster::CheckIsStoreInventory()
 {
-	if (!InventoryRef)
-	{
-		return false;
-	}
-
+	if (!InventoryRef) return false;
+	
 	AActor* Owner = InventoryRef->GetOwner();
-	if (!Owner)
-	{
-		return false;
-	}
-    
+	if (!Owner) return false;
+	
 	if (ANPC_HumanNPC* HumanNPC = Cast<ANPC_HumanNPC>(Owner))
 	{
 		ENPCType NPCType = HumanNPC->GetNPCType();
@@ -185,67 +142,48 @@ bool UItemSlotMaster::CheckIsStoreInventory()
 
 bool UItemSlotMaster::CheckDropTargetIsStoreInventory(UItemSlotMaster* TargetSlot)
 {
-	if (!TargetSlot)
-	{
-		return false;
-	}
-    
+	if (!IsValid(TargetSlot)) return false;
+	
 	return TargetSlot->CheckIsStoreInventory();
 }
 
 bool UItemSlotMaster::TrySellItem()
 {
-	if (!CheckIsPlayerInventory())
-	{
-		return false;
-	}
-
-	if (!SlotHasItem || !SlotData.ItemDataAsset.IsValid())
-	{
-		return false;
-	}
-
-	if (!InventoryRef)
-	{
-		return false;
-	}
+	if (!CheckIsPlayerInventory()) return false;
+	
+	if (!SlotHasItem || !SlotData.ItemDataAsset.IsValid()) return false;
+	
+	if (!IsValid(InventoryRef)) return false;
 	
 	return InventoryRef->TrySellItem(SlotData);
 }
 
 void UItemSlotMaster::OnItemButtonClickedInStore()
 {
-	if (!CheckInventoryOwnerAndNPCType())
-	{
-		return;
-	}
+	if (!CheckInventoryOwnerAndNPCType()) return;
+	
 
-	if (!InventoryRef)
+	if (!IsValid(InventoryRef))
 	{
 		return;
 	}
 
 	ANPC_HumanNPC* StoreNPC = Cast<ANPC_HumanNPC>(InventoryRef->GetOwner());
-	if (!StoreNPC)
-	{
-		return;
-	}
+	if (!IsValid(StoreNPC)) return;
+	
 	
 	UStoreWidget* StoreWidget = Cast<UStoreWidget>(StoreNPC->GetStoreWidget());
 	if (StoreWidget)
 	{
 		StoreWidget->OnStoreItemPurchase(this);
-		// StoreWidget->OnSellItem(this);
 	}
 }
 
 void UItemSlotMaster::OnItemDoubleClicked()
 {
 	APlayerCharacterBase* PlayerCharacter = Cast<APlayerCharacterBase>(InventoryRef->GetOwner());
-	if (!PlayerCharacter)
-	{
-		return;
-	}
+	if (!IsValid(PlayerCharacter)) return;
+	
 	
 	if (SlotData.ItemDataAsset->ItemType == EItemType::Equipment)
 	{

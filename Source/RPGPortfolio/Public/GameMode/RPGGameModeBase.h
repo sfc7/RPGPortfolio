@@ -7,7 +7,9 @@
 #include "RPGGameModeBase.generated.h"
 
 /**
+ * ARPGGameModeBase
  * 
+ * 가장 기본 게임모드
  */
 UCLASS()
 class RPGPORTFOLIO_API ARPGGameModeBase : public AGameModeBase

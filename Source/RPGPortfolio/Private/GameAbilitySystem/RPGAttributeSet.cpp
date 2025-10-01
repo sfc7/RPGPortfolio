@@ -29,6 +29,7 @@ URPGAttributeSet::URPGAttributeSet()
 
 void URPGAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data)
 {
+	// UI 인터페이스 초기화
 	if (!UIInterface.IsValid())
 	{
 		UIInterface = TWeakInterfacePtr<IUIInterface>(Data.Target.GetAvatarActor());
@@ -36,94 +37,121 @@ void URPGAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectMod
 
 	check(UIInterface.IsValid());
 
-	UUIComponentBase* UIComponent = UIInterface->GetUIComponent();
-
+	UUIComponentBase* const UIComponent = UIInterface->GetUIComponent();
 	check(UIComponent);
 		
+	// 현재 HP 변경 처리
 	if (Data.EvaluatedData.Attribute == GetCurrentHpAttribute())
 	{
-		URPGAbilitySystemComponent* ASC = CastChecked<URPGAbilitySystemComponent>(GetOwningAbilitySystemComponent());
+		URPGAbilitySystemComponent* const ASC = CastChecked<URPGAbilitySystemComponent>(GetOwningAbilitySystemComponent());
 
-		if (ASC->HasMatchingGameplayTag(RPGGameplayTag::Player_Status_ParryingSuccessCheck))
+		// 패링 실패 중 ParryingSuccessCheck가 있을 때 타격 받는 경우 기록용
+		const bool bIsParryingCheck = ASC->HasMatchingGameplayTag(RPGGameplayTag::Player_Status_ParryingSuccessCheck);
+		if (bIsParryingCheck)
 		{
-			GetWorld()->GetGameInstance()->GetSubsystem<UCombatManager>()->RecordParryAttempt(false);
+			UCombatManager* const CombatManager = GetWorld()->GetGameInstance()->GetSubsystem<UCombatManager>();
+			if (IsValid(CombatManager))
+			{
+				CombatManager->RecordParryAttempt(false);
+			}
 		}
 		
-		float NewCurrentHp = FMath::Clamp(GetCurrentHp(), 0.f, GetMaxHp());
-		
+		const float NewCurrentHp = FMath::Clamp(GetCurrentHp(), 0.f, GetMaxHp());
 		SetCurrentHp(NewCurrentHp);
 		
-		UIComponent->OnCurrentHpChanged.Broadcast(GetCurrentHp()/GetMaxHp());
+		const float HpRatio = GetCurrentHp() / GetMaxHp();
+		UIComponent->OnCurrentHpChanged.Broadcast(HpRatio);
 	}
 
+	// 현재 MP 변경 처리
 	if (Data.EvaluatedData.Attribute == GetCurrentMpAttribute())	
 	{
-		float NewCurrentMp = FMath::Clamp(GetCurrentMp(), 0.f, GetMaxMp());
-
+		const float NewCurrentMp = FMath::Clamp(GetCurrentMp(), 0.f, GetMaxMp());
 		SetCurrentMp(NewCurrentMp);
 
-		if (GetCurrentMp() != GetMaxMp())
+		// MP 상태에 따른 게임플레이 태그 관리
+		AActor* const TargetActor = Data.Target.GetAvatarActor();
+		const bool bIsMpFull = (GetCurrentMp() == GetMaxMp());
+
+		// 마나 리젠용
+		if (!bIsMpFull)
 		{
-			AddGameplayTagToActor(Data.Target.GetAvatarActor(), RPGGameplayTag::Player_Status_AttributeSet_MpNotFull);
-			RemoveGameplayTagFromActor(Data.Target.GetAvatarActor(), RPGGameplayTag::Player_Status_AttributeSet_MpFull);
+			AddGameplayTagToActor(TargetActor, RPGGameplayTag::Player_Status_AttributeSet_MpNotFull);
+			RemoveGameplayTagFromActor(TargetActor, RPGGameplayTag::Player_Status_AttributeSet_MpFull);
 		}
 		else
 		{
-			AddGameplayTagToActor(Data.Target.GetAvatarActor(), RPGGameplayTag::Player_Status_AttributeSet_MpFull);
-			RemoveGameplayTagFromActor(Data.Target.GetAvatarActor(), RPGGameplayTag::Player_Status_AttributeSet_MpNotFull);
+			AddGameplayTagToActor(TargetActor, RPGGameplayTag::Player_Status_AttributeSet_MpFull);
+			RemoveGameplayTagFromActor(TargetActor, RPGGameplayTag::Player_Status_AttributeSet_MpNotFull);
 		}
 		
-		UPlayerUIComponent* PlayerUIComponent = UIInterface->GetPlayerUIComponent();
-		if (PlayerUIComponent)
+		// 플레이어 UI 업데이트
+		UPlayerUIComponent* const PlayerUIComponent = UIInterface->GetPlayerUIComponent();
+		if (IsValid(PlayerUIComponent))
 		{
-			PlayerUIComponent->OnCurrentMpChanged.Broadcast(GetCurrentMp()/GetMaxMp());
+			const float MpRatio = GetCurrentMp() / GetMaxMp();
+			PlayerUIComponent->OnCurrentMpChanged.Broadcast(MpRatio);
 		}
 	}
 
+	// 데미지 처리
 	if (Data.EvaluatedData.Attribute == GetDamageAttribute())
 	{
-		float PreCurrentHp = GetCurrentHp();
-		float CalcDamage = GetDamage();
-
-		float CalcCurrentHp = FMath::Clamp(PreCurrentHp - CalcDamage, 0.f, GetMaxHp());
+		// 데미지 계산 및 HP 적용
+		const float PreCurrentHp = GetCurrentHp();
+		const float CalcDamage = GetDamage();
+		const float CalcCurrentHp = FMath::Clamp(PreCurrentHp - CalcDamage, 0.f, GetMaxHp());
 
 		SetCurrentHp(CalcCurrentHp);
 		
-		UIComponent->OnCurrentHpChanged.Broadcast(GetCurrentHp()/GetMaxHp());
+		// HP UI 업데이트
+		const float HpRatio = GetCurrentHp() / GetMaxHp();
+		UIComponent->OnCurrentHpChanged.Broadcast(HpRatio);
 		
-		if (GetCurrentHp() == 0.f)
+		// 사망 상태 확인 및 태그 추가
+		const bool bIsDead = (GetCurrentHp() == 0.f);
+		if (bIsDead)
 		{
-			AddGameplayTagToActor(Data.Target.GetAvatarActor(),RPGGameplayTag::Character_Status_Dead);
+			AActor* const TargetActor = Data.Target.GetAvatarActor();
+			AddGameplayTagToActor(TargetActor, RPGGameplayTag::Character_Status_Dead);
 		}
 
-		UMonsterUIComponent* MonsterUIComponent = UIInterface->GetMonsterUIComponent();
-		if (MonsterUIComponent)
+		// 몬스터인 경우 데미지 인디케이터 표시
+		UMonsterUIComponent* const MonsterUIComponent = UIInterface->GetMonsterUIComponent();
+		if (IsValid(MonsterUIComponent))
 		{
-			AMonsterCharacter* Monster = MonsterUIComponent->GetOwningPawn<AMonsterCharacter>();
-			Monster->SpawnDamageIndicator(CalcDamage);
+			AMonsterCharacter* const Monster = MonsterUIComponent->GetOwningPawn<AMonsterCharacter>();
+			if (IsValid(Monster))
+			{
+				Monster->SpawnDamageIndicator(CalcDamage);
+			}
 		}
 	}
 }
 
-void URPGAttributeSet::AddGameplayTagToActor(AActor* TargetActor, FGameplayTag AddTag)
+void URPGAttributeSet::AddGameplayTagToOwner(FGameplayTag AddTag)
 {
-	check(TargetActor);
+	if (!AddTag.IsValid()) return;
 
-	URPGAbilitySystemComponent* ASC = CastChecked<URPGAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor));
+	URPGAbilitySystemComponent* const ASC = CastChecked<URPGAbilitySystemComponent>(GetOwningAbilitySystemComponent());
 
-	if (!ASC->HasMatchingGameplayTag(AddTag))
+	// 이미 태그가 있는지 확인 후 추가
+	const bool bAlreadyHasTag = ASC->HasMatchingGameplayTag(AddTag);
+	if (!bAlreadyHasTag)
 	{
 		ASC->AddLooseGameplayTag(AddTag);
 	}
 }
 
-void URPGAttributeSet::RemoveGameplayTagFromActor(AActor* TargetActor, FGameplayTag RemoveTag)
+void URPGAttributeSet::RemoveGameplayTagFromOwner(FGameplayTag RemoveTag)
 {
-	check(TargetActor);
-	
-	URPGAbilitySystemComponent* ASC = CastChecked<URPGAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor));
+	if (!RemoveTag.IsValid()) return;
 
-	if (ASC->HasMatchingGameplayTag(RemoveTag))
+	URPGAbilitySystemComponent* const ASC = CastChecked<URPGAbilitySystemComponent>(GetOwningAbilitySystemComponent());
+
+	// 태그가 있는지 확인 후 제거
+	const bool bHasTag = ASC->HasMatchingGameplayTag(RemoveTag);
+	if (bHasTag)
 	{
 		ASC->RemoveLooseGameplayTag(RemoveTag);
 	}
@@ -133,31 +161,43 @@ TMap<FGameplayAttribute, float> URPGAttributeSet::SaveAllAttributes()
 {
 	TMap<FGameplayAttribute, float> LocalMap;
 
+	// 모든 어트리뷰트 가져오기
 	TArray<FGameplayAttribute> LocalAttributeArray;
-	GetOwningAbilitySystemComponent()->GetAllAttributes(LocalAttributeArray);
+	UAbilitySystemComponent* const OwningASC = GetOwningAbilitySystemComponent();
+	if (!IsValid(OwningASC)) return LocalMap;
 
-	if (!LocalAttributeArray.IsEmpty())
+	OwningASC->GetAllAttributes(LocalAttributeArray);
+
+
+	if (LocalAttributeArray.IsEmpty()) return LocalMap;
+
+	// 모든 어트리뷰트 값을 맵에 저장
+	for (const FGameplayAttribute& Attribute : LocalAttributeArray)
 	{
-		for (FGameplayAttribute Attribute : LocalAttributeArray)
-		{
-			bool bFoundAttribute = false;
-			float AttributeValue = 	GetOwningAbilitySystemComponent()->GetGameplayAttributeValue(Attribute, bFoundAttribute);
+		bool bFoundAttribute = false;
+		const float AttributeValue = OwningASC->GetGameplayAttributeValue(Attribute, bFoundAttribute);
 
-			if (bFoundAttribute)
-			{
-				LocalMap.Add(Attribute, AttributeValue);				
-			}
+		if (bFoundAttribute)
+		{
+			LocalMap.Add(Attribute, AttributeValue);				
 		}
 	}
 
 	return LocalMap;
 }
 
+
 void URPGAttributeSet::LoadAllAttributes(TMap<FGameplayAttribute, float> AttributeMap)
 {
-	for (auto& Attribute : AttributeMap)
+	if (AttributeMap.IsEmpty()) return;
+
+	UAbilitySystemComponent* const OwningASC = GetOwningAbilitySystemComponent();
+	if (!IsValid(OwningASC)) return;
+
+	// 모든 어트리뷰트 값 적용
+	for (const auto& Attribute : AttributeMap)
 	{
-		GetOwningAbilitySystemComponent()->ApplyModToAttribute(Attribute.Key, EGameplayModOp::Override, Attribute.Value);
+		OwningASC->ApplyModToAttribute(Attribute.Key, EGameplayModOp::Override, Attribute.Value);
 	}
 }
 
@@ -165,13 +205,20 @@ TArray<FAttributeSaveData> URPGAttributeSet::SaveAllAttributesToSaveData()
 {
 	TArray<FAttributeSaveData> SaveDataArray;
     
+	// 모든 어트리뷰트 가져오기
 	TArray<FGameplayAttribute> LocalAttributeArray;
-	GetOwningAbilitySystemComponent()->GetAllAttributes(LocalAttributeArray);
+	UAbilitySystemComponent* const OwningASC = GetOwningAbilitySystemComponent();
+	if (!IsValid(OwningASC)) return SaveDataArray;
+
+	OwningASC->GetAllAttributes(LocalAttributeArray);
     
-	for (FGameplayAttribute Attribute : LocalAttributeArray)
+	if (LocalAttributeArray.IsEmpty()) return SaveDataArray;
+
+	// 모든 어트리뷰트를 세이브 데이터로 변환
+	for (const FGameplayAttribute& Attribute : LocalAttributeArray)
 	{
 		bool bFoundAttribute = false;
-		float AttributeValue = GetOwningAbilitySystemComponent()->GetGameplayAttributeValue(Attribute, bFoundAttribute);
+		const float AttributeValue = OwningASC->GetGameplayAttributeValue(Attribute, bFoundAttribute);
         
 		if (bFoundAttribute)
 		{
@@ -187,110 +234,141 @@ TArray<FAttributeSaveData> URPGAttributeSet::SaveAllAttributesToSaveData()
 
 void URPGAttributeSet::LoadAllAttributesFromSaveData(TArray<FAttributeSaveData> AttributeSaveData)
 {
-	TMap<FGameplayAttribute, float> AttributeMap = SaveAllAttributes(); 
+	if (AttributeSaveData.IsEmpty()) return;
+
+	UAbilitySystemComponent* const OwningASC = GetOwningAbilitySystemComponent();
+	if (!IsValid(OwningASC)) return;
+
+	// 현재 어트리뷰트 맵 가져오기
+	const TMap<FGameplayAttribute, float> AttributeMap = SaveAllAttributes(); 
     
+	// 세이브 데이터의 각 어트리뷰트 로드
 	for (const FAttributeSaveData& SaveData : AttributeSaveData)
 	{
-		for (auto& Pair : AttributeMap)
+		// 해당 어트리뷰트 찾기
+		for (const auto& Pair : AttributeMap)
 		{
-			if (Pair.Key.GetName() == SaveData.AttributeName)
+			const bool bAttributeNameMatches = (Pair.Key.GetName() == SaveData.AttributeName);
+			if (bAttributeNameMatches)
 			{
-				GetOwningAbilitySystemComponent()->ApplyModToAttribute(Pair.Key, EGameplayModOp::Override, SaveData.Value);
+				OwningASC->ApplyModToAttribute(Pair.Key, EGameplayModOp::Override, SaveData.Value);
 				break;
 			}
 		}
 	}
 	
+	// UI 인터페이스 초기화
 	if (!UIInterface.IsValid())
 	{
-		if (UAbilitySystemComponent* ASC = GetOwningAbilitySystemComponent())
+		UAbilitySystemComponent* const ASC = GetOwningAbilitySystemComponent();
+		if (IsValid(ASC))
 		{
-			if (AActor* AvatarActor = ASC->GetAvatarActor())
+			AActor* const AvatarActor = ASC->GetAvatarActor();
+			if (IsValid(AvatarActor))
 			{
 				UIInterface = TWeakInterfacePtr<IUIInterface>(AvatarActor);
 			}
 		}
 	}
 	
-	if (UIInterface.IsValid())
+	// UI 업데이트
+	if (!UIInterface.IsValid()) return;
+
+	UUIComponentBase* const UIComponent = UIInterface->GetUIComponent();
+	if (IsValid(UIComponent))
 	{
-		UUIComponentBase* UIComponent = UIInterface->GetUIComponent();
-		if (UIComponent)
-		{
-			UIComponent->OnCurrentHpChanged.Broadcast(GetCurrentHp()/GetMaxHp());
-		}
-		
-		UPlayerUIComponent* PlayerUIComponent = UIInterface->GetPlayerUIComponent();
-		if (PlayerUIComponent)
-		{
-			PlayerUIComponent->OnCurrentMpChanged.Broadcast(GetCurrentMp()/GetMaxMp());
-		}
+		const float HpRatio = GetCurrentHp() / GetMaxHp();
+		UIComponent->OnCurrentHpChanged.Broadcast(HpRatio);
+	}
+	
+	UPlayerUIComponent* const PlayerUIComponent = UIInterface->GetPlayerUIComponent();
+	if (IsValid(PlayerUIComponent))
+	{
+		const float MpRatio = GetCurrentMp() / GetMaxMp();
+		PlayerUIComponent->OnCurrentMpChanged.Broadcast(MpRatio);
 	}
 }
 
 void URPGAttributeSet::ApplyEquipmentStats(float AddMaxHp, float AddMaxMp, float AddAttackRate, float AddDefense)
 {
+	// 장비 능력치 적용
 	SetMaxHp(GetMaxHp() + AddMaxHp);
 	SetMaxMp(GetMaxMp() + AddMaxMp);
 	SetAttackRate(GetAttackRate() + AddAttackRate);
 	SetDefense(GetDefense() + AddDefense);
 
-	if (UIInterface.IsValid())
+	// UI 업데이트
+	if (!UIInterface.IsValid()) return;
+
+	UUIComponentBase* const UIComponent = UIInterface->GetUIComponent();
+	if (IsValid(UIComponent))
 	{
-		UUIComponentBase* UIComponent = UIInterface->GetUIComponent();
-		if (UIComponent)
-		{
-			UIComponent->OnCurrentHpChanged.Broadcast(GetCurrentHp()/GetMaxHp());
-		}
-		
-		UPlayerUIComponent* PlayerUIComponent = UIInterface->GetPlayerUIComponent();
-		if (PlayerUIComponent)
-		{
-			PlayerUIComponent->OnCurrentMpChanged.Broadcast(GetCurrentMp()/GetMaxMp());
-		}
+		const float HpRatio = GetCurrentHp() / GetMaxHp();
+		UIComponent->OnCurrentHpChanged.Broadcast(HpRatio);
+	}
+	
+	UPlayerUIComponent* const PlayerUIComponent = UIInterface->GetPlayerUIComponent();
+	if (IsValid(PlayerUIComponent))
+	{
+		const float MpRatio = GetCurrentMp() / GetMaxMp();
+		PlayerUIComponent->OnCurrentMpChanged.Broadcast(MpRatio);
 	}
 }
 
 void URPGAttributeSet::RemoveEquipmentStats(float RemoveMaxHp, float RemoveMaxMp, float RemoveAttackRate, float RemoveDefense)
 {
+	// 장비 능력치 제거
 	SetMaxHp(GetMaxHp() - RemoveMaxHp);
 	SetMaxMp(GetMaxMp() - RemoveMaxMp);
 	SetAttackRate(GetAttackRate() - RemoveAttackRate);
 	SetDefense(GetDefense() - RemoveDefense);
 
-	if (UIInterface.IsValid())
+	// UI 업데이트
+	if (!UIInterface.IsValid()) return;
+
+	UUIComponentBase* const UIComponent = UIInterface->GetUIComponent();
+	if (IsValid(UIComponent))
 	{
-		UUIComponentBase* UIComponent = UIInterface->GetUIComponent();
-		if (UIComponent)
-		{
-			UIComponent->OnCurrentHpChanged.Broadcast(GetCurrentHp()/GetMaxHp());
-		}
-		
-		UPlayerUIComponent* PlayerUIComponent = UIInterface->GetPlayerUIComponent();
-		if (PlayerUIComponent)
-		{
-			PlayerUIComponent->OnCurrentMpChanged.Broadcast(GetCurrentMp()/GetMaxMp());
-		}
+		const float HpRatio = GetCurrentHp() / GetMaxHp();
+		UIComponent->OnCurrentHpChanged.Broadcast(HpRatio);
+	}
+	
+	UPlayerUIComponent* const PlayerUIComponent = UIInterface->GetPlayerUIComponent();
+	if (IsValid(PlayerUIComponent))
+	{
+		const float MpRatio = GetCurrentMp() / GetMaxMp();
+		PlayerUIComponent->OnCurrentMpChanged.Broadcast(MpRatio);
 	}
 }
 
-void URPGAttributeSet::AddGameplayTagToOwner(FGameplayTag AddTag)
+void URPGAttributeSet::AddGameplayTagToActor(AActor* TargetActor, FGameplayTag AddTag)
 {
-	URPGAbilitySystemComponent* ASC = CastChecked<URPGAbilitySystemComponent>(GetOwningAbilitySystemComponent());
+	if (!IsValid(TargetActor)) return;
 
-	if (!ASC->HasMatchingGameplayTag(AddTag))
+	if (!AddTag.IsValid()) return;
+
+	URPGAbilitySystemComponent* const ASC = CastChecked<URPGAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor));
+
+	// 이미 태그가 있는지 확인 후 추가
+	const bool bAlreadyHasTag = ASC->HasMatchingGameplayTag(AddTag);
+	if (!bAlreadyHasTag)
 	{
 		ASC->AddLooseGameplayTag(AddTag);
 	}
 }
 
-void URPGAttributeSet::RemoveGameplayTagFromOwner(FGameplayTag RemoveTag)
+void URPGAttributeSet::RemoveGameplayTagFromActor(AActor* TargetActor, FGameplayTag RemoveTag)
 {
-	URPGAbilitySystemComponent* ASC = CastChecked<URPGAbilitySystemComponent>(GetOwningAbilitySystemComponent());
+	if (!IsValid(TargetActor)) return;
 
-	if (ASC->HasMatchingGameplayTag(RemoveTag))
+	if (!RemoveTag.IsValid()) return;
+	
+	URPGAbilitySystemComponent* const ASC = CastChecked<URPGAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor));
+
+	// 태그가 있는지 확인 후 제거
+	const bool bHasTag = ASC->HasMatchingGameplayTag(RemoveTag);
+	if (bHasTag)
 	{
 		ASC->RemoveLooseGameplayTag(RemoveTag);
 	}
 }
-

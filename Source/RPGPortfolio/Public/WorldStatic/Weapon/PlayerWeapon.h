@@ -8,7 +8,9 @@
 #include "PlayerWeapon.generated.h"
 
 /**
+ * APlayerWeapon
  * 
+ * 플레이어 무기
  */
 UCLASS()
 class RPGPORTFOLIO_API APlayerWeapon : public AWeaponBase

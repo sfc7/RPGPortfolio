@@ -14,11 +14,11 @@ void UItemPotionHotBar::NativeOnInitialized()
 	Super::NativeOnInitialized();
 
 	APlayerCharacter_Fighter* PC = Cast<APlayerCharacter_Fighter>(GetOwningPlayerPawn());
-	if (PC)
+	if (IsValid(PC))
 	{
 		UInventoryComponent* PotionInventory = PC->GetPlayerPotionHotBar();
 
-		if (PotionInventory)
+		if (IsValid(PotionInventory))
 		{
 			ItemSlotContainer->SetInventoryRef(PotionInventory);
 			PotionInventory->OnPotionBarSlotChangedDelegate.AddDynamic(this, &UItemPotionHotBar::OnPotionBarChanged);
@@ -28,7 +28,8 @@ void UItemPotionHotBar::NativeOnInitialized()
 
 void UItemPotionHotBar::OnPotionBarChanged()
 {
-	if (ItemSlotContainer)
+	//@ 포션 퀵슬롯 변경시 슬롯들 재설정
+	if (IsValid(ItemSlotContainer))
 	{
 		ItemSlotContainer->RefreshSlots();
 	}

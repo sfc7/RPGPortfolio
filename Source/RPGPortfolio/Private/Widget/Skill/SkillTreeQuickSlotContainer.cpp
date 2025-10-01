@@ -29,12 +29,15 @@ void USkillTreeQuickSlotContainer::NativeConstruct()
 void USkillTreeQuickSlotContainer::OnApplyButtonClicked()
 {
 	UPlayerSkillComponent* PlayerSkillComponent = GetWorld()->GetGameInstance()->GetSubsystem<UGASManager>()->GetPlayerSkillComponent();
+	if (!IsValid(PlayerSkillComponent)) return;
 	
+	// 새로운 퀵슬롯 태그 배열 생성
 	TArray<FGameplayTag> NewQuickSlots;
 	NewQuickSlots.Add(QuickSlot_Z->SkillSlotData.SkillAbilityTag); 
 	NewQuickSlots.Add(QuickSlot_X->SkillSlotData.SkillAbilityTag);  
 	NewQuickSlots.Add(QuickSlot_C->SkillSlotData.SkillAbilityTag); 
-	
+
+	// 퀵슬롯 설정 적용
 	PlayerSkillComponent->SetAllSkillQuickSlots(NewQuickSlots);
 
 	GetWorld()->GetGameInstance()->GetSubsystem<UUIManager>()->ToggleInputMode(GetWorld(), ERPGInputMode::GameMode);
@@ -49,7 +52,9 @@ void USkillTreeQuickSlotContainer::OnCancelButtonClicked()
 void USkillTreeQuickSlotContainer::UpdateQuickSlot()
 {
 	UPlayerSkillComponent* PlayerSkillComponent = GetWorld()->GetGameInstance()->GetSubsystem<UGASManager>()->GetPlayerSkillComponent();
+	if (!IsValid(PlayerSkillComponent)) return;
 
+	// 퀵슬롯 인덱스 FGameplayTag 가져오기
 	TArray<FGameplayTag> QuickSlotGameplayTags;
 	if (PlayerSkillComponent)
 	{
@@ -61,6 +66,7 @@ void USkillTreeQuickSlotContainer::UpdateQuickSlot()
 
 	TArray<UHasSkillDataWidget*> QuickSlotWidgets = { QuickSlot_Z, QuickSlot_X, QuickSlot_C };
 
+	// 각 퀵슬롯 위젯 업데이트
 	for (int32 Index = 0; Index < QuickSlotWidgets.Num(); Index++)
 	{
 		if (QuickSlotWidgets[Index])

@@ -27,24 +27,22 @@ TArray<FPlayerAbilitySkillSet> UGASManager::GetPlayerAbilitySkillSet() const
 
 FString UGASManager::GetSkillDescriptionFromPlayerASC(FGameplayTag SkillTag)
 {
-	if (!SkillTag.IsValid())
-	{
-		return FString();
-	}
+	if (!SkillTag.IsValid()) return FString();
+	
+	APlayerController* const PC = GetWorld()->GetFirstPlayerController();
+	if (!IsValid(PC)) return FString();
 
-	APlayerController* PC = GetWorld()->GetFirstPlayerController();
-	if (!PC) return FString();
+	APlayerCharacterBase* const PlayerCharacter = Cast<APlayerCharacterBase>(PC->GetPawn());
+	if (!IsValid(PlayerCharacter)) return FString();
 
-	APlayerCharacterBase* PlayerCharacter = Cast<APlayerCharacterBase>(PC->GetPawn());
-	if (!PlayerCharacter) return FString();
+	URPGAbilitySystemComponent* const ASC = PlayerCharacter->GetRPGAbilitySystemComponent();
+	if (!IsValid(ASC)) return FString();
 
-	URPGAbilitySystemComponent* ASC = PlayerCharacter->GetRPGAbilitySystemComponent();
-	if (!ASC) return FString();
-
+	// 활성 어빌리티 스펙 찾기
 	FGameplayAbilitySpec* AbilitySpec = ASC->FindActiveAbilityByTag(SkillTag);
 	if (!AbilitySpec || !AbilitySpec->Ability) return *FString::Printf(TEXT("스킬을 아직 배우지 않았습니다."));
 	
-
+	// 스킬 어빌리티 타입에 따른 설명 반환
 	if (UPlayerAttackSkillGameplayAbility* SkillAbility = Cast<UPlayerAttackSkillGameplayAbility>(AbilitySpec->Ability))
 	{
 		return SkillAbility->GetSkillDescriptionForUI(); 
@@ -53,31 +51,30 @@ FString UGASManager::GetSkillDescriptionFromPlayerASC(FGameplayTag SkillTag)
 	{
 		return PlayerAbility->GetDescriptionForUI();
 	}
-
 	
 	return FString();
 }
 
 int32 UGASManager::GetSkillLevelFromPlayerASC(FGameplayTag SkillTag)
 {
-	if (!SkillTag.IsValid())
-	{
-		return 0;
-	}
+	if (!SkillTag.IsValid()) return 0;
+	
+	APlayerController* const PC = GetWorld()->GetFirstPlayerController();
+	if (!IsValid(PC)) return 0;
 
-	APlayerController* PC = GetWorld()->GetFirstPlayerController();
-	if (!PC) return 0;
+	APlayerCharacterBase* const PlayerCharacter = Cast<APlayerCharacterBase>(PC->GetPawn());
+	if (!IsValid(PlayerCharacter)) return 0;
 
-	APlayerCharacterBase* PlayerCharacter = Cast<APlayerCharacterBase>(PC->GetPawn());
-	if (!PlayerCharacter) return 0;
+	URPGAbilitySystemComponent* const ASC = PlayerCharacter->GetRPGAbilitySystemComponent();
+	if (!IsValid(ASC)) return 0;
 
-	URPGAbilitySystemComponent* ASC = PlayerCharacter->GetRPGAbilitySystemComponent();
-	if (!ASC) return 0;
-
+	// 활성 어빌리티 스펙 찾기
 	FGameplayAbilitySpec* AbilitySpec = ASC->FindActiveAbilityByTag(SkillTag);
 	if (!AbilitySpec || !AbilitySpec->Ability) return 0;
 
-	if (UPlayerGameplayAbility* PlayerAbility = Cast<UPlayerGameplayAbility>(AbilitySpec->Ability))
+	// 플레이어 어빌리티에서 레벨 가져오기
+	UPlayerGameplayAbility* const PlayerAbility = Cast<UPlayerGameplayAbility>(AbilitySpec->Ability);
+	if (IsValid(PlayerAbility))
 	{
 		return PlayerAbility->GetAbilityLevel();
 	}
@@ -87,13 +84,11 @@ int32 UGASManager::GetSkillLevelFromPlayerASC(FGameplayTag SkillTag)
 
 bool UGASManager::FindSkillByTag(FGameplayTag SkillAbilityTag, FPlayerAbilitySkillSet& OutSkillData) const
 {
-	if (!SkillDataAsset || !SkillAbilityTag.IsValid())
-	{
-		return false;
-	}
-
-	TArray<FPlayerAbilitySkillSet> AllSkills = SkillDataAsset->GetPlayerAbilitySkillSet();
+	if (!IsValid(SkillDataAsset) || !SkillAbilityTag.IsValid()) return false;
 	
+	TArray<FPlayerAbilitySkillSet> AllSkills = SkillDataAsset->GetPlayerAbilitySkillSet();
+
+	// 태그와 일치하는 스킬 데이터 찾기
 	for (const FPlayerAbilitySkillSet& SkillData : AllSkills)
 	{
 		if (SkillData.SkillAbilityTag == SkillAbilityTag)
@@ -108,20 +103,18 @@ bool UGASManager::FindSkillByTag(FGameplayTag SkillAbilityTag, FPlayerAbilitySki
 
 bool UGASManager::CheckActiveSkillByTag(FGameplayTag SkillAbilityTag) const
 {
-	if (!SkillAbilityTag.IsValid())
-	{
-		return false;
-	}
+	if (!SkillAbilityTag.IsValid()) return false;
+	
+	APlayerController* const PC = GetWorld()->GetFirstPlayerController();
+	if (!IsValid(PC)) return false;
 
-	APlayerController* PC = GetWorld()->GetFirstPlayerController();
-	if (!PC) return false;
+	APlayerCharacterBase* const PlayerCharacter = Cast<APlayerCharacterBase>(PC->GetPawn());
+	if (!IsValid(PlayerCharacter)) return false;
 
-	APlayerCharacterBase* PlayerCharacter = Cast<APlayerCharacterBase>(PC->GetPawn());
-	if (!PlayerCharacter) return false;
+	URPGAbilitySystemComponent* const ASC = PlayerCharacter->GetRPGAbilitySystemComponent();
+	if (!IsValid(ASC)) return false;
 
-	URPGAbilitySystemComponent* ASC = PlayerCharacter->GetRPGAbilitySystemComponent();
-	if (!ASC) return false;
-
+	// 활성 어빌리티 스펙 찾기
 	FGameplayAbilitySpec* AbilitySpec = ASC->FindActiveAbilityByTag(SkillAbilityTag);
 	if (!AbilitySpec || !AbilitySpec->Ability) return false;
 
@@ -130,9 +123,14 @@ bool UGASManager::CheckActiveSkillByTag(FGameplayTag SkillAbilityTag) const
 
 bool UGASManager::ApplyGameplayEffectSpecHandleToTargetActor(AActor* Instigator, AActor* TargetActor,const FGameplayEffectSpecHandle& SpecHandle)
 {
+	if (!IsValid(Instigator) || !IsValid(TargetActor)) return false;
+
+	if (!SpecHandle.IsValid()) return false;
+	
 	URPGAbilitySystemComponent* InstigatorASC = CastChecked<URPGAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Instigator));
 	URPGAbilitySystemComponent* TargetActorASC = CastChecked<URPGAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor));
 
+	// 게임플레이 이펙트 스펙을 타겟에게 적용
 	FActiveGameplayEffectHandle ActiveGameplayEffectHandle = InstigatorASC->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data, TargetActorASC);
 
 	return ActiveGameplayEffectHandle.WasSuccessfullyApplied();
@@ -146,7 +144,7 @@ void UGASManager::OnSkillSlotDrop(UPlayerSkillComponent* FromSkillTree, UPlayerS
 UPlayerSkillComponent* UGASManager::GetPlayerSkillComponent()
 {
 	APlayerCharacterBase* PC = Cast<APlayerCharacterBase>(GetWorld()->GetFirstPlayerController()->GetPawn());
-	if (PC)
+	if (IsValid(PC))
 	{
 		return PC->GetPlayerSkillComponent();
 	}

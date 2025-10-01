@@ -27,14 +27,17 @@ void AAOEBase::Tick(float DeltaTime)
 
 void AAOEBase::SpawnDecal()
 {	
-	if (DecalNiagara)
+	if (IsValid(DecalNiagara))
 	{
+		// 나이아가라 시스템 스폰
 		NiagaraComponent = UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, DecalNiagara, GetActorLocation(), FRotator::ZeroRotator, FVector::OneVector,
 	true,true, ENCPoolMethod::None, true);
 
-		if (NiagaraComponent)
+		if (IsValid(NiagaraComponent))
 		{
-			NiagaraComponent->SetAutoDestroy(true); 
+			// 자동 파괴 활성화
+			NiagaraComponent->SetAutoDestroy(true);
+			// 완료 이벤트 바인딩
 			NiagaraComponent->OnSystemFinished.AddDynamic(this, &AAOEBase::OnNiagaraFinished);
 		}
 	}
@@ -49,28 +52,35 @@ void AAOEBase::OnNiagaraFinished(UNiagaraComponent* PSystem)
 
 void AAOEBase::MoveToFloor()
 {
-	if (TargetActor)
-	{
-		FVector TargetActorLocation = GetActorLocation();
-		FVector EndLocation = TargetActorLocation + FVector(0.f, 0.f, -500.f);
-		FHitResult HitResult;
-		FCollisionQueryParams QueryParams;
-		QueryParams.bTraceComplex = false;   
-		QueryParams.AddIgnoredActor(TargetActor);
-		QueryParams.AddIgnoredActor(this);
-		
-		bool bHit = GetWorld()->LineTraceSingleByChannel(
-			OUT HitResult,
-			TargetActorLocation,
-			EndLocation,
-			ECC_Visibility,
-			QueryParams
-			);
+	if (!IsValid(TargetActor)) return;
+	
+	// 현재 위치에서 아래쪽으로 라인 트레이스
+	const FVector TargetActorLocation = GetActorLocation();
+	const FVector EndLocation = TargetActorLocation + FVector(0.f, 0.f, -500.f);
+	
+	FHitResult HitResult;
+	FCollisionQueryParams QueryParams;
+	QueryParams.bTraceComplex = false;
+	QueryParams.AddIgnoredActor(TargetActor);
+	QueryParams.AddIgnoredActor(this);
+	
 
-		if (bHit)
-		{
-			SetActorLocation(HitResult.Location);
-		}
+	const UWorld* World = GetWorld();
+	if (!IsValid(World)) return;
+
+	// 라인 트레이스 실행
+	const bool bHit = World->LineTraceSingleByChannel(
+		OUT HitResult,
+		TargetActorLocation,
+		EndLocation,
+		ECC_Visibility,
+		QueryParams
+	);
+
+	// 히트된 경우 위치 업데이트
+	if (bHit)
+	{
+		SetActorLocation(HitResult.Location);
 	}
 }
 

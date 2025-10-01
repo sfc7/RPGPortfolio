@@ -16,11 +16,13 @@ void UHasSkillDataWidget::UpdateSkillData(FPlayerAbilitySkillSet SkillSlotDataTo
 
 void UHasSkillDataWidget::UpdateSkillDataFromGamePlayTag(int32 Index, FGameplayTag SkillTag)
 {
+	// 인덱스가 일치해야됨
 	if (Index == SlotIndex)
 	{
 		FPlayerAbilitySkillSet FoundSkillData;
 		bool bSkillFound = GetWorld()->GetGameInstance()->GetSubsystem<UGASManager>()->FindSkillByTag(SkillTag, FoundSkillData);
-    
+
+		// 스킬을 찾은 경우 데이터 설정
 		if (bSkillFound)
 		{
 			SkillSlotData = FoundSkillData;
@@ -29,6 +31,7 @@ void UHasSkillDataWidget::UpdateSkillDataFromGamePlayTag(int32 Index, FGameplayT
 				SkillIcon->SetBrushFromMaterial(SkillSlotData.AbilityIcon);
 			}
 		}
+		// 스킬을 찾지 못한 경우 빈 데이터로 초기화
 		else
 		{
 			SkillSlotData = FPlayerAbilitySkillSet();

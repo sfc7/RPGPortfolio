@@ -28,13 +28,11 @@ void UUIManager::Deinitialize()
 
 void UUIManager::ShowUIAsync(const EUICategory& UICategory, UWorld* World)
 {
-	TSoftClassPtr<UUserWidget> WidgetClass = GetUIWidgetClass(UICategory);
+	const TSoftClassPtr<UUserWidget> WidgetClass = GetUIWidgetClass(UICategory);
     
-	if (WidgetClass.IsNull() || !World)
-	{
-		return;
-	}
+	if (WidgetClass.IsNull() || !World) return;
 
+	// 위젯 클래스 비동기 로딩
 	UAssetManager::GetStreamableManager().RequestAsyncLoad(
 		WidgetClass.ToSoftObjectPath(),
 		FStreamableDelegate::CreateLambda([WidgetClass, World]()
@@ -77,31 +75,31 @@ TSubclassOf<UUserWidget> UUIManager::GetQuestWidgetClass(const EQuestUICategory&
 
 void UUIManager::ToggleInputMode(const UObject* WorldContextObject, ERPGInputMode InputMode)
 {
-	APlayerController* PlayerController = nullptr;
+	if (!IsValid(WorldContextObject)) return;
+	
+	UWorld* const World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull);
+	if (!IsValid(World)) return;
 
-	if (GEngine)
-	{
-		if (UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull))
-		{
-			PlayerController = World->GetFirstPlayerController();
-		}
-	}
+	APlayerController* const PlayerController = World->GetFirstPlayerController();
+	if (!IsValid(PlayerController)) return;
 
-	if (!PlayerController) return;
-
+	// 입력 모드 설정
 	FInputModeGameOnly GameOnlyMode;
 	FInputModeUIOnly UIOnlyMode;
 
+	// 입력 모드에 따른 처리
 	switch (InputMode)
 	{
 	case ERPGInputMode::GameMode:
 		PlayerController->SetInputMode(GameOnlyMode);
 		PlayerController->bShowMouseCursor = false;
 		break;
+		
 	case ERPGInputMode::UIMode:
 		PlayerController->SetInputMode(UIOnlyMode);
 		PlayerController->bShowMouseCursor = true;
 		break;
+		
 	default:
 		break;
 	}

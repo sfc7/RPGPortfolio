@@ -45,6 +45,7 @@ void ULevelManager::SaveRPGGame()
 
 	if (URPGSaveGame* RpgSaveGame = Cast<URPGSaveGame>(SaveGame))
 	{
+		// 퀘스트 데이터 저장
 		TArray<ARPGQuestSystemActor*> CurrentQuests = GetGameInstance()->GetSubsystem<UQuestManager>()->GetCurrentQuests();
 		for (ARPGQuestSystemActor* CurrentQuest : CurrentQuests)
 		{
@@ -57,10 +58,11 @@ void ULevelManager::SaveRPGGame()
 			RpgSaveGame->SetCompletedQuests(QuestManager->GetCompletedQuests());
 		}
 
+		// 플레이어 데이터 저장
 		SavePlayerInventoryData(RpgSaveGame);
 		SavePlayerGold(RpgSaveGame);
-
 		SavePlayerAttribute(RpgSaveGame);
+		
 		UGameplayStatics::SaveGameToSlot(RpgSaveGame, TEXT("RPGSaveSlot"), 1);
 	}
 }
@@ -73,10 +75,12 @@ void ULevelManager::LoadRPGGame()
         
 		if (URPGSaveGame* RpgSaveGame = Cast<URPGSaveGame>(LoadedGame))
 		{
+			// 퀘스트 데이터 로드
 			UQuestManager* QuestManager = GetGameInstance()->GetSubsystem<UQuestManager>();
 
 			QuestManager->ClearAllQuests();
-			
+
+			//퀘스트 액터 스폰, 로드 적용 (현재 퀘스트는 액터단위로 구현됨)
 			TArray<FName> SavedActiveQuests = RpgSaveGame->GetCurrentActiveQuests();
 			for (FName CurrentActiveQuest : SavedActiveQuests)
 			{
@@ -97,6 +101,7 @@ void ULevelManager::LoadRPGGame()
 			QuestManager->SetCurrentActiveQuests(SavedActiveQuests);
 			QuestManager->SetCompleteActiveQuests(RpgSaveGame->GetCompletedQuests());
 
+			// 플레이어 데이터 로드
 			LoadPlayerInventoryData(RpgSaveGame);
 			LoadPlayerGold(RpgSaveGame);
 
@@ -107,19 +112,18 @@ void ULevelManager::LoadRPGGame()
 
 void ULevelManager::SavePlayerInventoryData(URPGSaveGame* SaveGame)
 {
-	if (!SaveGame) return;
+	if (!IsValid(SaveGame)) return;
 
-	APlayerCharacterBase* Player =  Cast<APlayerCharacterBase>(GetWorld()->GetFirstPlayerController()->GetPawn());
-	if (!Player)
-	{
-		return;
-	}
-
+	APlayerCharacterBase* const Player = Cast<APlayerCharacterBase>(GetWorld()->GetFirstPlayerController()->GetPawn());
+	if (!IsValid(Player)) return;
+	
+	// 플레이어 인벤토리 컴포넌트 저장
 	if (Player->GetPlayerInventoryComponent())
 	{
 		SaveGame->SetPlayerInventorySlots(Player->GetPlayerInventoryComponent()->DefaultItemSlots);
 	}
 
+	// 플레이어 포션 퀵슬롯 저장
 	if (Player->GetPlayerPotionHotBar())
 	{
 		SaveGame->SetPlayerPotionSlots(Player->GetPlayerPotionHotBar()->DefaultItemSlots);
@@ -128,10 +132,13 @@ void ULevelManager::SavePlayerInventoryData(URPGSaveGame* SaveGame)
 
 void ULevelManager::LoadPlayerInventoryData(URPGSaveGame* SaveGame)
 {
-	if (!SaveGame) return;
+	if (!IsValid(SaveGame)) return;
 	
-	APlayerCharacterBase* Player =  Cast<APlayerCharacterBase>(GetWorld()->GetFirstPlayerController()->GetPawn());
-	if (Player && Player->GetPlayerInventoryComponent())
+	APlayerCharacterBase* const Player = Cast<APlayerCharacterBase>(GetWorld()->GetFirstPlayerController()->GetPawn());
+	if (!IsValid(Player)) return;
+
+	// 플레이어 인벤토리 컴포넌트 로드
+	if (Player->GetPlayerInventoryComponent())
 	{
 		TArray<FInventorySlot> LoadedItemSlots = SaveGame->GetPlayerInventorySlots();
 		Player->GetPlayerInventoryComponent()->DefaultItemSlots = LoadedItemSlots;
@@ -142,7 +149,7 @@ void ULevelManager::LoadPlayerInventoryData(URPGSaveGame* SaveGame)
 			Player->GetPlayerInventoryComponent()->DefaultItemSlots[i].InventoryRef = Player->GetPlayerInventoryComponent();
 		}
 	}
-
+	// 플레이어 포션 퀵슬롯 로드
 	if (Player->GetPlayerPotionHotBar())
 	{
 		TArray<FInventorySlot> LoadedPotionSlots = SaveGame->GetPlayerPotionSlots();
@@ -160,24 +167,16 @@ void ULevelManager::LoadPlayerInventoryData(URPGSaveGame* SaveGame)
 
 void ULevelManager::SavePlayerGold(URPGSaveGame* SaveGame)
 {
-	if (!SaveGame)
-	{
-		return;
-	}
+	if (!IsValid(SaveGame)) return;
 
-	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
-	if (!PlayerController)
-	{
-		return;
-	}
+	APlayerController* const PlayerController = GetWorld()->GetFirstPlayerController();
+	if (!IsValid(PlayerController)) return;
 
-	APlayerCharacterBase* Player = Cast<APlayerCharacterBase>(PlayerController->GetPawn());
-	if (!Player)
-	{
-		return;
-	}
-	
-	if (Player && Player->GetPlayerInventoryComponent())
+	APlayerCharacterBase* const Player = Cast<APlayerCharacterBase>(PlayerController->GetPawn());
+	if (!IsValid(Player)) return;
+
+	// 플레이어 골드 저장
+	if (Player->GetPlayerInventoryComponent())
 	{
 		SaveGame->SetPlayerGold(Player->GetPlayerInventoryComponent()->GetPlayerGold());
 	}
@@ -185,24 +184,16 @@ void ULevelManager::SavePlayerGold(URPGSaveGame* SaveGame)
 
 void ULevelManager::LoadPlayerGold(URPGSaveGame* SaveGame)
 {
-	if (!SaveGame)
-	{
-		return;
-	}
+	if (!IsValid(SaveGame)) return;
 
-	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
-	if (!PlayerController)
-	{
-		return;
-	}
+	APlayerController* const PlayerController = GetWorld()->GetFirstPlayerController();
+	if (!IsValid(PlayerController)) return;
 
-	APlayerCharacterBase* Player = Cast<APlayerCharacterBase>(PlayerController->GetPawn());
-	if (!Player)
-	{
-		return;
-	}
-	
-	if (Player && Player->GetPlayerInventoryComponent())
+	APlayerCharacterBase* const Player = Cast<APlayerCharacterBase>(PlayerController->GetPawn());
+	if (!IsValid(Player)) return;
+
+	// 플레이어 골드 로드
+	if (Player->GetPlayerInventoryComponent())
 	{
 		int32 LoadedPlayerGold = SaveGame->GetPlayerGold();
 		Player->GetPlayerInventoryComponent()->SetGold(LoadedPlayerGold);
@@ -211,58 +202,38 @@ void ULevelManager::LoadPlayerGold(URPGSaveGame* SaveGame)
 
 void ULevelManager::SavePlayerAttribute(URPGSaveGame* SaveGame)
 {
-	if (!SaveGame)
-	{
-		return;
-	}
+	if (!IsValid(SaveGame)) return;
 
-	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
-	if (!PlayerController)
-	{
-		return;
-	}
+	APlayerController* const PlayerController = GetWorld()->GetFirstPlayerController();
+	if (!IsValid(PlayerController)) return;
 
-	APlayerCharacterBase* Player = Cast<APlayerCharacterBase>(PlayerController->GetPawn());
-	if (!Player)
-	{
-		return;
-	}
-	
-	if (Player)
-	{
-		TArray<FAttributeSaveData> AttributeData = Player->GetRPGAttributeSet()->SaveAllAttributesToSaveData();
-		SaveGame->SetSavedAttributes(AttributeData);
-	}
+	APlayerCharacterBase* const Player = Cast<APlayerCharacterBase>(PlayerController->GetPawn());
+	if (!IsValid(Player)) return;
+
+	// 플레이어 GAS용 AttributeSet 데이터 저장
+	TArray<FAttributeSaveData> AttributeData = Player->GetRPGAttributeSet()->SaveAllAttributesToSaveData();
+	SaveGame->SetSavedAttributes(AttributeData);	
 }
 
 void ULevelManager::LoadPlayerAttribute(URPGSaveGame* SaveGame)
 {
-	if (!SaveGame)
-	{
-		return;
-	}
+	if (!IsValid(SaveGame)) return;
 
-	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
-	if (!PlayerController)
-	{
-		return;
-	}
+	APlayerController* const PlayerController = GetWorld()->GetFirstPlayerController();
+	if (!IsValid(PlayerController)) return;
 
-	APlayerCharacterBase* Player = Cast<APlayerCharacterBase>(PlayerController->GetPawn());
-	if (!Player)
-	{
-		return;
-	}
+	APlayerCharacterBase* const Player = Cast<APlayerCharacterBase>(PlayerController->GetPawn());
+	if (!IsValid(Player)) return;
 
-	if (Player)
-	{
-		TArray<FAttributeSaveData> AttributeData = SaveGame->GetSavedAttributes();
-		Player->GetRPGAttributeSet()->LoadAllAttributesFromSaveData(AttributeData);
-	}
+	// 플레이어 GAS용 AttributeSet 데이터 로드
+	TArray<FAttributeSaveData> AttributeData = SaveGame->GetSavedAttributes();
+	Player->GetRPGAttributeSet()->LoadAllAttributesFromSaveData(AttributeData);
+	
 }
 
 void ULevelManager::LoadLoadingScreen(const FString& LevelName)
 {
+	// 로딩 스크린 속성 설정
 	FLoadingScreenAttributes LoadingScreenAttributes;
 	LoadingScreenAttributes.bAutoCompleteWhenLoadingCompletes = true;
 	LoadingScreenAttributes.MinimumLoadingScreenDisplayTime = 2.f;	
@@ -272,5 +243,6 @@ void ULevelManager::LoadLoadingScreen(const FString& LevelName)
 
 void ULevelManager::DestinationLoadingScreen(UWorld* LoadWorld)
 {
+	// 로딩 스크린 종료
 	GetMoviePlayer()->StopMovie();
 }

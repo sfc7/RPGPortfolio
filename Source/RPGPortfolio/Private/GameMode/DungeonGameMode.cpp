@@ -47,9 +47,9 @@ void ADungeonGameMode::Tick(float DeltaTime)
 
 void ADungeonGameMode::OnCinemaFinished()
 {
+	// 시네마 완료 후 카메라 페이드 효과
 	StartCameraFadeInOut();
 
-    
 	FTimerHandle BossTimer;
 	GetWorld()->GetTimerManager().SetTimer(BossTimer, [this]()
 	{
@@ -60,74 +60,104 @@ void ADungeonGameMode::OnCinemaFinished()
 
 void ADungeonGameMode::HidePlayerUI()
 {
-	APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-	if (!PC) return;
+	APlayerController* const PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	if (!IsValid(PC)) return;
     
+	// 모든 위젯 찾기
 	TArray<UUserWidget*> AllWidgets;
 	UWidgetBlueprintLibrary::GetAllWidgetsOfClass(GetWorld(), AllWidgets, URPGWidgetBase::StaticClass());
     
-	for (UUserWidget* Widget : AllWidgets)
+	// 모든 위젯 숨김
+	for (UUserWidget* const Widget : AllWidgets)
 	{
-		Widget->SetVisibility(ESlateVisibility::Hidden);
+		if (IsValid(Widget))
+		{
+			Widget->SetVisibility(ESlateVisibility::Hidden);
+		}
 	}
 }
 
 void ADungeonGameMode::ShowPlayerUI()
 {
-	APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-	if (!PC) return;
+	APlayerController* const PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	if (!IsValid(PC)) return;
     
+	// 모든 위젯 찾기
 	TArray<UUserWidget*> AllWidgets;
 	UWidgetBlueprintLibrary::GetAllWidgetsOfClass(GetWorld(), AllWidgets, URPGWidgetBase::StaticClass());
     
-	for (UUserWidget* Widget : AllWidgets)
+	// 모든 위젯 표시
+	for (UUserWidget* const Widget : AllWidgets)
 	{
-		Widget->SetVisibility(ESlateVisibility::Visible);
+		if (IsValid(Widget))
+		{
+			Widget->SetVisibility(ESlateVisibility::Visible);
+		}
 	}
 }
 
 void ADungeonGameMode::StartCameraFadeInOut()
 {
-	APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-	if (PC && PC->PlayerCameraManager)
-	{
-		PC->PlayerCameraManager->StartCameraFade(0.0f, 1.0f, 1.0f, FLinearColor::Black, false, true);
+	APlayerController* const PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	if (!IsValid(PC)) return;
+	
+	APlayerCameraManager* const CameraManager = PC->PlayerCameraManager;
+	if (!IsValid(CameraManager)) return;
+
+	// 페이드 아웃 시작
+	CameraManager->StartCameraFade(0.0f, 1.0f, 1.0f, FLinearColor::Black, false, true);
         
-		FTimerHandle FadeInTimer;
-		GetWorld()->GetTimerManager().SetTimer(FadeInTimer, [PC]()
-		{
-			if (PC && PC->PlayerCameraManager)
-			{
-				PC->PlayerCameraManager->StartCameraFade(1.0f, 0.0f, 1.0f, FLinearColor::Black, false, true);
-			}
-		}, 1.2f, false);
-	}
+	// 페이드 인 타이머 설정
+	FTimerHandle FadeInTimer;
+	const float FadeInDelay = 1.2f;
+	
+	GetWorld()->GetTimerManager().SetTimer(FadeInTimer, [PC]()
+	{
+		if (!IsValid(PC)) return;
+		
+		APlayerCameraManager* const CameraManager = PC->PlayerCameraManager;
+		if (!IsValid(CameraManager)) return;
+
+		// 페이드 인 시작
+		CameraManager->StartCameraFade(1.0f, 0.0f, 1.0f, FLinearColor::Black, false, true);
+	}, FadeInDelay, false);
 }
 
 void ADungeonGameMode::BossAppear()
 {
-	if (ASpawningVolume* FoundVolume = GetGameInstance()->GetSubsystem<UGeneralGameManager>()->GetDungeonProgressManager()->FindSpawningVolumebyName(BossSpawnVolume))
+	UGeneralGameManager* const GeneralGameManager = GetGameInstance()->GetSubsystem<UGeneralGameManager>();
+	if (!IsValid(GeneralGameManager)) return;
+
+	UDungeonProgressManager* const DungeonProgressManager = GeneralGameManager->GetDungeonProgressManager();
+	if (!IsValid(DungeonProgressManager)) return;
+
+	ASpawningVolume* const FoundVolume = DungeonProgressManager->FindSpawningVolumebyName(BossSpawnVolume);
+	if (IsValid(FoundVolume))
 	{
-		GetGameInstance()->GetSubsystem<UGeneralGameManager>()->GetDungeonProgressManager()->SpawnBossMonster(*FoundVolume);
+		DungeonProgressManager->SpawnBossMonster(*FoundVolume);
 	}
 }
 
 void ADungeonGameMode::StartCinema()
 {
+	if (!IsValid(LevelSequenceAsset)) return;
+
+	// 시퀀스 재생 설정
 	FMovieSceneSequencePlaybackSettings PlaybackSettings;
 	PlaybackSettings.bAutoPlay = true; 
 
 	ALevelSequenceActor* OutActor = nullptr;
 
-	ULevelSequencePlayer* SequencePlayer = ULevelSequencePlayer::CreateLevelSequencePlayer(
+	// 레벨 시퀀스 플레이어 생성
+	ULevelSequencePlayer* const SequencePlayer = ULevelSequencePlayer::CreateLevelSequencePlayer(
 		GetWorld(),
 		LevelSequenceAsset,
 		PlaybackSettings,
 		OutActor
 	);
 
-	if (SequencePlayer)
-	{
+	if (IsValid(SequencePlayer)) {
+		// 완료 콜백 바인딩 및 재생 시작
 		SequencePlayer->OnFinished.AddDynamic(this, &ADungeonGameMode::OnCinemaFinished);
 		SequencePlayer->Play();
 	}

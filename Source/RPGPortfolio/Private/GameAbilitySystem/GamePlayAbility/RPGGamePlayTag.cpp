@@ -5,6 +5,7 @@
 
 namespace RPGGameplayTag
 {
+	//InputTag
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Move_Keyboard, "InputTag.Move.Keyboard");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Look_Mouse, "InputTag.Look.Mouse");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Jump_Keyboard, "InputTag.Jump.Keyboard");
@@ -31,16 +32,13 @@ namespace RPGGameplayTag
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Toggle, "InputTag.Toggle");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Toggle_LockOnTarget, "InputTag.Toggle.LockOnTarget");
 
-	
-	RPGPORTFOLIO_API UE_DECLARE_GAMEPLAY_TAG_EXTERN();
-	RPGPORTFOLIO_API UE_DECLARE_GAMEPLAY_TAG_EXTERN();
-	RPGPORTFOLIO_API UE_DECLARE_GAMEPLAY_TAG_EXTERN();
-	//Player
+	//Player - Weapon
 	UE_DEFINE_GAMEPLAY_TAG(Player_Weapon_Fighter_Hand_l, "Player.Weapon.Fighter.Hand.l");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Weapon_Fighter_Hand_r, "Player.Weapon.Fighter.Hand.r");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Weapon_Fighter_Foot_l, "Player.Weapon.Fighter.Foot.l");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Weapon_Fighter_Foot_r, "Player.Weapon.Fighter.Foot.r");
 
+	//Player - Ability
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Light, "Player.Ability.Attack.Light");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Heavy, "Player.Ability.Attack.Heavy");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_HitPause, "Player.Ability.HitPause");
@@ -82,40 +80,43 @@ namespace RPGGameplayTag
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_CoolDown_Nova, "Player.Status.CoolDown.Nova");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_CoolDown_Meteor, "Player.Status.CoolDown.Meteor");
 	
-	
+	// Player - Event
 	UE_DEFINE_GAMEPLAY_TAG(Player_Event_HitPause, "Player.Event.HitPause");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Event_DodgeSuccess, "Player.Event.DodgeSuccess");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Event_DefenseSuccess, "Player.Event.DefenseSuccess");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Event_ActiveBuff, "Player.Event.ActiveBuff");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Event_SwitchTarget_Left, "Player.Event.SwitchTarget.Left");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Event_SwitchTarget_Right, "Player.Event.SwitchTarget.Right");
-	//Monster
-	UE_DEFINE_GAMEPLAY_TAG(Monster_Weapon, "Monster.Weapon");
 	
+	// Monster
+	UE_DEFINE_GAMEPLAY_TAG(Monster_Weapon, "Monster.Weapon");
+
+	// Monster - Ability
 	UE_DEFINE_GAMEPLAY_TAG(Monster_Ability_Attack_Melee, "Monster.Ability.Attack.Melee");
 	UE_DEFINE_GAMEPLAY_TAG(Monster_Ability_Attack_Ranged, "Monster.Ability.Attack.Ranged");
 	UE_DEFINE_GAMEPLAY_TAG(Monster_Ability_Attack_EarthQuake, "Monster.Ability.Attack.EarthQuake");
 	UE_DEFINE_GAMEPLAY_TAG(Monster_Ability_Attack_Meteor, "Monster.Ability.Attack.Meteor");
 	UE_DEFINE_GAMEPLAY_TAG(Monster_Ability_Attack_RollShot, "Monster.Ability.Attack.RollShot");
 
-	
+	// Monster - Status
 	UE_DEFINE_GAMEPLAY_TAG(Monster_Status_Strafe, "Monster.Status.Strafe");
 	UE_DEFINE_GAMEPLAY_TAG(Monster_Status_IsBeingAttacked, "Monster.Status.IsBeingAttacked");
 	UE_DEFINE_GAMEPLAY_TAG(Monster_Status_IsBeingUndefendableAttacked, "Monster.Status.IsBeingUndefendableAttacked");
 	UE_DEFINE_GAMEPLAY_TAG(Monster_Status_IsTasking, "Monster.Status.IsTasking");
-	// Event
-
 	
+	// Character - Event
 	UE_DEFINE_GAMEPLAY_TAG(Character_Event_AttackHit_Melee, "Character.Event.AttackHit.Melee");
 	UE_DEFINE_GAMEPLAY_TAG(Character_Event_AttackHit_AreaAttack, "Character.Event.AttackHit.AreaAttack");
 	UE_DEFINE_GAMEPLAY_TAG(Character_Event_HitReact, "Character.Event.HitReact");
 	UE_DEFINE_GAMEPLAY_TAG(Character_Event_SpawnProjectile, "Character.Event.SpawnProjectile");
 	UE_DEFINE_GAMEPLAY_TAG(Character_Event_ShowWeapon, "Character.Event.ShowWeapon");
 	UE_DEFINE_GAMEPLAY_TAG(Character_Event_HideWeapon, "Character.Event.HideWeapon");
-	
+
+	// Character - Ability
 	UE_DEFINE_GAMEPLAY_TAG(Character_Ability_HitReact, "Character.Ability.HitReact");
 	UE_DEFINE_GAMEPLAY_TAG(Character_Ability_Death, "Character.Ability.Death");
 
+	// Character - Status
 	UE_DEFINE_GAMEPLAY_TAG(Character_Status_Dead, "Character.Status.Dead");
 	UE_DEFINE_GAMEPLAY_TAG(Character_Status_HitReact_Front, "Character.Status.HitReact.Front");
 	UE_DEFINE_GAMEPLAY_TAG(Character_Status_HitReact_Back, "Character.Status.HitReact.Back");

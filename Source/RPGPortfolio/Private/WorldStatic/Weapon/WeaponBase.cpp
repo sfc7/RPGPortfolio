@@ -31,31 +31,30 @@ void AWeaponBase::SetCurrentAttackType(EWeaponAttackType AttackType)
 void AWeaponBase::OnCollisionBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	APawn* WeaponOwner = GetInstigator<APawn>();
+	if (!IsValid(WeaponOwner)) return;
 	
-	if (IsValid(WeaponOwner))
+	if (APawn* HitPawn = Cast<APawn>(OtherActor))
 	{
-		if (APawn* HitPawn = Cast<APawn>(OtherActor))
+		// 적대적인 타겟인지 확인
+		if (URPGFunc::CheckTargetTeamAgent(WeaponOwner, HitPawn))
 		{
-			if (URPGFunc::CheckTargetTeamAgent(WeaponOwner, HitPawn))
-			{
-				OnWeaponHitBegin.ExecuteIfBound(OtherActor, WeaponDefaultData.WeaponBaseDamage, WeaponDefaultData.WeaponAttackRate, CurrentAttackType, WeaponType, WeaponDefaultData.EquipSocketName);
-			}
+			OnWeaponHitBegin.ExecuteIfBound(OtherActor, WeaponDefaultData.WeaponBaseDamage, WeaponDefaultData.WeaponAttackRate, CurrentAttackType, WeaponType, WeaponDefaultData.EquipSocketName);
 		}
 	}
+	
 }
 
 void AWeaponBase::OnCollisionBoxEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 	APawn* WeaponOwner = GetInstigator<APawn>();
-	
-	if (IsValid(WeaponOwner))
+	if (!IsValid(WeaponOwner)) return;
+
+	if (APawn* HitPawn = Cast<APawn>(OtherActor))
 	{
-		if (APawn* HitPawn = Cast<APawn>(OtherActor))
+		// 적대적인 타겟인지 확인
+		if (URPGFunc::CheckTargetTeamAgent(WeaponOwner, HitPawn))
 		{
-			if (URPGFunc::CheckTargetTeamAgent(WeaponOwner, HitPawn))
-			{
-				OnWeaponHitEnd.ExecuteIfBound(OtherActor, WeaponDefaultData.WeaponBaseDamage, WeaponDefaultData.WeaponAttackRate, CurrentAttackType, WeaponType);
-			}
+			OnWeaponHitEnd.ExecuteIfBound(OtherActor, WeaponDefaultData.WeaponBaseDamage, WeaponDefaultData.WeaponAttackRate, CurrentAttackType, WeaponType);
 		}
 	}
 }
