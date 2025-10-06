@@ -28,8 +28,10 @@ void UQuestWidget::NativePreConstruct()
 
 	QuestName->SetText(	QuestDetails.QuestName);
 	QuestDescription->SetText(	QuestDetails.QuestDescription);
+	
 	if (StageDescription)
 	{
+		// 퀘스트의 첫 번째 스테이지가 있는지 확인 후 퀘스트 보상 UI 제작
 		if (QuestDetails.QuestStages.IsValidIndex(0))
 		{
 			StageDescription->SetText(QuestDetails.QuestStages[0].StageDescription);
@@ -61,12 +63,14 @@ void UQuestWidget::OnAcceptButtonClicked()
 }
 
 void UQuestWidget::CreateRewardItemSlots()
-{    
+{
+	// 기존 슬롯 정리
 	RewardItemContainer->GridForSlots->ClearChildren();
 
 	TMap<TSoftObjectPtr<UDataAsset_RPGItemData>, int32> Rewards = QuestDetails.QuestStages[0].ItemRewardAndQuantity;
     
 	int32 Index = 0;
+	// 보상 아이템 슬롯을 아이템 컨테이너에 담아 UI에 넣는 과정
 	for (auto& Pair : Rewards)
 	{
 		if (!Pair.Key) continue;

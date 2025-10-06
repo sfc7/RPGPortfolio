@@ -8,7 +8,9 @@
 
 class UNiagaraSystem;
 /**
+ * URPGGC_Player_AttackHit
  * 
+ * 공격 적중 시 이펙트를 적용할 GameplayCue(Static)
  */
 UCLASS()
 class RPGPORTFOLIO_API URPGGC_Player_AttackHit : public UGameplayCueNotify_Static
@@ -20,6 +22,7 @@ public:
 protected:
 	virtual bool OnExecute_Implementation(AActor* Target, const FGameplayCueParameters& Parameters) const override;
 
+	// 공격 적중 이펙트
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UNiagaraSystem* AttackHitEffect;
 };

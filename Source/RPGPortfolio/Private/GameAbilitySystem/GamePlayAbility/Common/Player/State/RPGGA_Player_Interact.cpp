@@ -15,6 +15,7 @@ void URPGGA_Player_Interact::ActivateAbility(const FGameplayAbilitySpecHandle Ha
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
+	// 상호작용 매니저에서 가져온 상호 작용 함수 실행
 	if (AActor* TargetActor = GetPlayerCharacterFromActorInfo()->GetInteractTargetActor())
 	{
 		GetWorld()->GetGameInstance()->GetSubsystem<UInteractManager>()->StartInteract(TargetActor, GetPlayerCharacterFromActorInfo(), EInteractType::NPC);
@@ -32,14 +33,11 @@ bool URPGGA_Player_Interact::CanActivateAbility(const FGameplayAbilitySpecHandle
 {
 	Super::CanActivateAbility(Handle, ActorInfo, SourceTags, TargetTags, OptionalRelevantTags);
 
+	// 상호작용 이전에 가능한 상태인지 GameplayTag로 체크
 	if (const UAbilitySystemComponent* ASC = GetAbilitySystemComponentFromActorInfo())
 	{
 		return ASC->HasMatchingGameplayTag(RPGGameplayTag::Player_Status_CanInteract);
 	}
 	
 	return false;
-}
-
-void URPGGA_Player_Interact::OnEndAbilityCallback()
-{
 }

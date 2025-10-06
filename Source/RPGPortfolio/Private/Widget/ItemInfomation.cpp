@@ -28,6 +28,7 @@ FText UItemInfomation::GetItemDescription(TSoftObjectPtr<UDataAsset_RPGItemData>
 	
 	if (ItemDataLoad)
 	{
+		// 아이템 타입별 설명 생성
 		switch (ItemDataLoad->ItemType)
 		{
 		case EItemType::Material:
@@ -56,7 +57,7 @@ FText UItemInfomation::GetItemDescription(TSoftObjectPtr<UDataAsset_RPGItemData>
 				}
 			}
 			break;
-			
+			// 장비 타입 텍스트 생성
 		case EItemType::Equipment:
 			{
 				UDataAsset_RPGItemData_Equipment* EquipmentData = Cast<UDataAsset_RPGItemData_Equipment>(ItemDataLoad);
@@ -89,6 +90,7 @@ FText UItemInfomation::GetItemDescription(TSoftObjectPtr<UDataAsset_RPGItemData>
 						*ItemDataLoad->ItemDescription.ToString(), 
 						*EquipmentTypeText.ToString());
 					
+					// 능력치 정보 추가
 					if (EquipmentData->MaxHp > 0)
 					{
 						DescriptionText += FString::Printf(TEXT("\n최대 HP: +%.0f"), EquipmentData->MaxHp);

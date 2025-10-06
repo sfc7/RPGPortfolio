@@ -7,7 +7,9 @@
 #include "RPGGC_Player_Defense.generated.h"
 
 /**
+ * ARPGGC_Player_Defense
  * 
+ * 방어 시 지속적으로 이펙트를 적용할 GameplayCue(Actor)
  */
 UCLASS()
 class RPGPORTFOLIO_API ARPGGC_Player_Defense : public AGameplayCueNotify_Actor

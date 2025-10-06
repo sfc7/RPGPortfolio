@@ -28,6 +28,7 @@ void URPGGA_Monster_Attack_Meteor::ActivateAbility(const FGameplayAbilitySpecHan
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
+	// 메테오 패턴 애니메이션 재생 AbilityTask 생성
 	UAbilityTask_PlayMontageAndWait* PlayMontageTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
 this,TEXT("Player_Attack_Meteor"), AttackMontage, 1.0f,  NAME_None,
 true, 1.0f, false);
@@ -38,6 +39,7 @@ true, 1.0f, false);
 	PlayMontageTask->OnCancelled.AddDynamic(this, &URPGGA_Monster_Attack_Meteor::OnEndAbilityCallback);
 	PlayMontageTask->ReadyForActivation();
 
+	// 애니메이션으로 부터 GameplayEvent를 기다림, 여기에는 메테오 생성
 	UAbilityTask_WaitGameplayEvent* WaitSpawnProjectile = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
 this, RPGGameplayTag::Character_Event_SpawnProjectile, nullptr, false, true
 	);
@@ -45,13 +47,16 @@ this, RPGGameplayTag::Character_Event_SpawnProjectile, nullptr, false, true
 	WaitSpawnProjectile->EventReceived.AddDynamic(this, &ThisClass::SpawnMeteor);
 	WaitSpawnProjectile->ReadyForActivation();
 
+	// 애니메이션으로 부터 GameplayEvent를 기다림, 메테오 사용 시 무기를 보여주는 연출용
 	UAbilityTask_WaitGameplayEvent* WaitShowWeapon = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
 this, RPGGameplayTag::Character_Event_ShowWeapon, nullptr, false, true
 	);
 
+
 	WaitShowWeapon->EventReceived.AddDynamic(this, &ThisClass::ShowWeapon);
 	WaitShowWeapon->ReadyForActivation();
 
+	// 애니메이션으로 부터 GameplayEvent를 기다림, 메테오 종료 시 무기를 숨기 연출용
 	UAbilityTask_WaitGameplayEvent* WaitHideWeapon = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
 this, RPGGameplayTag::Character_Event_HideWeapon, nullptr, false, true
 	);
@@ -67,17 +72,22 @@ void URPGGA_Monster_Attack_Meteor::OnEndAbilityCallback()
 
 void URPGGA_Monster_Attack_Meteor::SpawnMeteor(FGameplayEventData PayloadData)
 {
-	FVector StartLocation = GetMonsterCharacterFromActorInfo()->GetActorLocation();
-	FVector EndLocation = GetMonsterCharacterFromActorInfo()->GetActorForwardVector() * 100.f;
-	FRotator EndRotation = UKismetMathLibrary::MakeRotFromX(GetMonsterCharacterFromActorInfo()->GetActorForwardVector());
+	// 메테오 패턴에 사용할 BoxTrace 를 위한 초기 값
+	const FVector StartLocation = GetMonsterCharacterFromActorInfo()->GetActorLocation();
+	const FVector EndLocation = GetMonsterCharacterFromActorInfo()->GetActorForwardVector() * 100.f;
+	const FRotator EndRotation = UKismetMathLibrary::MakeRotFromX(GetMonsterCharacterFromActorInfo()->GetActorForwardVector());
+	// 메테오 패턴을 적용할 오브젝트 타입설정
 	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;
 	ObjectTypes.Add(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_Pawn));
 	TArray<AActor*> ActorsToIgnore;
-	
+
+	// 데미지를 적용할 적중한 HitResult들
 	TArray<FHitResult> OUTHitResults;
+	// 지진 패턴에 대상 감지에 사용할 BoxTrace 생성
 	UKismetSystemLibrary::BoxTraceMultiForObjects(this, StartLocation, EndLocation, FVector(MeteorTraceRadius, MeteorTraceRadius, 200.f), EndRotation,
 		ObjectTypes, false, ActorsToIgnore, EDrawDebugTrace::None, OUTHitResults, true,FColor::Green, FColor::Red, 2.0f);
 
+	// 타겟 지정
 	AActor* TargetActor = nullptr;
 
 	for (FHitResult OUTHitResult : OUTHitResults)
@@ -88,26 +98,29 @@ void URPGGA_Monster_Attack_Meteor::SpawnMeteor(FGameplayEventData PayloadData)
 		}
 	}
 
-	FVector DecalLocation = TargetActor->GetActorLocation();
+	// 메테오가 떨어지는 위치용 데칼
+	const FVector DecalLocation = TargetActor->GetActorLocation();
 
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.Owner = GetMonsterCharacterFromActorInfo();
 	SpawnParams.Instigator = GetMonsterCharacterFromActorInfo();
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
-	AAOEBase* SpawnDecal = GetWorld()->SpawnActor<AAOEBase>(MeteorDecalClass, DecalLocation, FRotator::ZeroRotator,SpawnParams);
+	const AAOEBase* SpawnDecal = GetWorld()->SpawnActor<AAOEBase>(MeteorDecalClass, DecalLocation, FRotator::ZeroRotator,SpawnParams);
 
-	float SignRandomOffset = FMath::RandBool() ? MeteorRandomOffset : -MeteorRandomOffset;
+	// 메테오가 생성되는 랜덤 위치
+	const float SignRandomOffset = FMath::RandBool() ? MeteorRandomOffset : -MeteorRandomOffset;
 	
-	FVector RandomOffset = FVector(
+	const FVector RandomOffset = FVector(
 	SignRandomOffset, 
 	SignRandomOffset, 
 	0.f
 	);
-	FVector ProjectileLocation = TargetActor->GetActorLocation() + FVector(0.f, 0.f, 1000.f) + RandomOffset;
-	FRotator ProjectileDirection = ((TargetActor->GetActorLocation() - ProjectileLocation).GetSafeNormal()).Rotation();
+	const FVector ProjectileLocation = TargetActor->GetActorLocation() + FVector(0.f, 0.f, 1000.f) + RandomOffset;
+	const FRotator ProjectileDirection = ((TargetActor->GetActorLocation() - ProjectileLocation).GetSafeNormal()).Rotation();
 
-	if (PortalEffect)
+	// 메테오 생성되는 위치의 생성되는 포탈 
+	if (IsValid(PortalEffect))
 	{
 		UGameplayStatics::SpawnEmitterAtLocation(
 		this, 
@@ -118,16 +131,19 @@ void URPGGA_Monster_Attack_Meteor::SpawnMeteor(FGameplayEventData PayloadData)
 		true                         
 		);
 	}
-	
+
+	// 메테오 생성
 	AProjectileBase* Projectile = GetWorld()->SpawnActor<AProjectileBase>(ProjectileClass, ProjectileLocation, ProjectileDirection, SpawnParams);
 	Projectile->LaunchProjectile((TargetActor->GetActorLocation() - ProjectileLocation).GetSafeNormal(), 1000.0f);
 	Projectile->SetIsUse(true);
-	
+
+	// 메테오가 충돌하면 데미지를 처리할 GameplayEffectSpecHandle
 	Projectile->DamageEffectSpecHandle = MakeMonsterBaseDamageEffectSpecHandle(DamageEffectClass, DamageScale);
 }
 
 void URPGGA_Monster_Attack_Meteor::ShowWeapon(FGameplayEventData PayloadData)
 {
+	// 파라곤 에셋의 문제로 무기를 보여주는 것을 AnimInstance로 처리함
 	UCharacterAnimInstance* CharacterAnim = Cast<UCharacterAnimInstance>(CurrentActorInfo->GetAnimInstance());
 	if (CharacterAnim)
 	{
@@ -137,6 +153,7 @@ void URPGGA_Monster_Attack_Meteor::ShowWeapon(FGameplayEventData PayloadData)
 
 void URPGGA_Monster_Attack_Meteor::HideWeapon(FGameplayEventData PayloadData)
 {
+	// 파라곤 에셋의 문제로 무기를 숨기는 것을 AnimInstance로 처리함
 	UCharacterAnimInstance* CharacterAnim = Cast<UCharacterAnimInstance>(CurrentActorInfo->GetAnimInstance());
 	if (CharacterAnim)
 	{

@@ -16,16 +16,19 @@ void URPGGA_SpawnWeaponBase::ActivateAbility(const FGameplayAbilitySpecHandle Ha
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
 	OwnerCharacter = CastChecked<ARPGCharacterBase>(GetAvatarActorFromActorInfo());
-		
+
+	// 스폰 파라미터 설정
 	FActorSpawnParameters SpawnParameters;
 	SpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 	SpawnParameters.TransformScaleMethod = ESpawnActorScaleMethod::MultiplyWithRoot;
 	SpawnParameters.Owner = OwnerCharacter;
 	SpawnParameters.Instigator = CastChecked<APawn>(OwnerCharacter);
-	
+
+	// 소켓 위치 및 회전 가져오기
 	FVector SocketLocation = OwnerCharacter->GetMesh()->GetSocketLocation(SocketNameToAttach);
 	FRotator SocketRotation = OwnerCharacter->GetMesh()->GetSocketRotation(SocketNameToAttach);
 
+	// 무기 스폰 성공 시 부착
 	AWeaponBase* PlayerWeapon = GetWorld()->SpawnActor<AWeaponBase>(WeaponClass, SocketLocation, SocketRotation, SpawnParameters);
 	if (IsValid(PlayerWeapon))
 	{ 
@@ -34,6 +37,7 @@ void URPGGA_SpawnWeaponBase::ActivateAbility(const FGameplayAbilitySpecHandle Ha
 			SocketNameToAttach);
 	}
 
+	// 전투 컴포넌트에 무기 등록
 	GetCombatComponentFromActorInfo()->RegisterSpawnedWeapon(WeaponTagtoRegister, PlayerWeapon, bShouldRegisterEquipWeapon);
 
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);

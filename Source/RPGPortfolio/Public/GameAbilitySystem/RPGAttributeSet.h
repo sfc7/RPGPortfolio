@@ -31,7 +31,7 @@ GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
 /**
  * URPGAttributeSet
  * 
- * 플레이어용 GameplayAbility AttributeSet
+ * 모든 ASC를 사용하는 캐릭터용 GameplayAbility AttributeSet
  */
 UCLASS()
 class RPGPORTFOLIO_API URPGAttributeSet : public UAttributeSet

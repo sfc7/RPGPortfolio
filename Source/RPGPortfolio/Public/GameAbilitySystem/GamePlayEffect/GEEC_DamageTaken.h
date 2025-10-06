@@ -7,7 +7,9 @@
 #include "GEEC_DamageTaken.generated.h"
 
 /**
+ * UGEEC_DamageTaken
  * 
+ * 데미지 계산할 GameplayEffect 클래스에 사용할 데미지 관련 계산 
  */
 UCLASS()
 class RPGPORTFOLIO_API UGEEC_DamageTaken : public UGameplayEffectExecutionCalculation

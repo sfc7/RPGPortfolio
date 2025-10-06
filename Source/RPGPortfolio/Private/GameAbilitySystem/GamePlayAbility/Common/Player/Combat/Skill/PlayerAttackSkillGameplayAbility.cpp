@@ -19,10 +19,12 @@ void UPlayerAttackSkillGameplayAbility::EndAbility(const FGameplayAbilitySpecHan
 FString UPlayerAttackSkillGameplayAbility::GetSkillDescriptionForUI()
 {
 	int32 CurrentLevel = GetAbilityLevel();
-	
+
+	// Level로 부터 현재 어빌리티 정보 계산
 	const float ScaledDamage = DamageScale.GetValueAtLevel(CurrentLevel);
 	const float CostMana = FMath::Abs(GetCostMana(CurrentLevel));
 	const float Cooldown = GetCooldown(CurrentLevel);
-	
+
+	// String 형태로 제작
 	return *FString::Printf(TEXT("데미지 x%.1f 소모마나 %.1f 쿨다운 %.1f"), ScaledDamage, CostMana, Cooldown);;
 }

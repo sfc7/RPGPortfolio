@@ -20,12 +20,11 @@ void UQuestRewardWidget::OnAcceptButtonClicked()
 	Super::OnAcceptButtonClicked();
 
 	APlayerCharacterBase* Player = Cast<APlayerCharacterBase>(GetOwningPlayerPawn());
-	if (!Player)
-	{
-		return;
-	}
-	
+	if (!IsValid(Player)) return;
+
+	// 퀘스트를 완료시키고
 	GetWorld()->GetGameInstance()->GetSubsystem<UQuestManager>()->TurnInQuest(QuestID);
 
+	// 퀘스트 보상 수령 진행
 	bool bRewardsGranted = GetWorld()->GetGameInstance()->GetSubsystem<UQuestManager>()->GrantQuestRewards(QuestID, Player);
 }

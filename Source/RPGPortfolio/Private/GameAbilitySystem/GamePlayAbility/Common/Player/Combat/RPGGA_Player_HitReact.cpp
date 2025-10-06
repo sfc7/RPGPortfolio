@@ -16,14 +16,15 @@ URPGGA_Player_HitReact::URPGGA_Player_HitReact()
 void URPGGA_Player_HitReact::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-	
-	
-	OUT float HitReactDirection;
+
+	// 공격자와 피격자 확인
 	AActor* Attacker = const_cast<AActor*>(TriggerEventData->Instigator.Get());
 	check(Attacker);
 	AActor* HitReactPlayer = Cast<AActor>(GetPlayerCharacterFromActorInfo());
 	check(HitReactPlayer);
-	
+
+	// 피격 방향 계산 후 결과에 따른 Montage 선택
+	OUT float HitReactDirection;
 	UAnimMontage* MontageToPlay = nullptr;
 	FGameplayTag HitReactGamePlayTag = URPGFunc::GetHitReactDirection(Attacker, HitReactPlayer, HitReactDirection);
 	if (HitReactGamePlayTag == RPGGameplayTag::Character_Status_HitReact_Front)
@@ -43,6 +44,7 @@ void URPGGA_Player_HitReact::ActivateAbility(const FGameplayAbilitySpecHandle Ha
 		MontageToPlay = HitReactMontage_Right;
 	}
 
+	// 피격 Montage 실행
 	if (IsValid(MontageToPlay))
 	{
 		UAbilityTask_PlayMontageAndWait* PlayMontageTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this,

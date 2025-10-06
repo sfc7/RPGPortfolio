@@ -10,6 +10,7 @@ URPGGC_Character_PlaySoundAtTarget_AttackHit::URPGGC_Character_PlaySoundAtTarget
 
 bool URPGGC_Character_PlaySoundAtTarget_AttackHit::OnExecute_Implementation(AActor* Target, const FGameplayCueParameters& Parameters) const
 {
+	// 위치에 사운드 재생
 	UGameplayStatics::PlaySoundAtLocation(this, SoundToPlay, Target->GetActorLocation());
 	
 	return Super::OnExecute_Implementation(Target, Parameters);;

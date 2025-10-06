@@ -9,7 +9,8 @@
 void URPGGA_Player_InitPlayUIWidget::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-	
+
+	//@ 플레이어 HUD 가져와서 화면에 추가
 	URPGWidgetBase* PlayerUI = CreateWidget<URPGWidgetBase>(GetPlayerControllerFromActorInfo(), WidgetClass);
 	PlayerUI->AddToViewport();
 	

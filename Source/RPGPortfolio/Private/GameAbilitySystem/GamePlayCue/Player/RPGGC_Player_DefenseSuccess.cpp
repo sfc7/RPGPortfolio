@@ -12,9 +12,15 @@ URPGGC_Player_DefenseSuccess::URPGGC_Player_DefenseSuccess()
 
 bool URPGGC_Player_DefenseSuccess::OnExecute_Implementation(AActor* Target,const FGameplayCueParameters& Parameters) const
 {
+	// 방어 성공 사운드 재생
 	UGameplayStatics::PlaySoundAtLocation(this, SoundToPlay, Target->GetActorLocation());
 
-	FVector SocketLocation = Parameters.TargetAttachComponent->GetSocketLocation(SocketName);
+	FVector SocketLocation = FVector::ZeroVector;
+	// 방어 성공 이펙트를 해당 소켓에 생성
+	if (Parameters.TargetAttachComponent->DoesSocketExist(SocketName))
+	{
+		SocketLocation = Parameters.TargetAttachComponent->GetSocketLocation(SocketName);	
+	}
 	
 	UNiagaraFunctionLibrary::SpawnSystemAtLocation(
 		this, DefenseEffect, SocketLocation, FRotator::ZeroRotator, FVector::OneVector,

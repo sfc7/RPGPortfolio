@@ -18,26 +18,25 @@ void URPGGA_Monster_Attack_Range::ActivateAbility(const FGameplayAbilitySpecHand
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
-	if (AttackMontage)
-	{
 
-		UAbilityTask_PlayMontageAndWait* PlayMontageTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
+	// 발사체 패턴 애니메이션 재생 AbilityTask 생성
+	UAbilityTask_PlayMontageAndWait* PlayMontageTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
 	this,TEXT("Player_Attack_Range"), AttackMontage, 1.0f,  NAME_None,
 true, 1.0f, false);
 
-		PlayMontageTask->OnCompleted.AddDynamic(this, &URPGGA_Monster_Attack_Range::OnEndAbilityCallback);
-		PlayMontageTask->OnBlendOut.AddDynamic(this, &URPGGA_Monster_Attack_Range::OnEndAbilityCallback);
-		PlayMontageTask->OnInterrupted.AddDynamic(this, &URPGGA_Monster_Attack_Range::OnEndAbilityCallback);
-		PlayMontageTask->OnCancelled.AddDynamic(this, &URPGGA_Monster_Attack_Range::OnEndAbilityCallback);
-		PlayMontageTask->ReadyForActivation();
+	PlayMontageTask->OnCompleted.AddDynamic(this, &URPGGA_Monster_Attack_Range::OnEndAbilityCallback);
+	PlayMontageTask->OnBlendOut.AddDynamic(this, &URPGGA_Monster_Attack_Range::OnEndAbilityCallback);
+	PlayMontageTask->OnInterrupted.AddDynamic(this, &URPGGA_Monster_Attack_Range::OnEndAbilityCallback);
+	PlayMontageTask->OnCancelled.AddDynamic(this, &URPGGA_Monster_Attack_Range::OnEndAbilityCallback);
+	PlayMontageTask->ReadyForActivation();
 
-		UAbilityTask_WaitGameplayEvent* WaitGameplayEvent = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
+	// 애니메이션으로 부터 GameplayEvent를 기다림, 여기에는 원거리 발사체 생성
+	UAbilityTask_WaitGameplayEvent* WaitGameplayEvent = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
 		this, RPGGameplayTag::Character_Event_SpawnProjectile, nullptr, false, true
 		);
 
-		WaitGameplayEvent->EventReceived.AddDynamic(this, &ThisClass::SpawnProjectile);
-		WaitGameplayEvent->ReadyForActivation();
-	}
+	WaitGameplayEvent->EventReceived.AddDynamic(this, &ThisClass::SpawnProjectile);
+	WaitGameplayEvent->ReadyForActivation();	
 }
 
 void URPGGA_Monster_Attack_Range::OnEndAbilityCallback()
@@ -47,17 +46,19 @@ void URPGGA_Monster_Attack_Range::OnEndAbilityCallback()
 
 void URPGGA_Monster_Attack_Range::SpawnProjectile(FGameplayEventData PayloadData)
 {
-	FVector ProjectileLocation = GetOwningComponentFromActorInfo()->GetSocketLocation(FName(TEXT("ProjectileSocket")));
-	FRotator ProjectileDirection = UKismetMathLibrary::MakeRotFromX(GetMonsterCharacterFromActorInfo()->GetActorForwardVector());
+	// 발사체가 생성되는 랜덤 위치
+	const FVector ProjectileLocation = GetOwningComponentFromActorInfo()->GetSocketLocation(FName(TEXT("ProjectileSocket")));
+	const FRotator ProjectileDirection = UKismetMathLibrary::MakeRotFromX(GetMonsterCharacterFromActorInfo()->GetActorForwardVector());
 
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.Owner = GetMonsterCharacterFromActorInfo();
 	SpawnParams.Instigator = GetMonsterCharacterFromActorInfo();
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
-
+	// 발사체 생성
 	AProjectileBase* Projectile = GetWorld()->SpawnActor<AProjectileBase>(ProjectileClass, ProjectileLocation, ProjectileDirection, SpawnParams);
 	Projectile->LaunchProjectile(GetMonsterCharacterFromActorInfo()->GetActorForwardVector(), 700.0f);
 	Projectile->SetIsUse(true);
+	// 발사체가 충돌하면 데미지를 처리할 GameplayEffectSpecHandle
 	Projectile->DamageEffectSpecHandle = MakeMonsterBaseDamageEffectSpecHandle(DamageEffectClass, DamageScale);
 }

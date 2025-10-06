@@ -43,8 +43,10 @@ void URPGQuestLog_QuestEntry::OnAcceptButtonClicked()
 
 void URPGQuestLog_QuestEntry::SetQuestID(FName QuestIDToSet)
 {
+	// 퀘스트 ID 설정
 	QuestID = QuestIDToSet;
 
+	// 퀘스트 데이터 로드 후 이름 설정
 	FQuest Quest = GetWorld()->GetGameInstance()->GetSubsystem<UQuestManager>()->GetQuestFromDataTable(QuestID);
 	QuestName->SetText(Quest.QuestName);
 }

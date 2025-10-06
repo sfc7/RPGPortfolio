@@ -18,6 +18,7 @@ void URPGGA_Monster_Attack_Melee::ActivateAbility(const FGameplayAbilitySpecHand
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
+	//@ 랜덤한 공격 Montage 실행
 	if (AttackMontages.Num() > 0)
 	{
 		int32 RandomIndex = FMath::RandRange(0, AttackMontages.Num() -1);
@@ -32,6 +33,7 @@ true, 1.0f, false);
 		PlayMontageTask->OnCancelled.AddDynamic(this, &URPGGA_Monster_Attack_Melee::OnEndAbilityCallback);
 		PlayMontageTask->ReadyForActivation();
 
+		// 애니메이션으로 부터 GameplayEvent를 기다림, 여기에는 데미지 계산, 이펙트 등의 로직을 바인딩
 		UAbilityTask_WaitGameplayEvent* WaitGameplayEvent = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
 			this, RPGGameplayTag::Character_Event_AttackHit_Melee, nullptr, false, true
 		);
@@ -41,10 +43,6 @@ true, 1.0f, false);
 	}
 }
 
-void URPGGA_Monster_Attack_Melee::OnEventReceived(FGameplayEventData PayloadData)
-{
-}
-
 void URPGGA_Monster_Attack_Melee::OnEndAbilityCallback()
 {
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
@@ -52,11 +50,13 @@ void URPGGA_Monster_Attack_Melee::OnEndAbilityCallback()
 
 void URPGGA_Monster_Attack_Melee::ApplyDamage(FGameplayEventData PayloadData)
 {
+	// PayloadData에서 가져와 타겟 액터 설정
 	LocalTargetActor = const_cast<AActor*>(PayloadData.Target.Get());
+	// 데미지 GameplayEffectSpec 생성 후 적용
 	FGameplayEffectSpecHandle SpecHandle = MakeMonsterBaseDamageEffectSpecHandle(DamageEffectClass, DamageScale);
 	ApplyEffectsSpecHandleToTarget(LocalTargetActor, SpecHandle);
 
-
+	// 공격 적중 이펙트 GameplayCue 실행
 	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(LocalTargetActor, RPGGameplayTag::Character_Event_HitReact, PayloadData);
 }
 

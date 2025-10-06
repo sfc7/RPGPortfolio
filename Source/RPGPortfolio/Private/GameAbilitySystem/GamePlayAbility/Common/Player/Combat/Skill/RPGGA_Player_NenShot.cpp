@@ -26,10 +26,12 @@ void URPGGA_Player_NenShot::ActivateAbility(const FGameplayAbilitySpecHandle Han
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
+	//@ 마나 소모 및 쿨다운 적용
 	CommitAbility(Handle, ActorInfo, ActivationInfo);
-
+	
 	if (GetPlayerCharacterFromActorInfo()->GetPlayerSkillComponent())
 	{
+		// 퀵슬롯에 해당 스킬이 등록되어 있다면 쿨다운 UI 표시
 		int32 QuickSlotIndex = GetPlayerCharacterFromActorInfo()->GetPlayerSkillComponent()->FindQuickSlotIndexByTag(RPGGameplayTag::Player_Ability_Skill_NenShot);
         
 		GetPlayerCharacterFromActorInfo()->GetPlayerUIComponent()->OnSkillCooldownBeginDelegate.Broadcast(
@@ -41,8 +43,10 @@ void URPGGA_Player_NenShot::ActivateAbility(const FGameplayAbilitySpecHandle Han
 		
 	}
 
+	// 타겟 회전 필요 여부 확인 - 주변 적 확인
 	bool bRotate = FindNearestEnemyBeforeAttack(1000.f) && !HasMatchingGameplayTag(RPGGameplayTag::Player_Status_LockOnTarget); 
 
+	// 여부에 따라 회전 후 공격 or 바로 공격
 	if (bRotate)
 	{
 		URPGAT_Player_RotateTarget* RotateTickTask = URPGAT_Player_RotateTarget::ExecuteTaskOnTick(this);
@@ -64,7 +68,8 @@ void URPGGA_Player_NenShot::OnEndAbilityCallback()
 
 void URPGGA_Player_NenShot::Attack()
 {
-	if (AttackMontage)
+	// NenShot 애니메이션 재생 AbilityTask 생성
+	if (IsValid(AttackMontage))
 	{
 		UAbilityTask_PlayMontageAndWait* PlayMontageTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
 	this,TEXT("Player_Skill_NenShot"), AttackMontage, 1.0f,  NAME_None,
@@ -76,6 +81,7 @@ void URPGGA_Player_NenShot::Attack()
 		PlayMontageTask->OnCancelled.AddDynamic(this, &URPGGA_Player_NenShot::OnEndAbilityCallback);
 		PlayMontageTask->ReadyForActivation();
 
+		// 애니메이션으로 부터 GameplayEvent를 기다림, 여기에는 발사체 생성을 바인딩
 		UAbilityTask_WaitGameplayEvent* WaitGameplayEvent = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
 		this, RPGGameplayTag::Character_Event_SpawnProjectile, nullptr, false, true
 		);
@@ -86,22 +92,23 @@ void URPGGA_Player_NenShot::Attack()
 }
 
 void URPGGA_Player_NenShot::SpawnProjectile(FGameplayEventData PayloadData)
-{ 
-	FVector CharacterLocation = GetPlayerCharacterFromActorInfo()->GetActorLocation();
-	FVector CharacterForward = GetPlayerCharacterFromActorInfo()->GetActorForwardVector();
-	FVector CharacterRight = GetPlayerCharacterFromActorInfo()->GetActorRightVector();
-	FVector CharacterUp = GetPlayerCharacterFromActorInfo()->GetActorUpVector();
-	FVector ProjectileLocation = CharacterLocation + 
-									(CharacterForward * 50.0f) +
-										(CharacterUp * 50.0f);
-	
+{
+	// 발사체 생성 위치 
+	const FVector CharacterLocation = GetPlayerCharacterFromActorInfo()->GetActorLocation();
+	const FVector CharacterForward = GetPlayerCharacterFromActorInfo()->GetActorForwardVector();
+	const FVector CharacterRight = GetPlayerCharacterFromActorInfo()->GetActorRightVector();
+	const FVector CharacterUp = GetPlayerCharacterFromActorInfo()->GetActorUpVector();
+	const FVector ProjectileLocation = CharacterLocation + (CharacterForward * 50.0f) + (CharacterUp * 50.0f);
+
+	// 발사체 생성 초기회전
 	FRotator ProjectileDirection = UKismetMathLibrary::MakeRotFromX(GetPlayerCharacterFromActorInfo()->GetActorForwardVector());
-	
+
+	// 오브젝트풀 패턴을 통한 발사체 생성
 	APooledActor* PooledActor = GetPlayerCharacterFromActorInfo()->GetObjectPoolComponent()->SpawnFromPool(RPGGameplayTag::Data_ObjectPoolType_NenShot,ProjectileLocation, ProjectileDirection);
 	if (AProjectileBase* Projectile = Cast<AProjectileBase>(PooledActor))
 	{
 		Projectile->LaunchProjectile(GetPlayerCharacterFromActorInfo()->GetActorForwardVector(), 700.0f);
-		float WeaponDamage = GetPlayerCharacterFromActorInfo()->GetCombatComponent()->GetCharacterCurrentEquippedWeapon()->WeaponDefaultData.WeaponBaseDamage;
+		const float WeaponDamage = GetPlayerCharacterFromActorInfo()->GetCombatComponent()->GetCharacterCurrentEquippedWeapon()->WeaponDefaultData.WeaponBaseDamage;
 		Projectile->DamageEffectSpecHandle = MakePlayerSkillDamageEffectSpecHandle(DamageEffectClass, WeaponDamage, DamageScale);
 	}
 }

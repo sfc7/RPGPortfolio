@@ -14,10 +14,12 @@ bool ARPGGC_Player_UsePotionFX::WhileActive_Implementation(AActor* Target, const
 {
 	Super::WhileActive_Implementation(Target, Parameters);
 
-	FVector SpawnEffectLocation = Target->GetActorLocation();
-
+	const FVector SpawnEffectLocation = Target->GetActorLocation();
+	
+	// 물약 사용 사운드 재생
 	UGameplayStatics::PlaySoundAtLocation(this, SoundToPlay, Target->GetActorLocation());
 
+	// 물약 사용 이펙트를 해당 소켓에 재생
 	UGameplayStatics::SpawnEmitterAtLocation(
 		this, 
 		UseItemActiveEffect,                  

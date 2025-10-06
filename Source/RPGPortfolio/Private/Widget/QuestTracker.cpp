@@ -14,10 +14,8 @@ void UQuestTracker::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 
-	
 }
 	
-
 void UQuestTracker::NativePreConstruct()
 {
 	Super::NativePreConstruct();
@@ -27,7 +25,8 @@ void UQuestTracker::UpdateQuestActor(ARPGQuestSystemActor* QuestActorToSet)
 {
 	QuestActor = QuestActorToSet;
 	ObjectiveBox->ClearChildren();
-	
+
+	// 퀘스트 액터를 이벤트에 바인딩
 	QuestActor->OnObjectiveHeard.AddDynamic(this, &ThisClass::OnObjectiveHeard);
 
 	SetQuestActor(QuestActor);
@@ -35,16 +34,10 @@ void UQuestTracker::UpdateQuestActor(ARPGQuestSystemActor* QuestActorToSet)
 
 void UQuestTracker::SetQuestActor(ARPGQuestSystemActor* QuestActorToSet)
 {
-	if (!QuestActorToSet)
-	{
-		return;
-	}
-    
-	if (!QuestName || !ObjectiveBox)
-	{
-		return;
-	}
-
+	if (!IsValid(QuestActorToSet)) return;
+	
+	if (!IsValid(QuestName) || !IsValid(ObjectiveBox)) return;
+	
 	QuestActor = QuestActorToSet;
     
 	FQuest QuestDetails = QuestActor->GetQuestDetailVariable();
@@ -54,7 +47,8 @@ void UQuestTracker::SetQuestActor(ARPGQuestSystemActor* QuestActorToSet)
 	}
     
 	QuestName->SetText(QuestDetails.QuestName);
-    
+
+	// 퀘스트의 첫번째 스테이지가 있는지로 유효성을 체크하여 오브젝트들 가져와서 위젯 생성
 	if (QuestDetails.QuestStages.IsValidIndex(0))
 	{
 		const TArray<FObjectiveDetail>& Objectives = QuestDetails.QuestStages[0].Objectives;
@@ -70,6 +64,7 @@ void UQuestTracker::SetQuestActor(ARPGQuestSystemActor* QuestActorToSet)
 		}
 	}
 
+	// 퀘스트 액터를 이벤트에 바인딩
 	QuestActor->OnObjectiveHeard.AddDynamic(this, &ThisClass::OnObjectiveHeard);
 }
 

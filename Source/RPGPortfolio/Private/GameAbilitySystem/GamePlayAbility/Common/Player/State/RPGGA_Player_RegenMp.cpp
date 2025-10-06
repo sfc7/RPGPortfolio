@@ -24,7 +24,7 @@ void URPGGA_Player_RegenMp::ActivateAbility(const FGameplayAbilitySpecHandle Han
 		CurrentRegenHandle.Invalidate();
 	}
 
-	
+	// 마나 리젠 관련 GameplayEffect를 캐릭터에 적용
 	FGameplayEffectContextHandle EffectContextHandle = ASC->MakeEffectContext();
 	FGameplayEffectSpecHandle SpecHandle = ASC->MakeOutgoingSpec(RegenEffectClass, 1, EffectContextHandle);
 	if (SpecHandle.IsValid())
@@ -34,9 +34,4 @@ void URPGGA_Player_RegenMp::ActivateAbility(const FGameplayAbilitySpecHandle Han
 	}
 
 	EndAbility(Handle, ActorInfo, ActivationInfo, true, false);
-}
-
-void URPGGA_Player_RegenMp::OnEndAbilityCallback()
-{
-	
 }

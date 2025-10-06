@@ -17,16 +17,14 @@ void URPGGA_Montser_Death_Base::ActivateAbility(const FGameplayAbilitySpecHandle
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
 	AMonsterCharacter* OwnerMonster = Cast<AMonsterCharacter>(ActorInfo->AvatarActor.Get());
+	if (!IsValid(OwnerMonster)) return;
 	
-	if (!OwnerMonster)
-	{
-		return;
-	}
-
+	
 	if (DeathMontages.Num() > 0)
 	{
 		int32 RandomIndex = FMath::RandRange(0, DeathMontages.Num() -1);
-	
+
+		// 죽음 애니메이션 재생 AbilityTask 생성
 		UAbilityTask_PlayMontageAndWait* PlayMontageTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this,
 		TEXT("Montser_Death"), DeathMontages[RandomIndex],1.0f,  NAME_None,
 	true, 1.0f, false);
@@ -36,7 +34,8 @@ void URPGGA_Montser_Death_Base::ActivateAbility(const FGameplayAbilitySpecHandle
 		PlayMontageTask->OnInterrupted.AddDynamic(this, &URPGGA_Montser_Death_Base::OnEndAbilityCallback);
 		PlayMontageTask->OnCancelled.AddDynamic(this, &URPGGA_Montser_Death_Base::OnEndAbilityCallback);
 		PlayMontageTask->ReadyForActivation();
-		
+
+		// 죽음 사운드 재생을 처리할 GameplayCue 실행
 		URPGAbilitySystemComponent* ASC = GetRPGAbilitySystemComponentFromActorInfo();
 		if (ASC)
 		{

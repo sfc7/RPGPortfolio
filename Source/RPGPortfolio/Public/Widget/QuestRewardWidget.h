@@ -7,7 +7,9 @@
 #include "QuestRewardWidget.generated.h"
 
 /**
+ * UQuestRewardWidget
  * 
+ * 퀘스트 보상 수령시 나오는 UI 
  */
 UCLASS()
 class RPGPORTFOLIO_API UQuestRewardWidget : public UQuestWidget

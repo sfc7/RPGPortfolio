@@ -8,11 +8,17 @@
 
 class URPGWidgetBase;
 
+/**
+ * URPGGA_Player_InitPlayUIWidget
+ * 
+ * 플레이어용 게임 초기화 시 UI를 설정하는 GameplayAbility
+ */
 UCLASS()
 class RPGPORTFOLIO_API URPGGA_Player_InitPlayUIWidget : public UPlayerGameplayAbility
 {
 	GENERATED_BODY()
 public:
+	//@ 플레이어 HUD
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 	TSubclassOf<URPGWidgetBase> WidgetClass;
 	
