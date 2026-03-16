@@ -14,7 +14,8 @@ AWeaponBase::AWeaponBase()
  
 	WeaponMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("WeaponMesh"));
 	SetRootComponent(WeaponMesh);
- 
+
+	
 	WeaponCollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("WeaponCollisionBox"));
 	WeaponCollisionBox->SetupAttachment(GetRootComponent());
 	WeaponCollisionBox->SetBoxExtent(FVector(20.f));
@@ -35,13 +36,11 @@ void AWeaponBase::OnCollisionBoxBeginOverlap(UPrimitiveComponent* OverlappedComp
 	
 	if (APawn* HitPawn = Cast<APawn>(OtherActor))
 	{
-		// 적대적인 타겟인지 확인
 		if (URPGFunc::CheckTargetTeamAgent(WeaponOwner, HitPawn))
 		{
 			OnWeaponHitBegin.ExecuteIfBound(OtherActor, WeaponDefaultData.WeaponBaseDamage, WeaponDefaultData.WeaponAttackRate, CurrentAttackType, WeaponType, WeaponDefaultData.EquipSocketName);
 		}
 	}
-	
 }
 
 void AWeaponBase::OnCollisionBoxEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
@@ -51,7 +50,6 @@ void AWeaponBase::OnCollisionBoxEndOverlap(UPrimitiveComponent* OverlappedCompon
 
 	if (APawn* HitPawn = Cast<APawn>(OtherActor))
 	{
-		// 적대적인 타겟인지 확인
 		if (URPGFunc::CheckTargetTeamAgent(WeaponOwner, HitPawn))
 		{
 			OnWeaponHitEnd.ExecuteIfBound(OtherActor, WeaponDefaultData.WeaponBaseDamage, WeaponDefaultData.WeaponAttackRate, CurrentAttackType, WeaponType);

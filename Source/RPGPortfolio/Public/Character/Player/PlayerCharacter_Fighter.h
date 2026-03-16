@@ -18,5 +18,5 @@ class RPGPORTFOLIO_API APlayerCharacter_Fighter : public APlayerCharacterBase
 public:
 	APlayerCharacter_Fighter();
 
-	
+	virtual void BeginPlay() override;
 };

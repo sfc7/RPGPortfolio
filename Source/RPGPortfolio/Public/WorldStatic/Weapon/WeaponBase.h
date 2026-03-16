@@ -10,9 +10,7 @@
 
 class UBoxComponent;
 
-//@ 히트 시작 델리게이트
 DECLARE_DELEGATE_SixParams(FOnWeaponHitBegin, AActor*, float, float, EWeaponAttackType, EWeaponType, FName);
-//@ 히트 종료 델리게이트 
 DECLARE_DELEGATE_FiveParams(FOnWeaponHitEnd, AActor*, float, float, EWeaponAttackType, EWeaponType);
 
 /**
@@ -26,23 +24,17 @@ class RPGPORTFOLIO_API AWeaponBase : public AActor
 	GENERATED_BODY()
 	
 public:	
-	// Sets default values for this actor's properties
 	AWeaponBase();
 
-	//@ 무기 기본 데이터
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "WeaponData")
 	FWeaponDefaultData WeaponDefaultData;
 
-	//@ 무기 타입
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "WeaponData")
 	EWeaponType WeaponType;
 
-	//@ 히트 시작 델리게이트
 	FOnWeaponHitBegin OnWeaponHitBegin;
-	//@ 히트 종료 델리게이트 
 	FOnWeaponHitEnd OnWeaponHitEnd;
 
-	//@ 현재 공격의 타입 설정
 	void SetCurrentAttackType(EWeaponAttackType AttackType);
 
 protected:
@@ -52,7 +44,6 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
 	UBoxComponent* WeaponCollisionBox;
 
-	//@ 현재 공격 타입
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
 	EWeaponAttackType CurrentAttackType;
 	

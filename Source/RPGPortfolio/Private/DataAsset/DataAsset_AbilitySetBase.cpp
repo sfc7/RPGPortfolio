@@ -49,7 +49,7 @@ void UDataAsset_AbilitySetBase::GrantAbilities(const TArray<TSubclassOf<URPGGame
 		FGameplayAbilitySpec AbilitySpec(Ability);
 		AbilitySpec.SourceObject = _ASC->GetAvatarActor();
 		AbilitySpec.Level = ApplyLevel;
- 
+		
 		// ASC에 어빌리티 부여
 		_ASC->GiveAbility(AbilitySpec);
 	}	

@@ -9,3 +9,8 @@ APlayerCharacter_Fighter::APlayerCharacter_Fighter()
 {
 	PlayerCharacterClass = EPlayerCharacterClass::Fighter;
 }
+
+void APlayerCharacter_Fighter::BeginPlay()
+{
+	Super::BeginPlay();
+}

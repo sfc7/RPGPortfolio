@@ -24,7 +24,7 @@ public:
 	//@ 입력 태그에 따른 어빌리티 비활성화 처리 
 	void OnAbilityInputReleased(const FGameplayTag& _InputTag);
 
-	//@ GameplayTag로 어빌리티 활성화
+	//@ GameplayTag로 어빌리티 활성화a
 	UFUNCTION(BlueprintCallable)
 	bool ActivateGamePlayAbilityByTag(FGameplayTag _ActivateAbilityTag);
 
@@ -43,7 +43,17 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Save System")
 	void LoadDynamicAbilitiesFromSaveGame(URPGSaveGame* SaveGame);
 
+	//@ 버퍼에 저장된 입력 태그로 어빌리티 활성화 시도
+	void FlushInputBuffer();
+
 private:
 	//@ 어빌리티가 동적 어빌리티인지 확인 (DynamicSpecSourceTags 존재 여부)
 	bool IsDynamicAbility(const FGameplayAbilitySpec& Spec) const;
+
+	//@ 선입력 버퍼
+	FGameplayTag BufferedInputTag;
+	FTimerHandle BufferTimerHandle;
+
+	//@ 버퍼 초기화
+	void ClearBuffer();
 };

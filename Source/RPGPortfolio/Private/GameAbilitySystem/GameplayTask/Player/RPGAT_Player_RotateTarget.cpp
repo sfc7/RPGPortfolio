@@ -31,7 +31,7 @@ URPGAT_Player_RotateTarget* URPGAT_Player_RotateTarget::ExecuteTaskOnTick(UGamep
 	URPGAT_Player_RotateTarget* Node = NewAbilityTask<URPGAT_Player_RotateTarget>(OwningAbility);
 
 	return Node;
-}
+}	
 
 void URPGAT_Player_RotateTarget::SetTargetRotation(FRotator NewTargetRotation)
 {

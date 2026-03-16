@@ -60,7 +60,7 @@ public:
 	//@ 로딩 스크린 로드
 	void LoadLoadingScreen(const FString& LevelName);
 	//@ 로딩 성공 이후 스크린 중단
-	void DestinationLoadingScreen(UWorld* LoadWorld);
+	void DestinationLoadingScreen (UWorld* LoadWorld);
 	
 protected:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;

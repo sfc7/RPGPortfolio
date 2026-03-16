@@ -128,7 +128,7 @@ void URPGGA_Player_HeavyAttack::ApplyEffectsSpecHandleToTargetCallback(FGameplay
 	BP_ApplyGameplayEffectToOwner(GainMpEffectClass,GetAbilityLevel());
 
 		
-	// 공격 적중 이펙트 GameplayCue 실행
+	// 공격 적중 이펙트 GameplayCue 실행	
 	const FVector AttackDirection = (LocalTargetActor->GetActorLocation() - GetPlayerCharacterFromActorInfo()->GetActorLocation()).GetSafeNormal();
 	const FVector HitLocation = PayloadData.ContextHandle.GetHitResult()->Location;
 	FGameplayCueParameters AttackHitGCParam;

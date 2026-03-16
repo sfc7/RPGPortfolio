@@ -33,8 +33,16 @@ void URPGAbilitySystemComponent::OnAbilityInputPressed(const FGameplayTag& _Inpu
 		}
 		else
 		{
-			// 일반 어빌리티 활성화
-			TryActivateAbility(AbilitySpec.Handle);
+			// 어빌리티 활성화 실패 시 버퍼에 대한 처리
+			const bool bActivated = TryActivateAbility(AbilitySpec.Handle);
+			if (!bActivated)
+			{
+				float BufferCleartime = 0.5f;
+				BufferedInputTag = _InputTag;
+				GetWorld()->GetTimerManager().SetTimer(
+					BufferTimerHandle, this,
+					&URPGAbilitySystemComponent::ClearBuffer, BufferCleartime, false);
+			}
 		}
 	}
 }
@@ -195,8 +203,23 @@ void URPGAbilitySystemComponent::LoadDynamicAbilitiesFromSaveGame(URPGSaveGame* 
 	}
 }
 
+void URPGAbilitySystemComponent::FlushInputBuffer()
+{
+	if (!BufferedInputTag.IsValid()) return;
+
+	FGameplayTag TagToFlush = BufferedInputTag;
+	ClearBuffer();                        
+	OnAbilityInputPressed(TagToFlush);   
+}
+
 bool URPGAbilitySystemComponent::IsDynamicAbility(const FGameplayAbilitySpec& Spec) const
 {
 	// 동적 소스 태그가 존재하면 동적 어빌리티로 판단
 	return Spec.GetDynamicSpecSourceTags().Num() > 0;
+}
+
+void URPGAbilitySystemComponent::ClearBuffer()
+{
+	BufferedInputTag = FGameplayTag::EmptyTag;
+	GetWorld()->GetTimerManager().ClearTimer(BufferTimerHandle);
 }

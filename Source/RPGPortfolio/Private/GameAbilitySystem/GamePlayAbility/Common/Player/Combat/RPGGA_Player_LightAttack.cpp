@@ -119,8 +119,14 @@ void URPGGA_Player_LightAttack::ResetComboCountTimer()
 void URPGGA_Player_LightAttack::OnEndAbilityCallback()
 {
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
-
 	ResetComboCountTimer();
+
+	// EndAbility 이후 블로킹 태그가 해제된 시점에 버퍼 확인
+	URPGAbilitySystemComponent* ASC = GetRPGAbilitySystemComponentFromActorInfo();
+	if (IsValid(ASC))
+	{
+		ASC->FlushInputBuffer();
+	}
 }
 
 void URPGGA_Player_LightAttack::ApplyEffectsSpecHandleToTargetCallback(FGameplayEventData PayloadData)
