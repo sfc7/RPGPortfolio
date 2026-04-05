@@ -134,26 +134,26 @@ enum class ERPGInputMode : uint8
 	UIMode,
 };
 
-//@ 인벤토리 슬롯 구조체, 인벤토리 시스템에서 쓸 가장 기본적인 아이템 데이터 단위
+//@ 인벤토리 슬롯 구조체, 가장 기본적인 아이템 데이터 단위
 USTRUCT(BlueprintType)
 struct FInventorySlot
 {
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FName ItemID;
+	FName ItemID; // 아이템 고유 번호
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 Quantity;
+	int32 Quantity; // 아이템 양
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 SlotIndex;
+	int32 SlotIndex; // 아이템 슬롯 번호
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSoftObjectPtr<UDataAsset_RPGItemData> ItemDataAsset;
+	TSoftObjectPtr<UDataAsset_RPGItemData> ItemDataAsset; // 아이템정보 약참조
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TObjectPtr<UInventoryComponent> InventoryRef;
+	TObjectPtr<UInventoryComponent> InventoryRef; //아이템이 속한 레퍼런스
 };
 
 //@ 상호작용 타입 열거형

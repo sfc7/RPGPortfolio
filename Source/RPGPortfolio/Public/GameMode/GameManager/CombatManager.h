@@ -43,6 +43,9 @@ public:
 	UFUNCTION()
 	void LoadParryingData();
 
+	//@ TArray / TQueue / TCircularQueue 자료구조 벤치마크
+	void RunBenchmark();
+
 private:
 	//@ 현재 패링 데이터 세이브 게임 인스턴스
 	UPROPERTY()
@@ -61,5 +64,5 @@ private:
 
 	// 이전 로그의 성공률을 얼마나 반영할지 Alpha값
 	UPROPERTY()
-	float SuccessAlpha = 0.5f;
+	float SuccessAlpha = 0.7f;
 };
